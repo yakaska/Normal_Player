@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Normal Player</string>
+    <string name="previous" translatable="false">Предыдущая</string>
+    <string name="play" translatable="false">Воспроизвести</string>
+    <string name="next" translatable="false">Следующая</string>
+    <string name="home" translatable="false">Главная</string>
+    <string name="music" translatable="false">Музыка</string>
+    <string name="albums" translatable="false">Альбомы</string>
+    <string name="artists" translatable="false">Исполнители</string>
+    <string name="folders" translatable="false">Папки</string>
+</resources>
