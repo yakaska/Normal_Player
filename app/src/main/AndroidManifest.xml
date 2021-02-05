@@ -22,7 +22,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <service android:name=".PlaybackService"
+        <service android:name=".playback.PlaybackService"
             android:label="@string/playback_service">
             <intent-filter>
                 <action android:name="android.intent.action.MEDIA_BUTTON" />

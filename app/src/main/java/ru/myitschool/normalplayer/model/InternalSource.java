@@ -36,7 +36,7 @@ public class InternalSource implements MusicProviderSource {
                 .putString(MediaMetadataCompat.METADATA_KEY_ALBUM, audioContent.getAlbum())
                 .putString(MediaMetadataCompat.METADATA_KEY_ARTIST, audioContent.getArtist())
                 .putLong(MediaMetadataCompat.METADATA_KEY_DURATION, audioContent.getDuration())
-                .putString(MediaMetadataCompat.METADATA_KEY_GENRE, "Not implemented yet")
+                .putString(MediaMetadataCompat.METADATA_KEY_GENRE, "Not_implemented_yet")
                 .putString(MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI, String.valueOf(audioContent.getArt_uri()))
                 .putString(MediaMetadataCompat.METADATA_KEY_TITLE, audioContent.getTitle())
                 .build();

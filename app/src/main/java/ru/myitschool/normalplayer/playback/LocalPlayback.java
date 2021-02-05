@@ -16,7 +16,6 @@ import android.util.Log;
 
 import java.io.IOException;
 
-import ru.myitschool.normalplayer.PlaybackService;
 import ru.myitschool.normalplayer.model.MusicProvider;
 import ru.myitschool.normalplayer.utils.MediaIDHelper;
 

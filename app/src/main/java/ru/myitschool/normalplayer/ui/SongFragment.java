@@ -1,7 +1,6 @@
 package ru.myitschool.normalplayer.ui;
 
 import android.os.Bundle;
-import android.support.v4.media.MediaBrowserCompat.MediaItem;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -59,11 +58,11 @@ public class SongFragment extends Fragment implements MediaItemAdapter.OnItemCli
         if (mediaId == null) {
             return;
         }
-        mainActivityViewModel = new ViewModelProvider(this, ProviderUtils.provideMainActivityViewModel(requireActivity())).get(MainActivityViewModel.class);
+        mainActivityViewModel = new ViewModelProvider(getActivity(), ProviderUtils.provideMainActivityViewModel(requireActivity())).get(MainActivityViewModel.class);
         songFragmentViewModel = new ViewModelProvider(this, ProviderUtils.provideSongFragmentViewModel(requireActivity(), mediaId)).get(SongFragmentViewModel.class);
-        songFragmentViewModel.mediaItems.observe(getViewLifecycleOwner(), new Observer<List<MediaItem>>() {
+        songFragmentViewModel.mediaItems.observe(getViewLifecycleOwner(), new Observer<List<MediaItemData>>() {
             @Override
-            public void onChanged(List<MediaItem> mediaItems) {
+            public void onChanged(List<MediaItemData> mediaItems) {
                 if (mediaItems != null && !mediaItems.isEmpty()) {
                     binding.loadingSpinner.setVisibility(View.GONE);
                 } else {
@@ -77,8 +76,8 @@ public class SongFragment extends Fragment implements MediaItemAdapter.OnItemCli
     }
 
     @Override
-    public void onItemClick(MediaItem clickedItem) {
-        Log.d(TAG, "onItemClick: " + clickedItem.getMediaId());
+    public void onItemClick(MediaItemData clickedItem) {
+        Log.d(TAG, "onItemClick: ");
         mainActivityViewModel.mediaItemClicked(clickedItem);
     }
 

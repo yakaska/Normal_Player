@@ -3,7 +3,7 @@ package ru.myitschool.normalplayer.utils;
 import android.content.ComponentName;
 import android.content.Context;
 
-import ru.myitschool.normalplayer.PlaybackService;
+import ru.myitschool.normalplayer.playback.PlaybackService;
 import ru.myitschool.normalplayer.ui.MusicServiceConnection;
 import ru.myitschool.normalplayer.ui.viewmodel.MainActivityViewModel;
 import ru.myitschool.normalplayer.ui.viewmodel.SongFragmentViewModel;

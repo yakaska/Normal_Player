@@ -4,20 +4,26 @@ import android.Manifest;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+
 import permissions.dispatcher.NeedsPermission;
 import permissions.dispatcher.OnPermissionDenied;
 import permissions.dispatcher.RuntimePermissions;
 import ru.myitschool.normalplayer.R;
+import ru.myitschool.normalplayer.databinding.ActivityMainBinding;
 import ru.myitschool.normalplayer.ui.viewmodel.MainActivityViewModel;
 import ru.myitschool.normalplayer.utils.Event;
+import ru.myitschool.normalplayer.utils.MediaIDHelper;
 import ru.myitschool.normalplayer.utils.ProviderUtils;
 
 @RuntimePermissions
@@ -27,14 +33,18 @@ public class MainActivity extends AppCompatActivity {
 
     private MainActivityViewModel viewModel;
 
+    private ActivityMainBinding binding;
+
     @NeedsPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_main);
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
 
-        viewModel = new ViewModelProvider(MainActivity.this, ProviderUtils.provideMainActivityViewModel(MainActivity.this)).get(MainActivityViewModel.class);
+        setContentView(binding.getRoot());
+
+        viewModel = new ViewModelProvider(this, ProviderUtils.provideMainActivityViewModel(this)).get(MainActivityViewModel.class);
 
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
 
@@ -54,19 +64,38 @@ public class MainActivity extends AppCompatActivity {
         viewModel.getRootMediaId().observe(this, new Observer<String>() {
             @Override
             public void onChanged(String mediaId) {
+                Log.d(TAG, "onChanged: observing root id");
                 if (mediaId != null) {
                     navigateToMediaItem(mediaId);
                 }
             }
         });
 
-        viewModel.getNavigateToMediaItem().observe(this, new Observer<Event<String>>() {
+        viewModel.getNavigateToMediaItem().observe(MainActivity.this, new Observer<Event<String>>() {
             @Override
             public void onChanged(Event<String> event) {
+                Log.d(TAG, "onChanged: navigate");
                 String content = event.getContentIfNotHandled();
+                Log.d(TAG, "onChanged: navigate: " + content);
                 navigateToMediaItem(content);
             }
         });
+        
+        binding.bottomNavigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.nav_music:
+                        navigateToMediaItem(MediaIDHelper.MEDIA_ID_MUSICS_ALL);
+                        break;
+                    case R.id.nav_albums:
+                        navigateToMediaItem(MediaIDHelper.MEDIA_ID_MUSICS_BY_ALBUM);
+                        break;
+                }
+                return true;
+            }
+        });
+        binding.bottomNavigation.setSelectedItemId(R.id.nav_music);
     }
 
     private void navigateToMediaItem(String mediaId) {
