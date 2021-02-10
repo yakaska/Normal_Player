@@ -1,5 +1,15 @@
 package ru.myitschool.normalplayer.utils;
 
+import android.net.Uri;
+import android.support.v4.media.MediaMetadataCompat;
+
+import com.google.android.exoplayer2.source.ConcatenatingMediaSource;
+import com.google.android.exoplayer2.source.MediaSource;
+import com.google.android.exoplayer2.source.ProgressiveMediaSource;
+import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
+
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.concurrent.TimeUnit;
 
 public class Utils {
@@ -9,6 +19,26 @@ public class Utils {
                 TimeUnit.MILLISECONDS.toMinutes(milliSeconds),
                 TimeUnit.MILLISECONDS.toSeconds(milliSeconds) -
                         TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(milliSeconds)));
+    }
+
+    public static ConcatenatingMediaSource metadataListToMediaSource(ArrayList<MediaMetadataCompat> metadataList, DefaultDataSourceFactory dataSourceFactory) {
+        ConcatenatingMediaSource mediaSource = new ConcatenatingMediaSource();
+        for (MediaMetadataCompat metadata : metadataList) {
+            mediaSource.addMediaSource(toMediaSource(metadata, dataSourceFactory));
+        }
+        return mediaSource;
+    }
+
+    public static MediaSource toMediaSource(MediaMetadataCompat metadataCompat, DefaultDataSourceFactory dataSourceFactory) {
+        return new ProgressiveMediaSource.Factory(dataSourceFactory).createMediaSource(Uri.parse(metadataCompat.getString(MediaMetadataCompat.METADATA_KEY_MEDIA_URI)));
+    }
+
+    public static <E> Collection<E> makeCollectionFromIterable(Iterable<E> iterable) {
+        Collection<E> list = new ArrayList<E>();
+        for (E item : iterable) {
+            list.add(item);
+        }
+        return list;
     }
 
 }

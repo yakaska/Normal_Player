@@ -46,14 +46,12 @@ dependencies {
 
     implementation 'androidx.cardview:cardview'
     implementation 'com.google.android.material:material:1.2.1'
-    implementation 'com.sothree.slidinguppanel:library:3.4.0'
-    implementation 'org.greenrobot:eventbus:3.2.0'
     implementation 'com.github.CodeBoy722:MediaFacer:1.0.3'
     implementation 'com.squareup.picasso:picasso:2.71828'
-    implementation 'com.squareup.okhttp3:okhttp:3.12.6'
-    implementation 'com.jakewharton.picasso:picasso2-okhttp3-downloader:1.1.0'
     implementation "org.permissionsdispatcher:permissionsdispatcher:4.8.0"
     annotationProcessor "org.permissionsdispatcher:permissionsdispatcher-processor:4.8.0"
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
     implementation "androidx.lifecycle:lifecycle-viewmodel:2.2.0"
+    implementation 'com.google.android.exoplayer:exoplayer:2.11.5'
+    implementation 'com.google.android.exoplayer:extension-mediasession:2.11.5'
 }

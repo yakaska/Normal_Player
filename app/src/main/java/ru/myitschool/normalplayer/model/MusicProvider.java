@@ -407,16 +407,6 @@ public class MusicProvider {
         Log.d(TAG, "createMediaItem: " + hierarchyAwareMediaID);
         Bundle extras = new Bundle();
         extras.putLong(EXTRA_DURATION, copy.getLong(MediaMetadataCompat.METADATA_KEY_DURATION));
-        MediaDescriptionCompat description = new MediaDescriptionCompat.Builder()
-                .setMediaId(copy.getDescription().getMediaId())
-                .setTitle(copy.getDescription().getTitle())
-                .setSubtitle(copy.getDescription().getSubtitle())
-                .setMediaUri(copy.getDescription().getMediaUri())
-                .setIconUri(copy.getDescription().getIconUri())
-                .setDescription(copy.getDescription().getDescription())
-                .setExtras(extras)
-                .build();
-        //copy.getDescription(),
         Log.d(TAG, "createMediaItem:2 " + copy.getDescription().getMediaId());
         return new MediaBrowserCompat.MediaItem(copy.getDescription(),
                 MediaBrowserCompat.MediaItem.FLAG_PLAYABLE);
