@@ -2,6 +2,7 @@ package ru.myitschool.normalplayer.utils;
 
 import android.net.Uri;
 import android.support.v4.media.MediaMetadataCompat;
+import android.support.v4.media.session.PlaybackStateCompat;
 
 import com.google.android.exoplayer2.source.ConcatenatingMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
@@ -41,4 +42,9 @@ public class Utils {
         return list;
     }
 
+    public static boolean isPlaying(PlaybackStateCompat playbackState) {
+        return (playbackState.getState() == PlaybackStateCompat.STATE_BUFFERING) ||
+                (playbackState.getState() == PlaybackStateCompat.STATE_PLAYING) ||
+                (playbackState.getState() == PlaybackStateCompat.STATE_PAUSED);
+    }
 }

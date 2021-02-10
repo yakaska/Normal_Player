@@ -23,6 +23,7 @@ public class InternalSource implements MusicProviderSource {
         ArrayList<audioContent> audioContents = fetchAudioContent();
         ArrayList<MediaMetadataCompat> metadata = new ArrayList<>();
         for (audioContent a : audioContents) {
+            if (a.getFilePath().endsWith(".midi") || a.getFilePath().endsWith(".mid")) continue;
             metadata.add(buildFromAudioContent(a));
         }
         return metadata.iterator();

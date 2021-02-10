@@ -21,10 +21,4 @@
         android:icon="@drawable/ic_outline_artist_24"
         android:title="@string/artists" />
 
-    <item
-        android:id="@+id/nav_folders"
-        android:icon="@drawable/ic_outline_folder_24"
-        android:title="@string/folders" />
-
-
 </menu>

@@ -103,7 +103,6 @@ public class MusicService extends MediaBrowserServiceCompat {
 
         notificationManager = new NPNotificationManager(this, mediaSession.getSessionToken(), new PlayerNotificationListener());
 
-
         notificationManager.showNotificationForPlayer(currentPlayer);
 
         mediaSessionConnector = new MediaSessionConnector(mediaSession);
@@ -111,6 +110,7 @@ public class MusicService extends MediaBrowserServiceCompat {
         mediaSessionConnector.setQueueNavigator(new NPQueueNavigator(mediaSession));
 
         switchToPlayer(null, exoPlayer);
+        currentPlayer.setRepeatMode(Player.REPEAT_MODE_ALL);
 
         storage = PersistentStorage.getInstance(this);
     }
@@ -152,12 +152,16 @@ public class MusicService extends MediaBrowserServiceCompat {
         super.onSearch(query, extras, result);
     }
 
-    private void preparePlaylist(ArrayList<MediaMetadataCompat> metadataList, @Nullable MediaMetadataCompat itemToPlay, boolean playWhenReady, long playbackStartPositionMs) {
-        int initialWindowIndex;
-        if (itemToPlay == null) {
+    private void preparePlaylist(ArrayList<MediaMetadataCompat> metadataList, @Nullable String mediaIdToPlay, boolean playWhenReady, long playbackStartPositionMs) {
+        int initialWindowIndex = 0;
+        if (mediaIdToPlay == null) {
             initialWindowIndex = 0;
         } else {
-            initialWindowIndex = metadataList.indexOf(itemToPlay);
+            for (MediaMetadataCompat metadata : metadataList) {
+                if (metadata.getDescription().getMediaId().equals(mediaIdToPlay)) {
+                    initialWindowIndex = metadataList.indexOf(metadata);
+                }
+            }
         }
         currentPlaylistItems = metadataList;
         exoPlayer.setPlayWhenReady(playWhenReady);
@@ -165,11 +169,13 @@ public class MusicService extends MediaBrowserServiceCompat {
         if (currentPlayer == exoPlayer) {
             ConcatenatingMediaSource mediaSource = Utils.metadataListToMediaSource(metadataList, dataSourceFactory);
             exoPlayer.prepare(mediaSource);
+            Log.d(TAG, "start:" + playbackStartPositionMs + " window:" + initialWindowIndex);
             exoPlayer.seekTo(initialWindowIndex, playbackStartPositionMs);
         }
     }
 
     public void switchToPlayer(Player previousPlayer, Player newPlayer) {
+        Log.d(TAG, "switchToPlayer: ");
         if (previousPlayer == newPlayer) {
             return;
         }
@@ -181,7 +187,7 @@ public class MusicService extends MediaBrowserServiceCompat {
             } else if (playbackState != Player.STATE_IDLE && playbackState != Player.STATE_ENDED) {
                 preparePlaylist(
                         currentPlaylistItems,
-                        currentPlaylistItems.get(previousPlayer.getCurrentWindowIndex()),
+                        currentPlaylistItems.get(previousPlayer.getCurrentWindowIndex()).getDescription().getMediaId(),
                         previousPlayer.getPlayWhenReady(),
                         previousPlayer.getCurrentPosition()
                 );
@@ -239,13 +245,13 @@ public class MusicService extends MediaBrowserServiceCompat {
             } else {
                 long playbackStartPositionMs;
                 if (extras != null) {
-                    playbackStartPositionMs = extras.getLong(MEDIA_DESCRIPTION_EXTRAS_START_PLAYBACK_POSITION_MS, C.TIME_UNSET);
+                    playbackStartPositionMs = extras.getLong(MEDIA_DESCRIPTION_EXTRAS_START_PLAYBACK_POSITION_MS, 0);
                 } else {
-                    playbackStartPositionMs = C.TIME_UNSET;
+                    playbackStartPositionMs = 0;
                 }
                 preparePlaylist(
-                        buildPlaylist(itemToPlay),
-                        itemToPlay,
+                        buildPlaylist(mediaId),
+                        mediaId,
                         playWhenReady,
                         playbackStartPositionMs
                 );
@@ -267,8 +273,8 @@ public class MusicService extends MediaBrowserServiceCompat {
             return false;
         }
 
-        private ArrayList<MediaMetadataCompat> buildPlaylist(MediaMetadataCompat item) {
-            return QueueHelper.getPlayingQueue(item.getDescription().getMediaId(), musicProvider);
+        private ArrayList<MediaMetadataCompat> buildPlaylist(String mediaId) {
+            return QueueHelper.getPlayingQueue(mediaId, musicProvider);
         }
 
     }

@@ -30,7 +30,6 @@ public class MediaItemAdapter extends ListAdapter<MediaItemData, MediaItemAdapte
         this.itemClickListener = itemClickListener;
     }
 
-
     @NonNull
     @Override
     public ItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -39,11 +38,13 @@ public class MediaItemAdapter extends ListAdapter<MediaItemData, MediaItemAdapte
 
     @Override
     public void onBindViewHolder(@NonNull ItemViewHolder holder, int position) {
+        Log.d(TAG, "onBindViewHolder: 1");
         onBindViewHolder(holder, position, Collections.emptyList());
     }
 
     @Override
     public void onBindViewHolder(@NonNull ItemViewHolder holder, int position, @NonNull List<Object> payloads) {
+        Log.d(TAG, "onBindViewHolder: 2");
         MediaItemData item = getItem(position);
         boolean fullRefresh = payloads.isEmpty();
 
@@ -64,8 +65,8 @@ public class MediaItemAdapter extends ListAdapter<MediaItemData, MediaItemAdapte
             holder.titleTv.setText(item.getTitle());
             holder.artistTv.setText(item.getSubtitle());
             holder.durationTv.setText(Utils.convertMs(item.getDuration()));
+            Log.d(TAG, "onBindViewHolder: duration " + item.getDuration());
             holder.stateIv.setImageResource(item.getPlaybackRes());
-            Log.d(TAG, "onBindViewHolder: " + item.getPlaybackRes());
             Picasso.get().load(item.getAlbumArtUri()).placeholder(R.drawable.ic_default_art).into(holder.artIv);
         }
     }

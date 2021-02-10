@@ -141,6 +141,7 @@ public class MusicProvider {
      * Very basic implementation of a search that filter music tracks with title containing
      * the given query.
      */
+
     public Iterable<MediaMetadataCompat> searchMusicBySongTitle(String query) {
         return searchMusic(MediaMetadataCompat.METADATA_KEY_TITLE, query);
     }
@@ -288,7 +289,6 @@ public class MusicProvider {
         musicListByAlbum = newMusicListByAlbum;
     }
 
-
     private synchronized void retrieveMedia() {
         try {
             if (currentState == State.NON_INITIALIZED) {
@@ -346,7 +346,7 @@ public class MusicProvider {
                 mediaItems.add(createBrowsableMediaItemForAlbum(album, resources));
             }
 
-        }else if (mediaId.startsWith(MEDIA_ID_MUSICS_BY_ALBUM)){
+        } else if (mediaId.startsWith(MEDIA_ID_MUSICS_BY_ALBUM)) {
             String album = MediaIDHelper.getHierarchy(mediaId)[1];
             for (MediaMetadataCompat metadata : getMusicsByAlbum(album)) {
                 mediaItems.add(createMediaItem(metadata));
@@ -362,8 +362,6 @@ public class MusicProvider {
                 .setMediaId(MEDIA_ID_MUSICS_BY_GENRE)
                 .setTitle(resources.getString(R.string.browse_genres))
                 .setSubtitle(resources.getString(R.string.browse_genre_subtitle))
-                .setIconUri(Uri.parse("android.resource://" +
-                        "ru.myitschool.normalplayer/drawable/ic_note_placeholder"))
                 .build();
         return new MediaBrowserCompat.MediaItem(description,
                 MediaBrowserCompat.MediaItem.FLAG_BROWSABLE);
@@ -382,7 +380,6 @@ public class MusicProvider {
 
     //createBrowsableMediaItemForAlbum
     private MediaBrowserCompat.MediaItem createBrowsableMediaItemForAlbum(String album, Resources resources) {
-
         MediaDescriptionCompat description = new MediaDescriptionCompat.Builder()
                 .setMediaId(createMediaID(null, MEDIA_ID_MUSICS_BY_ALBUM, album))
                 .setTitle(album)
@@ -401,14 +398,21 @@ public class MusicProvider {
         String genre = metadata.getString(MediaMetadataCompat.METADATA_KEY_GENRE);
         String hierarchyAwareMediaID = createMediaID(
                 metadata.getDescription().getMediaId(), MEDIA_ID_MUSICS_BY_GENRE, genre);
-        MediaMetadataCompat copy = new MediaMetadataCompat.Builder(metadata)
-                .putString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID, hierarchyAwareMediaID)
-                .build();
-        Log.d(TAG, "createMediaItem: " + hierarchyAwareMediaID);
+        //MediaMetadataCompat copy = new MediaMetadataCompat.Builder(metadata)
+        //        .putString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID, hierarchyAwareMediaID)
+        //        .build();
         Bundle extras = new Bundle();
-        extras.putLong(EXTRA_DURATION, copy.getLong(MediaMetadataCompat.METADATA_KEY_DURATION));
-        Log.d(TAG, "createMediaItem:2 " + copy.getDescription().getMediaId());
-        return new MediaBrowserCompat.MediaItem(copy.getDescription(),
+        extras.putLong(EXTRA_DURATION, metadata.getLong(MediaMetadataCompat.METADATA_KEY_DURATION));
+        MediaDescriptionCompat description = new MediaDescriptionCompat.Builder()
+                .setTitle(metadata.getString(MediaMetadataCompat.METADATA_KEY_TITLE))
+                .setSubtitle(metadata.getString(MediaMetadataCompat.METADATA_KEY_ARTIST))
+                .setIconUri(Uri.parse(metadata.getString(MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI)))
+                .setMediaId(hierarchyAwareMediaID)
+                .setExtras(extras)
+                .build();
+
+        Log.d(TAG, "createMediaItem: extra " + extras.getLong(EXTRA_DURATION));
+        return new MediaBrowserCompat.MediaItem(description,
                 MediaBrowserCompat.MediaItem.FLAG_PLAYABLE);
 
     }
