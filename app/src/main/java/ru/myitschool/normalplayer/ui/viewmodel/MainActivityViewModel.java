@@ -16,6 +16,7 @@ import androidx.lifecycle.ViewModelProvider;
 import ru.myitschool.normalplayer.ui.MediaItemData;
 import ru.myitschool.normalplayer.ui.MusicServiceConnection;
 import ru.myitschool.normalplayer.utils.Event;
+import ru.myitschool.normalplayer.utils.Utils;
 
 public class MainActivityViewModel extends ViewModel {
 
@@ -86,6 +87,33 @@ public class MainActivityViewModel extends ViewModel {
         } else {
             transportControls.playFromMediaId(clickedItem.getMediaId(), null);
         }
+    }
+
+    //TODO
+    private void playMedia(MediaItemData clickedItem, boolean pauseAllowed) {
+        MediaMetadataCompat metadata = connection.getNowPlaying().getValue();
+        MediaControllerCompat.TransportControls transportControls = connection.getTransportControls();
+
+        boolean isPrepared;
+        if (connection.getPlaybackState().getValue() != null) {
+            isPrepared = Utils.isPrepared(connection.getPlaybackState().getValue());
+        } else {
+            isPrepared = false;
+        }
+        if (isPrepared && clickedItem.getMediaId().equals(metadata.getString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID))) {
+            if (connection.getPlaybackState().getValue() != null) {
+                if (Utils.isPlaying(connection.getPlaybackState().getValue())) {
+                    if (pauseAllowed) transportControls.pause();
+                } else if (Utils.isPlayEnabled(connection.getPlaybackState().getValue())) {
+                    transportControls.play();
+                } else {
+                    Log.d(TAG, "playMedia: ПОШЕЛ НАХУЙ ПИДОРАС");
+                }
+            }
+        } else {
+            transportControls.playFromMediaId(clickedItem.getMediaId(), null);
+        }
+
     }
 
     private void browseToItem(MediaItemData clickedItem) {

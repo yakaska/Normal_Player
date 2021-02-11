@@ -10,7 +10,6 @@ import com.google.android.exoplayer2.source.ProgressiveMediaSource;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.concurrent.TimeUnit;
 
 public class Utils {
@@ -34,17 +33,31 @@ public class Utils {
         return new ProgressiveMediaSource.Factory(dataSourceFactory).createMediaSource(Uri.parse(metadataCompat.getString(MediaMetadataCompat.METADATA_KEY_MEDIA_URI)));
     }
 
-    public static <E> Collection<E> makeCollectionFromIterable(Iterable<E> iterable) {
-        Collection<E> list = new ArrayList<E>();
-        for (E item : iterable) {
-            list.add(item);
-        }
-        return list;
-    }
 
     public static boolean isPlaying(PlaybackStateCompat playbackState) {
+        return (playbackState.getState() == PlaybackStateCompat.STATE_BUFFERING) ||
+                (playbackState.getState() == PlaybackStateCompat.STATE_PLAYING);
+    }
+
+    public static boolean isPrepared(PlaybackStateCompat playbackState) {
         return (playbackState.getState() == PlaybackStateCompat.STATE_BUFFERING) ||
                 (playbackState.getState() == PlaybackStateCompat.STATE_PLAYING) ||
                 (playbackState.getState() == PlaybackStateCompat.STATE_PAUSED);
     }
+
+    public static boolean isPlayEnabled(PlaybackStateCompat playbackState) {
+        return (((playbackState.getActions() & PlaybackStateCompat.ACTION_PLAY) != 0L)
+                || ((playbackState.getActions() & PlaybackStateCompat.ACTION_PLAY_PAUSE) != 0L))
+                && (playbackState.getState() == PlaybackStateCompat.STATE_PAUSED);
+    }
+
+    //TODO WARNING: may cause bugs
+    public static boolean isPauseEnabled(PlaybackStateCompat playbackState) {
+        return (((playbackState.getActions() & PlaybackStateCompat.ACTION_PAUSE) != 0L) ||
+        ((playbackState.getActions() & PlaybackStateCompat.ACTION_PLAY_PAUSE) != 0L)) &&
+        (playbackState.getState() == PlaybackStateCompat.STATE_BUFFERING ||
+                playbackState.getState() == PlaybackStateCompat.STATE_PLAYING);
+
+    }
+
 }

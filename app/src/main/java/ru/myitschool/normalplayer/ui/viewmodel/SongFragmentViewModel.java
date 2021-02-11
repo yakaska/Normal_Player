@@ -1,23 +1,28 @@
 package ru.myitschool.normalplayer.ui.viewmodel;
 
 import android.support.v4.media.MediaBrowserCompat;
+import android.support.v4.media.MediaMetadataCompat;
+import android.support.v4.media.session.PlaybackStateCompat;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import ru.myitschool.normalplayer.R;
 import ru.myitschool.normalplayer.model.MusicProvider;
 import ru.myitschool.normalplayer.ui.MediaItemData;
 import ru.myitschool.normalplayer.ui.MusicServiceConnection;
+import ru.myitschool.normalplayer.utils.Utils;
 
 public class SongFragmentViewModel extends ViewModel {
 
-    private static String TAG = SongFragmentViewModel.class.getSimpleName();
+    private static final String TAG = SongFragmentViewModel.class.getSimpleName();
 
     private static final int NO_RES_ID = 0;
 
@@ -46,7 +51,7 @@ public class SongFragmentViewModel extends ViewModel {
                         item.getDescription().getIconUri(),
                         duration,
                         item.isBrowsable(),
-                        NO_RES_ID
+                        getResourceForMediaId(mediaId)
                 ));
             }
             mediaItems.postValue(itemList);
@@ -54,22 +59,111 @@ public class SongFragmentViewModel extends ViewModel {
     };
 
 
+    private final Observer<PlaybackStateCompat> playbackStateObserver = new Observer<PlaybackStateCompat>() {
+        @Override
+        public void onChanged(PlaybackStateCompat playbackStateCompat) {
+            PlaybackStateCompat playbackState = playbackStateCompat;
+            if (playbackState == null) {
+                playbackState = MusicServiceConnection.EMPTY_PLAYBACK_STATE;
+            }
+            MediaMetadataCompat metadata = connection.getNowPlaying().getValue();
+            if (metadata == null) {
+                metadata = MusicServiceConnection.NOTHING_PLAYING;
+            }
+            if (metadata.getString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID) != null) {
+                mediaItems.postValue(updateState(playbackState, metadata));
+            }
+        }
+    };
+
+    private final Observer<MediaMetadataCompat> mediaMetadataObserver = new Observer<MediaMetadataCompat>() {
+        @Override
+        public void onChanged(MediaMetadataCompat metadataCompat) {
+            PlaybackStateCompat playbackState = connection.getPlaybackState().getValue();
+            if (playbackState == null) {
+                playbackState = MusicServiceConnection.EMPTY_PLAYBACK_STATE;
+            }
+            MediaMetadataCompat metadata = metadataCompat;
+            if (metadata == null) {
+                metadata = MusicServiceConnection.NOTHING_PLAYING;
+            }
+            if (metadata.getString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID) != null) {
+                mediaItems.postValue(updateState(playbackState, metadata));
+            }
+        }
+    };
+
     public SongFragmentViewModel(String mediaId, MusicServiceConnection connection) {
         this.connection = connection;
         this.mediaId = mediaId;
         this.connection.subscribe(mediaId, subscriptionCallback);
+        this.connection.getPlaybackState().observeForever(playbackStateObserver);
+        this.connection.getNowPlaying().observeForever(mediaMetadataObserver);
+    }
+
+    private List<MediaItemData> updateState(PlaybackStateCompat playbackState, MediaMetadataCompat metadata) {
+        int newResId = NO_RES_ID;
+        if (Utils.isPlaying(playbackState)) {
+            newResId = R.drawable.ic_pause_black_24;
+        } else {
+            newResId = R.drawable.ic_play_arrow_black_24;
+        }
+        List<MediaItemData> resultList = new ArrayList<>();
+
+        if (mediaItems.getValue() != null) {
+            for (MediaItemData item : mediaItems.getValue()) {
+                int useResId = NO_RES_ID;
+                if (item.getMediaId().equals(metadata.getString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID))) {
+                    useResId = newResId;
+                }
+                item = new MediaItemData(
+                        item.getMediaId(),
+                        item.getTitle(),
+                        item.getSubtitle(),
+                        item.getAlbumArtUri(),
+                        item.getDuration(),
+                        item.isBrowsable(),
+                        useResId);
+                resultList.add(item);
+            }
+        }
+        return resultList;
+    }
+
+    private int getResourceForMediaId(String mediaId) {
+        boolean isActive;
+        boolean isPlaying;
+        if (connection.getNowPlaying().getValue() != null) {
+            isActive = mediaId.equals(connection.getNowPlaying().getValue().getString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID));
+        } else {
+            isActive = false;
+        }
+        if (connection.getPlaybackState().getValue() != null) {
+            isPlaying = Utils.isPlaying(connection.getPlaybackState().getValue());
+        } else {
+            isPlaying = false;
+        }
+        if (!isActive) {
+            return NO_RES_ID;
+        } else if (isPlaying) {
+            return R.drawable.ic_pause_black_24;
+        } else {
+            return R.drawable.ic_play_arrow_black_24;
+        }
     }
 
     @Override
     protected void onCleared() {
         super.onCleared();
         connection.unsubscribe(mediaId, subscriptionCallback);
+        connection.getPlaybackState().removeObserver(playbackStateObserver);
+        connection.getNowPlaying().removeObserver(mediaMetadataObserver);
     }
 
     public static class Factory extends ViewModelProvider.NewInstanceFactory {
 
-        private String mediaId;
-        private MusicServiceConnection connection;
+        private final String mediaId;
+        private final MusicServiceConnection connection;
 
         public Factory(String mediaId, MusicServiceConnection connection) {
             this.mediaId = mediaId;
