@@ -380,11 +380,17 @@ public class MusicProvider {
 
     //createBrowsableMediaItemForAlbum
     private MediaBrowserCompat.MediaItem createBrowsableMediaItemForAlbum(String album, Resources resources) {
+        MediaMetadataCompat metadata = searchMusicByAlbum(album).iterator().next();
+        String iconUri = "";
+        if (metadata != null) {
+            iconUri = metadata.getString(MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI);
+        }
         MediaDescriptionCompat description = new MediaDescriptionCompat.Builder()
                 .setMediaId(createMediaID(null, MEDIA_ID_MUSICS_BY_ALBUM, album))
                 .setTitle(album)
                 .setSubtitle(resources.getString(
                         R.string.browse_musics_by_album_subtitle, album))
+                .setIconUri(Uri.parse(iconUri))
                 .build();
         return new MediaBrowserCompat.MediaItem(description,
                 MediaBrowserCompat.MediaItem.FLAG_BROWSABLE);
@@ -398,9 +404,6 @@ public class MusicProvider {
         String genre = metadata.getString(MediaMetadataCompat.METADATA_KEY_GENRE);
         String hierarchyAwareMediaID = createMediaID(
                 metadata.getDescription().getMediaId(), MEDIA_ID_MUSICS_BY_GENRE, genre);
-        //MediaMetadataCompat copy = new MediaMetadataCompat.Builder(metadata)
-        //        .putString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID, hierarchyAwareMediaID)
-        //        .build();
         Bundle extras = new Bundle();
         extras.putLong(EXTRA_DURATION, metadata.getLong(MediaMetadataCompat.METADATA_KEY_DURATION));
         MediaDescriptionCompat description = new MediaDescriptionCompat.Builder()

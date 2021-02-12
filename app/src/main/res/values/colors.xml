@@ -8,6 +8,7 @@
     <color name="colorWhite">#FFFFFF</color>
     <color name="colorBackground">#F3F3F3</color>
     <color name="colorStroke">#BDBDBD</color>
-    <color name="colorHind">#ECECEC</color>
+    <color name="colorHint">#ECECEC</color>
+    <color name="colorBlack">#000000</color>
 
 </resources>

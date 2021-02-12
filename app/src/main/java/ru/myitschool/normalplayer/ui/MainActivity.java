@@ -5,6 +5,7 @@ import android.media.AudioManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -15,6 +16,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
 import permissions.dispatcher.NeedsPermission;
 import permissions.dispatcher.OnPermissionDenied;
@@ -43,6 +45,40 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
 
         setContentView(binding.getRoot());
+
+        View view = findViewById(R.id.bottom_sheet);
+        BottomSheetBehavior sheetBehavior = BottomSheetBehavior.from(view);
+        sheetBehavior.setHideable(false);
+        sheetBehavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+                View v = bottomSheet.findViewById(R.id.sheet_peek);
+                switch (newState) {
+                    case BottomSheetBehavior.STATE_COLLAPSED:
+                        v.setVisibility(View.VISIBLE);
+                        binding.bottomNavigation.setVisibility(View.VISIBLE);
+                        break;
+                    case BottomSheetBehavior.STATE_DRAGGING:
+                        break;
+                    case BottomSheetBehavior.STATE_EXPANDED:
+                        v.setVisibility(View.GONE);
+                        binding.bottomNavigation.setVisibility(View.GONE);
+                        break;
+                    case BottomSheetBehavior.STATE_HALF_EXPANDED:
+                        break;
+                    case BottomSheetBehavior.STATE_HIDDEN:
+                        break;
+                    case BottomSheetBehavior.STATE_SETTLING:
+                        break;
+                }
+            }
+
+            @Override
+            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+
+            }
+        });
+
 
         viewModel = new ViewModelProvider(this, ProviderUtils.provideMainActivityViewModel(this)).get(MainActivityViewModel.class);
 

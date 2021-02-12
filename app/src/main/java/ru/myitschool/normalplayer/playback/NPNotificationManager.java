@@ -49,6 +49,7 @@ public class NPNotificationManager {
         );
 
         notificationManager.setMediaSessionToken(sessionToken);
+        notificationManager.setColorized(true);
         notificationManager.setSmallIcon(R.drawable.ic_notification);
         notificationManager.setFastForwardIncrementMs(0);
         notificationManager.setRewindIncrementMs(0);
