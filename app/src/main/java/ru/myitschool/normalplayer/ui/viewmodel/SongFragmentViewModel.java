@@ -104,9 +104,9 @@ public class SongFragmentViewModel extends ViewModel {
     private List<MediaItemData> updateState(PlaybackStateCompat playbackState, MediaMetadataCompat metadata) {
         int newResId = NO_RES_ID;
         if (Utils.isPlaying(playbackState)) {
-            newResId = R.drawable.ic_pause_black_24;
+            newResId = R.drawable.ic_pause_white_24;
         } else {
-            newResId = R.drawable.ic_play_arrow_black_24;
+            newResId = R.drawable.ic_play_arrow_white_24;
         }
         List<MediaItemData> resultList = new ArrayList<>();
 
@@ -146,9 +146,9 @@ public class SongFragmentViewModel extends ViewModel {
         if (!isActive) {
             return NO_RES_ID;
         } else if (isPlaying) {
-            return R.drawable.ic_pause_black_24;
+            return R.drawable.ic_pause_white_24;
         } else {
-            return R.drawable.ic_play_arrow_black_24;
+            return R.drawable.ic_play_arrow_white_24;
         }
     }
 

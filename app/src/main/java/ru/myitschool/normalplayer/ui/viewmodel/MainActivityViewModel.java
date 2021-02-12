@@ -2,7 +2,6 @@ package ru.myitschool.normalplayer.ui.viewmodel;
 
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaControllerCompat;
-import android.support.v4.media.session.PlaybackStateCompat;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -53,7 +52,7 @@ public class MainActivityViewModel extends ViewModel {
         if (clickedItem.isBrowsable()) {
             browseToItem(clickedItem);
         } else {
-            playMedia(clickedItem);
+            playMediaId(clickedItem.getMediaId());
         }
     }
 
@@ -75,17 +74,28 @@ public class MainActivityViewModel extends ViewModel {
         return navigateToMediaItem;
     }
 
-    private void playMedia(MediaItemData clickedItem) {
+    //TODO maybe should start playback from 0pos?
+    private void playMediaId(String mediaId) {
         MediaMetadataCompat nowPlaying = connection.getNowPlaying().getValue();
         MediaControllerCompat.TransportControls transportControls = connection.getTransportControls();
-        if (clickedItem.getMediaId().equals(nowPlaying.getString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID))) {
-            if (connection.getPlaybackState().getValue().getState() == PlaybackStateCompat.STATE_PLAYING) {
-                transportControls.play();
-            } else {
-                transportControls.pause();
+        boolean isPrepared;
+        if (connection.getPlaybackState().getValue() != null) {
+            isPrepared = Utils.isPrepared(connection.getPlaybackState().getValue());
+        } else {
+            isPrepared = false;
+        }
+        if (isPrepared && mediaId.equals(nowPlaying.getString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID))) {
+            if (connection.getPlaybackState().getValue() != null) {
+                if (Utils.isPlaying(connection.getPlaybackState().getValue())) {
+                    transportControls.pause();
+                } else if (Utils.isPlayEnabled(connection.getPlaybackState().getValue())) {
+                    transportControls.play();
+                } else {
+                    Log.d(TAG, "playMediaId: ПОШЕЛ НАХУЙ ПИДОРАС");
+                }
             }
         } else {
-            transportControls.playFromMediaId(clickedItem.getMediaId(), null);
+            transportControls.playFromMediaId(mediaId, null);
         }
     }
 
