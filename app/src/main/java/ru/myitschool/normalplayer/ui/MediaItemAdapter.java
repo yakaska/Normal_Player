@@ -64,7 +64,12 @@ public class MediaItemAdapter extends ListAdapter<MediaItemData, MediaItemAdapte
             holder.item = item;
             holder.titleTv.setText(item.getTitle());
             holder.artistTv.setText(item.getSubtitle());
-            holder.durationTv.setText(Utils.convertMs(item.getDuration()));
+            if (item.isBrowsable()) {
+                holder.durationTv.setVisibility(View.INVISIBLE);
+            } else {
+                holder.durationTv.setText(Utils.convertMs(item.getDuration()));
+
+            }
             Log.d(TAG, "onBindViewHolder: duration " + item.getDuration());
             holder.stateIv.setImageResource(item.getPlaybackRes());
             Picasso.get().load(item.getAlbumArtUri()).placeholder(R.drawable.ic_default_art).into(holder.artIv);

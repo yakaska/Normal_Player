@@ -1,6 +1,7 @@
 package ru.myitschool.normalplayer.utils;
 
 import android.net.Uri;
+import android.os.SystemClock;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 
@@ -49,6 +50,15 @@ public class Utils {
         return (((playbackState.getActions() & PlaybackStateCompat.ACTION_PLAY) != 0L)
                 || ((playbackState.getActions() & PlaybackStateCompat.ACTION_PLAY_PAUSE) != 0L))
                 && (playbackState.getState() == PlaybackStateCompat.STATE_PAUSED);
+    }
+
+    public static long getCurrentPosition(PlaybackStateCompat playbackState) {
+        if (playbackState.getState() == PlaybackStateCompat.STATE_PLAYING) {
+            long timeDelta = SystemClock.elapsedRealtime() - playbackState.getLastPositionUpdateTime();
+            return (long) (playbackState.getPosition() + (timeDelta * playbackState.getPlaybackSpeed()));
+        } else {
+            return playbackState.getPosition();
+        }
     }
 
     //TODO WARNING: may cause bugs

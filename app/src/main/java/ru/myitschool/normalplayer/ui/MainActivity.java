@@ -17,6 +17,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.squareup.picasso.Picasso;
 
 import permissions.dispatcher.NeedsPermission;
 import permissions.dispatcher.OnPermissionDenied;
@@ -24,6 +25,7 @@ import permissions.dispatcher.RuntimePermissions;
 import ru.myitschool.normalplayer.R;
 import ru.myitschool.normalplayer.databinding.ActivityMainBinding;
 import ru.myitschool.normalplayer.ui.viewmodel.MainActivityViewModel;
+import ru.myitschool.normalplayer.ui.viewmodel.NowPlayingViewModel;
 import ru.myitschool.normalplayer.utils.Event;
 import ru.myitschool.normalplayer.utils.MediaIDHelper;
 import ru.myitschool.normalplayer.utils.ProviderUtils;
@@ -33,21 +35,22 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
-    private MainActivityViewModel viewModel;
+    private MainActivityViewModel mainActivityViewModel;
 
-    private ActivityMainBinding binding;
+    private NowPlayingViewModel nowPlayingViewModel;
+
+    private ActivityMainBinding activityMainBinding;
 
     @NeedsPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        activityMainBinding = ActivityMainBinding.inflate(getLayoutInflater());
 
-        setContentView(binding.getRoot());
+        setContentView(activityMainBinding.getRoot());
 
-        View view = findViewById(R.id.bottom_sheet);
-        BottomSheetBehavior sheetBehavior = BottomSheetBehavior.from(view);
+        BottomSheetBehavior sheetBehavior = BottomSheetBehavior.from(activityMainBinding.bottomSheetInclude.bottomSheet);
         sheetBehavior.setHideable(false);
         sheetBehavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
@@ -56,13 +59,13 @@ public class MainActivity extends AppCompatActivity {
                 switch (newState) {
                     case BottomSheetBehavior.STATE_COLLAPSED:
                         v.setVisibility(View.VISIBLE);
-                        binding.bottomNavigation.setVisibility(View.VISIBLE);
+                        activityMainBinding.bottomNavigation.setVisibility(View.VISIBLE);
                         break;
                     case BottomSheetBehavior.STATE_DRAGGING:
                         break;
                     case BottomSheetBehavior.STATE_EXPANDED:
                         v.setVisibility(View.GONE);
-                        binding.bottomNavigation.setVisibility(View.GONE);
+                        activityMainBinding.bottomNavigation.setVisibility(View.GONE);
                         break;
                     case BottomSheetBehavior.STATE_HALF_EXPANDED:
                         break;
@@ -80,11 +83,13 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-        viewModel = new ViewModelProvider(this, ProviderUtils.provideMainActivityViewModel(this)).get(MainActivityViewModel.class);
+        mainActivityViewModel = new ViewModelProvider(this, ProviderUtils.provideMainActivityViewModel(this)).get(MainActivityViewModel.class);
+
+        nowPlayingViewModel = new ViewModelProvider(this, ProviderUtils.provideNowPlayingViewModel(this)).get(NowPlayingViewModel.class);
 
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
 
-        viewModel.getNavigateToFragment().observe(this, fragmentNavigationRequestEvent -> {
+        mainActivityViewModel.getNavigateToFragment().observe(this, fragmentNavigationRequestEvent -> {
             MainActivityViewModel.FragmentNavigationRequest request = fragmentNavigationRequestEvent.getContentIfNotHandled();
             Log.d(TAG, "onCreate: " + request.getFragment().getClass().getName());
             if (request != null) {
@@ -97,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        viewModel.getRootMediaId().observe(this, new Observer<String>() {
+        mainActivityViewModel.getRootMediaId().observe(this, new Observer<String>() {
             @Override
             public void onChanged(String mediaId) {
                 Log.d(TAG, "onChanged: observing root id");
@@ -107,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        viewModel.getNavigateToMediaItem().observe(MainActivity.this, new Observer<Event<String>>() {
+        mainActivityViewModel.getNavigateToMediaItem().observe(MainActivity.this, new Observer<Event<String>>() {
             @Override
             public void onChanged(Event<String> event) {
                 Log.d(TAG, "onChanged: navigate");
@@ -116,8 +121,69 @@ public class MainActivity extends AppCompatActivity {
                 navigateToMediaItem(content);
             }
         });
-        
-        binding.bottomNavigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+
+        nowPlayingViewModel.getMediaMetadata().observe(this, new Observer<NowPlayingMetadata>() {
+            @Override
+            public void onChanged(NowPlayingMetadata nowPlayingMetadata) {
+                updateUI(nowPlayingMetadata);
+            }
+        });
+
+        nowPlayingViewModel.getMediaButtonRes().observe(this, new Observer<Integer>() {
+            @Override
+            public void onChanged(Integer integer) {
+                activityMainBinding.bottomSheetInclude.buttonPlay.setImageResource(integer);
+                activityMainBinding.bottomSheetInclude.buttonPlayPeek.setImageResource(integer);
+            }
+        });
+
+        nowPlayingViewModel.getMediaPosition().observe(this, new Observer<Long>() {
+            @Override
+            public void onChanged(Long aLong) {
+                Log.d(TAG, "onChanged: time" + aLong);
+                activityMainBinding.bottomSheetInclude.textCurrentTime.setText(NowPlayingMetadata.timestampToMSS(MainActivity.this, aLong));
+                updateSeekBar(aLong);
+            }
+        });
+
+        activityMainBinding.bottomSheetInclude.buttonPlay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (nowPlayingViewModel.getMediaMetadata().getValue() != null) {
+                    mainActivityViewModel.playMediaId(nowPlayingViewModel.getMediaMetadata().getValue().getMediaId());
+                }
+            }
+        });
+
+        activityMainBinding.bottomSheetInclude.buttonPlayPeek.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (nowPlayingViewModel.getMediaMetadata().getValue() != null) {
+                    mainActivityViewModel.playMediaId(nowPlayingViewModel.getMediaMetadata().getValue().getMediaId());
+                }
+            }
+        });
+
+        activityMainBinding.bottomSheetInclude.buttonNext.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                nowPlayingViewModel.skipToNext();
+            }
+        });
+
+        activityMainBinding.bottomSheetInclude.buttonPrevious.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                nowPlayingViewModel.skipToPrevious();
+            }
+        });
+
+        //activityMainBinding.bottomSheetInclude.textTotalTime.setText(NowPlayingMetadata.timestampToMSS(MainActivity.this, 0L));
+
+        //activityMainBinding.bottomSheetInclude.textCurrentTime.setText(NowPlayingMetadata.timestampToMSS(MainActivity.this, 0L));
+
+
+        activityMainBinding.bottomNavigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
@@ -131,7 +197,25 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
-        binding.bottomNavigation.setSelectedItemId(R.id.nav_music);
+        activityMainBinding.bottomNavigation.setSelectedItemId(R.id.nav_music);
+    }
+
+    private void updateUI(NowPlayingMetadata nowPlayingMetadata) {
+        if (nowPlayingMetadata.getAlbumArtUri() == null) {
+            activityMainBinding.bottomSheetInclude.imageAlbumArt.setImageResource(R.drawable.ic_default_art);
+        } else {
+            Picasso.get().load(nowPlayingMetadata.getAlbumArtUri()).placeholder(R.drawable.ic_default_art).into(activityMainBinding.bottomSheetInclude.imageAlbumArt);
+            Picasso.get().load(nowPlayingMetadata.getAlbumArtUri()).placeholder(R.drawable.ic_default_art).into(activityMainBinding.bottomSheetInclude.imageAlbumArtPeek);
+        }
+        activityMainBinding.bottomSheetInclude.textTitle.setText(nowPlayingMetadata.getTitle());
+        activityMainBinding.bottomSheetInclude.textTitlePeek.setText(nowPlayingMetadata.getTitle());
+        activityMainBinding.bottomSheetInclude.textSubtitle.setText(nowPlayingMetadata.getSubtitle());
+        activityMainBinding.bottomSheetInclude.textSubtitlePeek.setText(nowPlayingMetadata.getSubtitle());
+        activityMainBinding.bottomSheetInclude.textTotalTime.setText(nowPlayingMetadata.getDuration());
+    }
+
+    private void updateSeekBar(long aLong) {
+
     }
 
     private void navigateToMediaItem(String mediaId) {
@@ -139,11 +223,11 @@ public class MainActivity extends AppCompatActivity {
         if (fragment == null) {
             fragment = SongFragment.newInstance(mediaId);
         }
-        viewModel.showFragment(fragment, !isRootId(mediaId), mediaId);
+        mainActivityViewModel.showFragment(fragment, !isRootId(mediaId), mediaId);
     }
 
     private boolean isRootId(String mediaId) {
-        return mediaId.equals(viewModel.getRootMediaId().getValue());
+        return mediaId.equals(mainActivityViewModel.getRootMediaId().getValue());
     }
 
     private Fragment getBrowseFragment(String mediaId) {

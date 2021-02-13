@@ -3,7 +3,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/colorBackground">
 
 <androidx.coordinatorlayout.widget.CoordinatorLayout
     android:layout_width="match_parent"
@@ -36,7 +37,9 @@
         android:layout_height="match_parent"
         android:layout_above="@id/bottom_navigation" />
 
-    <include layout="@layout/bottom_sheet"/>
+    <include
+        android:id="@+id/bottom_sheet_include"
+        layout="@layout/bottom_sheet"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
@@ -48,6 +51,7 @@
         android:layout_gravity="bottom"
         android:background="@color/design_default_color_background"
         app:elevation="0dp"
+        android:fontFamily="sans-serif-condensed-medium"
         app:labelVisibilityMode="labeled"
         app:menu="@menu/bottom_navigation"
         app:layout_constraintBottom_toBottomOf="parent"

@@ -22,4 +22,6 @@
     <string name="error_loading_media">Error loading media</string>
     <string name="notification_channel_description">Channel description</string>
     <string name="search">Поиск</string>
+    <string name="duration_unknown">--:--</string>
+    <string name="duration_format">%d:%02d</string>
 </resources>

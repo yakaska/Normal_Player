@@ -20,7 +20,7 @@
         android:background="@color/colorWhite">
 
         <ImageView
-            android:id="@+id/peek_art"
+            android:id="@+id/imageAlbumArtPeek"
             android:padding="8dp"
             android:layout_width="60dp"
             android:layout_height="60dp"
@@ -35,28 +35,30 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:text="Current song title"
-            app:layout_constraintStart_toEndOf="@id/peek_art"
+            app:layout_constraintStart_toEndOf="@id/imageAlbumArtPeek"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/textArtistPeek"
+            app:layout_constraintBottom_toTopOf="@id/textSubtitlePeek"
             app:layout_constraintEnd_toStartOf="@id/buttonPlayPeek"
             android:textColor="@color/colorPrimaryText"
             android:textSize="18sp"
             android:textStyle="bold"
+            android:fontFamily="sans-serif-condensed-medium"
             android:gravity="bottom|start"
             android:ellipsize="end"
             />
 
         <TextView
-            android:id="@+id/textArtistPeek"
+            android:id="@+id/textSubtitlePeek"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:text="Current artist name"
-            app:layout_constraintStart_toEndOf="@id/peek_art"
+            app:layout_constraintStart_toEndOf="@id/imageAlbumArtPeek"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/buttonPlayPeek"
             app:layout_constraintTop_toBottomOf="@id/textTitlePeek"
             android:gravity="top|start"
             android:textSize="16sp"
+            android:fontFamily="sans-serif-condensed-medium"
             android:textColor="@color/colorSecondaryText"
             android:ellipsize="end"
             />
@@ -65,15 +67,15 @@
             android:id="@+id/buttonPlayPeek"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:src="@drawable/ic_play_arrow_black_24"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:background="@null"
-            android:scaleType="fitCenter"
             android:adjustViewBounds="true"
+            android:background="@null"
             android:padding="10dp"
-            />
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_play_arrow_black_24"
+            android:tint="@color/colorBlack"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -143,15 +145,19 @@
             android:textColor="@color/colorPrimaryText"
             android:textSize="22sp"
             android:textStyle="bold"
+            android:fontFamily="sans-serif-condensed-medium"
+
             app:layout_constraintTop_toBottomOf="@id/imageAlbumArt"/>
 
         <TextView
+            android:id="@+id/textSubtitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:text="Current artist name"
             android:textColor="@color/colorSecondaryText"
             android:textSize="18sp"
+            android:fontFamily="sans-serif-condensed-medium"
             app:layout_constraintTop_toBottomOf="@id/textTitle"/>
 
         <ImageButton
@@ -188,6 +194,7 @@
             android:textColor="@color/colorPrimaryText"
             android:textSize="18sp"
             android:textStyle="bold"
+            android:fontFamily="sans-serif-condensed-medium"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
@@ -285,6 +292,7 @@
                 app:layout_constraintStart_toStartOf="@id/playerSeekBar"
                 app:layout_constraintTop_toTopOf="parent"
                 android:text="0:00"
+                android:fontFamily="sans-serif-condensed-medium"
                 tools:text="0:00" />
 
             <TextView
@@ -298,6 +306,7 @@
                 tools:text="0:00"
                 android:textColor="@color/colorPrimaryText"
                 android:textSize="16sp"
+                android:fontFamily="sans-serif-condensed-medium"
                 app:layout_constraintBottom_toTopOf="@id/playerSeekBar"
                 app:layout_constraintEnd_toEndOf="@id/playerSeekBar"
                 app:layout_constraintTop_toTopOf="parent"/>

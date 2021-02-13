@@ -75,7 +75,7 @@ public class MainActivityViewModel extends ViewModel {
     }
 
     //TODO maybe should start playback from 0pos?
-    private void playMediaId(String mediaId) {
+    public void playMediaId(String mediaId) {
         MediaMetadataCompat nowPlaying = connection.getNowPlaying().getValue();
         MediaControllerCompat.TransportControls transportControls = connection.getTransportControls();
         boolean isPrepared;
@@ -100,7 +100,7 @@ public class MainActivityViewModel extends ViewModel {
     }
 
     //TODO
-    private void playMedia(MediaItemData clickedItem, boolean pauseAllowed) {
+    public void playMedia(MediaItemData clickedItem, boolean pauseAllowed) {
         MediaMetadataCompat metadata = connection.getNowPlaying().getValue();
         MediaControllerCompat.TransportControls transportControls = connection.getTransportControls();
 
