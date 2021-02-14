@@ -67,6 +67,10 @@ public class MusicServiceConnection {
         return mediaController.getTransportControls();
     }
 
+    public int getShuffleMode() {
+        return mediaController.getShuffleMode();
+    }
+
     public String getBrowserRoot() {
         return mediaBrowser.getRoot();
     }

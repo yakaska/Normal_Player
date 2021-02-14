@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.SeekBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -141,8 +142,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onChanged(Long aLong) {
                 Log.d(TAG, "onChanged: time" + aLong);
-                activityMainBinding.bottomSheetInclude.textCurrentTime.setText(NowPlayingMetadata.timestampToMSS(MainActivity.this, aLong));
-                updateSeekBar(aLong);
+                long time = aLong;
+                activityMainBinding.bottomSheetInclude.textCurrentTime.setText(NowPlayingMetadata.timestampToMSS(MainActivity.this, time));
+                activityMainBinding.bottomSheetInclude.playerSeekBar.setProgress((int) time);
+                activityMainBinding.bottomSheetInclude.progressBarPeek.setProgress((int) time);
             }
         });
 
@@ -178,10 +181,36 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        //activityMainBinding.bottomSheetInclude.textTotalTime.setText(NowPlayingMetadata.timestampToMSS(MainActivity.this, 0L));
+        activityMainBinding.bottomSheetInclude.playerSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                if (fromUser) {
+                    seekBar.setProgress(progress);
+                    nowPlayingViewModel.seekTo(progress);
+                }
+            }
 
-        //activityMainBinding.bottomSheetInclude.textCurrentTime.setText(NowPlayingMetadata.timestampToMSS(MainActivity.this, 0L));
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
 
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+
+        activityMainBinding.bottomSheetInclude.buttonCollapse.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+            }
+        });
+
+        activityMainBinding.bottomSheetInclude.textTotalTime.setText(NowPlayingMetadata.timestampToMSS(MainActivity.this, 0L));
+
+        activityMainBinding.bottomSheetInclude.textCurrentTime.setText(NowPlayingMetadata.timestampToMSS(MainActivity.this, 0L));
 
         activityMainBinding.bottomNavigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -197,6 +226,7 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
+
         activityMainBinding.bottomNavigation.setSelectedItemId(R.id.nav_music);
     }
 
@@ -212,10 +242,10 @@ public class MainActivity extends AppCompatActivity {
         activityMainBinding.bottomSheetInclude.textSubtitle.setText(nowPlayingMetadata.getSubtitle());
         activityMainBinding.bottomSheetInclude.textSubtitlePeek.setText(nowPlayingMetadata.getSubtitle());
         activityMainBinding.bottomSheetInclude.textTotalTime.setText(nowPlayingMetadata.getDuration());
-    }
-
-    private void updateSeekBar(long aLong) {
-
+        activityMainBinding.bottomSheetInclude.playerSeekBar.setMax((int) nowPlayingMetadata.getDurationMs());
+        activityMainBinding.bottomSheetInclude.playerSeekBar.setProgress(0);
+        activityMainBinding.bottomSheetInclude.progressBarPeek.setMax((int) nowPlayingMetadata.getDurationMs());
+        activityMainBinding.bottomSheetInclude.progressBarPeek.setProgress(0);
     }
 
     private void navigateToMediaItem(String mediaId) {

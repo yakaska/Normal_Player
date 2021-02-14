@@ -104,7 +104,8 @@ public class NowPlayingViewModel extends AndroidViewModel {
                     metadata.getDescription().getIconUri(),
                     metadata.getDescription().getTitle().toString(),
                     metadata.getDescription().getSubtitle().toString(),
-                    NowPlayingMetadata.timestampToMSS(app, metadata.getLong(MediaMetadataCompat.METADATA_KEY_DURATION))
+                    NowPlayingMetadata.timestampToMSS(app, metadata.getLong(MediaMetadataCompat.METADATA_KEY_DURATION)),
+                    metadata.getLong(MediaMetadataCompat.METADATA_KEY_DURATION)
             );
             this.mediaMetadata.postValue(nowPlayingMetadata);
         }

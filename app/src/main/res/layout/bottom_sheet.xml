@@ -16,57 +16,65 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/sheet_peek"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="62dp"
         android:background="@color/colorWhite">
+
+        <ProgressBar
+            android:id="@+id/progressBarPeek"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/imageAlbumArtPeek"/>
 
         <ImageView
             android:id="@+id/imageAlbumArtPeek"
             android:padding="8dp"
             android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_height="0dp"
             android:src="@drawable/ic_default_art"
             android:scaleType="centerCrop"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintTop_toBottomOf="@id/progressBarPeek"/>
 
         <TextView
             android:id="@+id/textTitlePeek"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:ellipsize="end"
+            android:fontFamily="sans-serif-condensed-medium"
+            android:gravity="bottom|start"
             android:text="Current song title"
-            app:layout_constraintStart_toEndOf="@id/imageAlbumArtPeek"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/textSubtitlePeek"
-            app:layout_constraintEnd_toStartOf="@id/buttonPlayPeek"
             android:textColor="@color/colorPrimaryText"
             android:textSize="18sp"
             android:textStyle="bold"
-            android:fontFamily="sans-serif-condensed-medium"
-            android:gravity="bottom|start"
-            android:ellipsize="end"
-            />
+            app:layout_constraintBottom_toTopOf="@id/textSubtitlePeek"
+            app:layout_constraintEnd_toStartOf="@id/buttonPlayPeek"
+            app:layout_constraintStart_toEndOf="@id/imageAlbumArtPeek"
+            app:layout_constraintTop_toBottomOf="@id/progressBarPeek" />
 
         <TextView
             android:id="@+id/textSubtitlePeek"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:ellipsize="end"
+            android:fontFamily="sans-serif-condensed-medium"
+            android:gravity="top|start"
             android:text="Current artist name"
-            app:layout_constraintStart_toEndOf="@id/imageAlbumArtPeek"
+            android:textColor="@color/colorSecondaryText"
+            android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/buttonPlayPeek"
-            app:layout_constraintTop_toBottomOf="@id/textTitlePeek"
-            android:gravity="top|start"
-            android:textSize="16sp"
-            android:fontFamily="sans-serif-condensed-medium"
-            android:textColor="@color/colorSecondaryText"
-            android:ellipsize="end"
-            />
+            app:layout_constraintStart_toEndOf="@id/imageAlbumArtPeek"
+            app:layout_constraintTop_toBottomOf="@id/textTitlePeek" />
 
         <ImageButton
             android:id="@+id/buttonPlayPeek"
             android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_height="0dp"
             android:adjustViewBounds="true"
             android:background="@null"
             android:padding="10dp"
@@ -75,7 +83,7 @@
             android:tint="@color/colorBlack"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@id/progressBarPeek" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

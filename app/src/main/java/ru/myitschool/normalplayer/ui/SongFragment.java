@@ -22,9 +22,9 @@ import ru.myitschool.normalplayer.utils.ProviderUtils;
 
 public class SongFragment extends Fragment implements MediaItemAdapter.OnItemClickListener {
 
-    private static String TAG = SongFragment.class.getSimpleName();
+    private static final String TAG = SongFragment.class.getSimpleName();
 
-    private static String MEDIA_ID_ARG = "media_id_arg";
+    private static final String MEDIA_ID_ARG = "media_id_arg";
 
     private String mediaId;
 
@@ -34,7 +34,7 @@ public class SongFragment extends Fragment implements MediaItemAdapter.OnItemCli
 
     private FragmentSongBinding binding;
 
-    private MediaItemAdapter adapter = new MediaItemAdapter(this::onItemClick);
+    private final MediaItemAdapter adapter = new MediaItemAdapter(this);
 
     public static SongFragment newInstance(String mediaId) {
         Bundle args = new Bundle();
