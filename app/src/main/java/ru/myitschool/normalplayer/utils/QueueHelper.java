@@ -15,6 +15,7 @@ import java.util.List;
 import ru.myitschool.normalplayer.model.MusicProvider;
 
 import static ru.myitschool.normalplayer.utils.MediaIDHelper.MEDIA_ID_MUSICS_BY_ALBUM;
+import static ru.myitschool.normalplayer.utils.MediaIDHelper.MEDIA_ID_MUSICS_BY_ARTIST;
 import static ru.myitschool.normalplayer.utils.MediaIDHelper.MEDIA_ID_MUSICS_BY_GENRE;
 import static ru.myitschool.normalplayer.utils.MediaIDHelper.MEDIA_ID_MUSICS_BY_SEARCH;
 
@@ -45,6 +46,8 @@ public class QueueHelper {
             tracks = musicProvider.getMusicsByGenre(categoryValue);
         } else if (categoryType.equals(MEDIA_ID_MUSICS_BY_ALBUM)) {
             tracks = musicProvider.getMusicsByAlbum(categoryValue);
+        } else if (categoryType.equals(MEDIA_ID_MUSICS_BY_ARTIST)){
+            tracks = musicProvider.getMusicsByArtist(categoryType);
         }
 
         if (tracks == null) {

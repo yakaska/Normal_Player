@@ -53,6 +53,7 @@ public class MainActivityViewModel extends ViewModel {
             browseToItem(clickedItem);
         } else {
             playMediaId(clickedItem.getMediaId());
+            Log.d(TAG, "mediaItemClicked: " + clickedItem.getMediaId());
         }
     }
 

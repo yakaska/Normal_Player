@@ -197,7 +197,6 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-
             }
         });
 
@@ -221,6 +220,9 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     case R.id.nav_albums:
                         navigateToMediaItem(MediaIDHelper.MEDIA_ID_MUSICS_BY_ALBUM);
+                        break;
+                    case R.id.nav_artists:
+                        navigateToMediaItem(MediaIDHelper.MEDIA_ID_MUSICS_BY_ARTIST);
                         break;
                 }
                 return true;
