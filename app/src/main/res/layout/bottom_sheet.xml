@@ -10,7 +10,8 @@
     android:focusable="true"
     android:orientation="vertical"
     app:behavior_hideable="false"
-    app:behavior_peekHeight="?actionBarSize"
+    app:behavior_peekHeight="62dp"
+    android:elevation="@dimen/design_appbar_elevation"
     app:layout_behavior="@string/bottom_sheet_behavior">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -23,64 +24,68 @@
             android:id="@+id/progressBarPeek"
             android:layout_width="match_parent"
             android:layout_height="2dp"
+            android:layout_margin="0dp"
+            android:padding="0dp"
             style="@style/Widget.AppCompat.ProgressBar.Horizontal"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/imageAlbumArtPeek"/>
+            app:layout_constraintBottom_toTopOf="@id/imageAlbumArtPeekParent"/>
 
-        <ImageView
-            android:id="@+id/imageAlbumArtPeek"
-            android:padding="8dp"
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/imageAlbumArtPeekParent"
             android:layout_width="60dp"
             android:layout_height="0dp"
-            android:src="@drawable/ic_default_art"
-            android:scaleType="centerCrop"
-            app:layout_constraintStart_toStartOf="parent"
+            android:elevation="0dp"
+            android:padding="8dp"
+            app:cardCornerRadius="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/progressBarPeek"/>
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/progressBarPeek">
+
+            <ImageView
+                android:id="@+id/imageAlbumArtPeek"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_default_art" />
+
+        </com.google.android.material.card.MaterialCardView>
 
         <TextView
-            android:id="@+id/textTitlePeek"
+            android:id="@+id/textName"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:ellipsize="end"
+            android:ellipsize="marquee"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
             android:fontFamily="sans-serif-condensed-medium"
-            android:gravity="bottom|start"
+            android:gravity="center"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:scrollHorizontally="true"
+            android:singleLine="true"
             android:text="Current song title"
             android:textColor="@color/colorPrimaryText"
             android:textSize="18sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@id/textSubtitlePeek"
-            app:layout_constraintEnd_toStartOf="@id/buttonPlayPeek"
-            app:layout_constraintStart_toEndOf="@id/imageAlbumArtPeek"
-            app:layout_constraintTop_toBottomOf="@id/progressBarPeek" />
-
-        <TextView
-            android:id="@+id/textSubtitlePeek"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:ellipsize="end"
-            android:fontFamily="sans-serif-condensed-medium"
-            android:gravity="top|start"
-            android:text="Current artist name"
-            android:textColor="@color/colorSecondaryText"
-            android:textSize="16sp"
+            android:textStyle="italic"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/buttonPlayPeek"
-            app:layout_constraintStart_toEndOf="@id/imageAlbumArtPeek"
-            app:layout_constraintTop_toBottomOf="@id/textTitlePeek" />
+            app:layout_constraintStart_toEndOf="@id/imageAlbumArtPeekParent"
+            app:layout_constraintTop_toBottomOf="@id/progressBarPeek" />
+
 
         <ImageButton
             android:id="@+id/buttonPlayPeek"
             android:layout_width="60dp"
             android:layout_height="0dp"
-            android:adjustViewBounds="true"
             android:background="@null"
             android:padding="10dp"
+            android:foregroundGravity="center"
             android:scaleType="fitCenter"
-            android:src="@drawable/ic_play_arrow_black_24"
+            android:src="@drawable/ic_play_24"
             android:tint="@color/colorBlack"
+            android:tintMode="multiply"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/progressBarPeek" />
@@ -115,7 +120,6 @@
             android:id="@+id/view1"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:background="@color/colorHint"
             app:layout_constraintBottom_toTopOf="@id/viewSupporterForAlbumArt"
             app:layout_constraintEnd_toStartOf="@id/viewSupporterForAlbumArt"
             app:layout_constraintStart_toStartOf="parent"
@@ -125,23 +129,32 @@
             android:id="@+id/view2"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:background="@color/colorHint"
             app:layout_constraintBottom_toTopOf="@id/viewSupporterForBackground"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/view1"
             app:layout_constraintTop_toBottomOf="@id/view1"/>
 
-        <ImageView
-            android:id="@+id/imageAlbumArt"
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/imageAlbumArtParent"
             android:layout_width="260dp"
             android:layout_height="260dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/ic_default_art"
             app:layout_constraintBottom_toBottomOf="@id/viewSupporterForAlbumArt"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/viewSupporterForAlbumArt"
-            />
+            app:cardCornerRadius="16dp"
+            app:layout_constraintTop_toTopOf="@id/viewSupporterForAlbumArt">
+
+            <ImageView
+                android:id="@+id/imageAlbumArt"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:adjustViewBounds="true"
+                android:src="@drawable/ic_default_art"
+                />
+
+        </com.google.android.material.card.MaterialCardView>
+
 
         <TextView
             android:id="@+id/textTitle"
@@ -154,8 +167,7 @@
             android:textSize="22sp"
             android:textStyle="bold"
             android:fontFamily="sans-serif-condensed-medium"
-
-            app:layout_constraintTop_toBottomOf="@id/imageAlbumArt"/>
+            app:layout_constraintTop_toBottomOf="@id/imageAlbumArtParent"/>
 
         <TextView
             android:id="@+id/textSubtitle"
@@ -223,7 +235,7 @@
                 android:layout_marginBottom="30dp"
                 android:background="@drawable/play_button_background"
                 android:padding="12dp"
-                android:src="@drawable/ic_play_arrow_white_24"
+                android:src="@drawable/ic_play_24"
                 android:tint="@color/colorWhite"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

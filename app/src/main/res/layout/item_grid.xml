@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/item_grid_root"
+    android:layout_width="match_parent"
+    android:layout_height="250dp"
+    android:elevation="4dp"
+    android:padding="8dp"
+    app:shapeAppearance="@style/ShapeAppearance.MaterialComponents.MediumComponent"
+    app:cardCornerRadius="8dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:weightSum="10">
+
+        <!--TODO -->
+        <ImageView
+            android:id="@+id/item_grid_art"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="7"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_default_art" />
+
+        <TextView
+            android:id="@+id/item_grid_title"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1.5"
+            android:fontFamily="sans-serif-condensed-medium"
+            android:gravity="center"
+            android:text="Title"
+            android:textColor="@color/colorPrimaryText"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/item_grid_subtitle"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1.5"
+            android:fontFamily="sans-serif-condensed-medium"
+            android:gravity="center"
+            android:text="Subtitle"
+            android:textColor="@color/colorSecondaryText"
+            android:textSize="14sp" />
+
+    </LinearLayout>
+
+</com.google.android.material.card.MaterialCardView>

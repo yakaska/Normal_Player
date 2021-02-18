@@ -20,6 +20,9 @@ public class MusicServiceConnection {
     public static final MediaMetadataCompat NOTHING_PLAYING = new MediaMetadataCompat.Builder()
             .putString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID, "")
             .putLong(MediaMetadataCompat.METADATA_KEY_DURATION, 0)
+            .putString(MediaMetadataCompat.METADATA_KEY_TITLE, "")
+            .putString(MediaMetadataCompat.METADATA_KEY_ARTIST, "")
+            .putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_TITLE, "")
             .build();
 
     private final MediaBrowserCompat mediaBrowser;
@@ -71,6 +74,10 @@ public class MusicServiceConnection {
         return mediaController.getShuffleMode();
     }
 
+    public int getRepeatMode() {
+        return mediaController.getRepeatMode();
+    }
+
     public String getBrowserRoot() {
         return mediaBrowser.getRoot();
     }
@@ -88,10 +95,10 @@ public class MusicServiceConnection {
             super.onConnected();
             try {
                 mediaController = new MediaControllerCompat(context, mediaBrowser.getSessionToken());
-                mediaController.registerCallback(new MediaControllerCallback());
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
+            mediaController.registerCallback(new MediaControllerCallback());
             isConnected.postValue(true);
         }
 

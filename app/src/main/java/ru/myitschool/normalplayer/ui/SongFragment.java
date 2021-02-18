@@ -10,6 +10,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import java.util.List;
@@ -65,13 +66,19 @@ public class SongFragment extends Fragment implements MediaItemAdapter.OnItemCli
             public void onChanged(List<MediaItemData> mediaItems) {
                 if (mediaItems != null && !mediaItems.isEmpty()) {
                     binding.loadingSpinner.setVisibility(View.GONE);
+                    if (mediaItems.get(0).isBrowsable()) {
+                        binding.fragmentSongRecycler.setLayoutManager(new GridLayoutManager(getContext(), 2));
+                        binding.fragmentSongRecycler.addItemDecoration(new GridSpacingItemDecoration(2, 40, false));
+                    } else {
+                        binding.fragmentSongRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
+                        binding.fragmentSongRecycler.addItemDecoration(new GridSpacingItemDecoration(1, 0, false));
+                    }
                 } else {
                     binding.loadingSpinner.setVisibility(View.VISIBLE);
                 }
                 adapter.submitList(mediaItems);
             }
         });
-        binding.fragmentSongRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.fragmentSongRecycler.setAdapter(adapter);
     }
 

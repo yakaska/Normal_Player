@@ -30,6 +30,8 @@ import com.google.android.exoplayer2.ext.mediasession.TimelineQueueNavigator;
 import com.google.android.exoplayer2.source.ConcatenatingMediaSource;
 import com.google.android.exoplayer2.ui.PlayerNotificationManager;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
+import com.google.android.exoplayer2.upstream.cache.CacheDataSource;
+import com.google.android.exoplayer2.upstream.cache.CacheDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 
 import java.util.ArrayList;
@@ -37,6 +39,7 @@ import java.util.List;
 
 import ru.myitschool.normalplayer.model.MusicProvider;
 import ru.myitschool.normalplayer.ui.MainActivity;
+import ru.myitschool.normalplayer.utils.CacheUtil;
 import ru.myitschool.normalplayer.utils.MediaIDHelper;
 import ru.myitschool.normalplayer.utils.QueueHelper;
 import ru.myitschool.normalplayer.utils.Utils;
@@ -63,7 +66,7 @@ public class MusicService extends MediaBrowserServiceCompat {
 
     private PersistentStorage storage;
 
-    private DefaultDataSourceFactory dataSourceFactory;
+    private CacheDataSourceFactory cacheDataSourceFactory;
 
     private boolean isForegroundService;
 
@@ -73,8 +76,6 @@ public class MusicService extends MediaBrowserServiceCompat {
             .build();
 
     private final PlayerEventListener playerListener = new PlayerEventListener();
-
-    private Player currentPlayer;
 
     private SimpleExoPlayer exoPlayer;
 
@@ -94,24 +95,24 @@ public class MusicService extends MediaBrowserServiceCompat {
 
         setSessionToken(mediaSession.getSessionToken());
 
-        dataSourceFactory = new DefaultDataSourceFactory(this, Util.getUserAgent(this, NP_USER_AGENT), null);
+        DefaultDataSourceFactory dataSourceFactory = new DefaultDataSourceFactory(this, Util.getUserAgent(this, NP_USER_AGENT), null);
+
+        cacheDataSourceFactory = new CacheDataSourceFactory(CacheUtil.getCache(this), dataSourceFactory, CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR);
 
         exoPlayer = new SimpleExoPlayer.Builder(this).build();
-        exoPlayer.setAudioAttributes(audioAttributes);
+        exoPlayer.setAudioAttributes(audioAttributes, true);
+        exoPlayer.setWakeMode(C.WAKE_MODE_LOCAL);
         exoPlayer.setHandleAudioBecomingNoisy(true);
         exoPlayer.addListener(playerListener);
 
-        notificationManager = new NPNotificationManager(this, mediaSession.getSessionToken(), new PlayerNotificationListener());
-
-        notificationManager.showNotificationForPlayer(currentPlayer);
 
         mediaSessionConnector = new MediaSessionConnector(mediaSession);
         mediaSessionConnector.setPlaybackPreparer(new NPPlaybackPreparer());
         mediaSessionConnector.setQueueNavigator(new NPQueueNavigator(mediaSession));
+        mediaSessionConnector.setPlayer(exoPlayer);
 
-        switchToPlayer(null, exoPlayer);
-        currentPlayer.setRepeatMode(Player.REPEAT_MODE_ALL);
-
+        notificationManager = new NPNotificationManager(this, mediaSession.getSessionToken(), new PlayerNotificationListener());
+        notificationManager.showNotificationForPlayer(exoPlayer);
         storage = PersistentStorage.getInstance(this);
     }
 
@@ -122,6 +123,12 @@ public class MusicService extends MediaBrowserServiceCompat {
         mediaSession.release();
         exoPlayer.removeListener(playerListener);
         exoPlayer.release();
+    }
+
+    @Override
+    public void onTaskRemoved(Intent rootIntent) {
+        super.onTaskRemoved(rootIntent);
+        exoPlayer.stop(true);
     }
 
     @Override
@@ -166,42 +173,15 @@ public class MusicService extends MediaBrowserServiceCompat {
         currentPlaylistItems = metadataList;
         exoPlayer.setPlayWhenReady(playWhenReady);
         exoPlayer.stop(true);
-        if (currentPlayer == exoPlayer) {
-            ConcatenatingMediaSource mediaSource = Utils.metadataListToMediaSource(metadataList, dataSourceFactory);
-            exoPlayer.prepare(mediaSource);
-            Log.d(TAG, "start:" + playbackStartPositionMs + " window:" + initialWindowIndex);
-            exoPlayer.seekTo(initialWindowIndex, playbackStartPositionMs);
-        }
-    }
-
-    public void switchToPlayer(Player previousPlayer, Player newPlayer) {
-        Log.d(TAG, "switchToPlayer: ");
-        if (previousPlayer == newPlayer) {
-            return;
-        }
-        currentPlayer = newPlayer;
-        if (previousPlayer != null) {
-            int playbackState = previousPlayer.getPlaybackState();
-            if (currentPlaylistItems.isEmpty()) {
-                currentPlayer.stop(true);
-            } else if (playbackState != Player.STATE_IDLE && playbackState != Player.STATE_ENDED) {
-                preparePlaylist(
-                        currentPlaylistItems,
-                        currentPlaylistItems.get(previousPlayer.getCurrentWindowIndex()).getDescription().getMediaId(),
-                        previousPlayer.getPlayWhenReady(),
-                        previousPlayer.getCurrentPosition()
-                );
-            }
-        }
-        mediaSessionConnector.setPlayer(newPlayer);
-        if (previousPlayer != null) {
-            previousPlayer.stop(true);
-        }
+        ConcatenatingMediaSource mediaSource = Utils.metadataListToMediaSource(metadataList, cacheDataSourceFactory);
+        exoPlayer.prepare(mediaSource);
+        Log.d(TAG, "start:" + playbackStartPositionMs + " window:" + initialWindowIndex);
+        exoPlayer.seekTo(initialWindowIndex, playbackStartPositionMs);
     }
 
     private void saveRecentSongToStorage() {
-        MediaDescriptionCompat description = currentPlaylistItems.get(currentPlayer.getCurrentWindowIndex()).getDescription();
-        long position = currentPlayer.getCurrentPosition();
+        MediaDescriptionCompat description = currentPlaylistItems.get(exoPlayer.getCurrentWindowIndex()).getDescription();
+        long position = exoPlayer.getCurrentPosition();
         storage.saveRecentSong(description, position);
     }
 
@@ -213,6 +193,7 @@ public class MusicService extends MediaBrowserServiceCompat {
 
         @Override
         public MediaDescriptionCompat getMediaDescription(Player player, int windowIndex) {
+            Log.d(TAG, "getMediaDescription: " + currentPlaylistItems.get(windowIndex).getDescription());
             return currentPlaylistItems.get(windowIndex).getDescription();
         }
     }
@@ -224,7 +205,9 @@ public class MusicService extends MediaBrowserServiceCompat {
             return PlaybackStateCompat.ACTION_PREPARE_FROM_MEDIA_ID |
                     PlaybackStateCompat.ACTION_PLAY_FROM_MEDIA_ID |
                     PlaybackStateCompat.ACTION_PREPARE_FROM_SEARCH |
-                    PlaybackStateCompat.ACTION_PLAY_FROM_SEARCH;
+                    PlaybackStateCompat.ACTION_PLAY_FROM_SEARCH |
+                    PlaybackStateCompat.ACTION_SET_REPEAT_MODE |
+                    PlaybackStateCompat.ACTION_SET_SHUFFLE_MODE;
         }
 
         @Override
@@ -286,6 +269,7 @@ public class MusicService extends MediaBrowserServiceCompat {
                 ContextCompat.startForegroundService(getApplicationContext(), new Intent(getApplicationContext(), MusicService.class));
                 startForeground(notificationId, notification);
                 isForegroundService = true;
+                exoPlayer.setForegroundMode(isForegroundService);
             }
         }
 
@@ -293,6 +277,7 @@ public class MusicService extends MediaBrowserServiceCompat {
         public void onNotificationCancelled(int notificationId, boolean dismissedByUser) {
             stopForeground(true);
             isForegroundService = false;
+            exoPlayer.setForegroundMode(isForegroundService);
             stopSelf();
         }
     }
@@ -303,7 +288,7 @@ public class MusicService extends MediaBrowserServiceCompat {
             switch (playbackState) {
                 case Player.STATE_BUFFERING:
                 case Player.STATE_READY:
-                    notificationManager.showNotificationForPlayer(currentPlayer);
+                    notificationManager.showNotificationForPlayer(exoPlayer);
                     if (playbackState == Player.STATE_READY) {
                         saveRecentSongToStorage();
                         if (!playWhenReady) {

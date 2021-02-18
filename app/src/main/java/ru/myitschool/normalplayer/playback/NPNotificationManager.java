@@ -1,6 +1,5 @@
 package ru.myitschool.normalplayer.playback;
 
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -8,8 +7,10 @@ import android.net.Uri;
 import android.os.RemoteException;
 import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.MediaSessionCompat;
+import android.util.Log;
 
 import androidx.annotation.Nullable;
+import androidx.core.app.NotificationCompat;
 
 import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.ui.PlayerNotificationManager;
@@ -18,18 +19,16 @@ import ru.myitschool.normalplayer.R;
 
 public class NPNotificationManager {
 
+    private static final String TAG = NPNotificationManager.class.getSimpleName();
+
     private static final String NOW_PLAYING_CHANNEL_ID = "ru.myitschool.normalplayer.NOW_PLAYING";
     private static final int NOW_PLAYING_NOTIFICATION_ID = 30399;
 
     private static final int NOTIFICATION_LARGE_ICON_SIZE = 144;
 
-
-    private Player player;
     private final PlayerNotificationManager notificationManager;
-    private final NotificationManager platformNotificationManager;
 
     public NPNotificationManager(Context context, MediaSessionCompat.Token sessionToken, PlayerNotificationManager.NotificationListener notificationListener) {
-        platformNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
         MediaControllerCompat mediaController = null;
         try {
@@ -48,14 +47,17 @@ public class NPNotificationManager {
                 notificationListener
         );
 
-        notificationManager.setMediaSessionToken(sessionToken);
+        notificationManager.setVisibility(NotificationCompat.VISIBILITY_PRIVATE);
         notificationManager.setColorized(true);
+        notificationManager.setPriority(NotificationCompat.PRIORITY_HIGH);
         notificationManager.setSmallIcon(R.drawable.ic_notification);
         notificationManager.setFastForwardIncrementMs(0);
         notificationManager.setRewindIncrementMs(0);
+        notificationManager.setMediaSessionToken(sessionToken);
     }
 
     public void hideNotification() {
+        Log.d(TAG, "hideNotification: ");
         notificationManager.setPlayer(null);
     }
 
@@ -63,9 +65,9 @@ public class NPNotificationManager {
         notificationManager.setPlayer(player);
     }
 
-    private class DescriptionAdapter implements PlayerNotificationManager.MediaDescriptionAdapter {
+    private static class DescriptionAdapter implements PlayerNotificationManager.MediaDescriptionAdapter {
 
-        private MediaControllerCompat controller;
+        private final MediaControllerCompat controller;
 
         private Uri currentIconUri;
 
@@ -77,39 +79,40 @@ public class NPNotificationManager {
 
         @Override
         public CharSequence getCurrentContentTitle(Player player) {
+            Log.d(TAG, "getCurrentContentTitle: " + controller.getMetadata().getDescription().getTitle());
             return controller.getMetadata().getDescription().getTitle();
         }
 
         @Nullable
         @Override
         public PendingIntent createCurrentContentIntent(Player player) {
+            Log.d(TAG, "createCurrentContentIntent: ");
             return controller.getSessionActivity();
         }
+
+
 
         @Nullable
         @Override
         public CharSequence getCurrentContentText(Player player) {
+            Log.d(TAG, "getCurrentContentText: " + controller.getMetadata().getDescription().getSubtitle());
+            return controller.getMetadata().getDescription().getSubtitle();
+        }
+
+        @Nullable
+        @Override
+        public CharSequence getCurrentSubText(Player player) {
             return controller.getMetadata().getDescription().getSubtitle();
         }
 
         @Nullable
         @Override
         public Bitmap getCurrentLargeIcon(Player player, PlayerNotificationManager.BitmapCallback callback) {
-            Uri iconUri = controller.getMetadata().getDescription().getIconUri();
-            if (currentIconUri != iconUri || currentBitmap == null) {
-                currentIconUri = iconUri;
-                currentBitmap = resolveUriAsBitmap(iconUri);
-                callback.onBitmap(currentBitmap);
-                return null;
-            } else {
-                return currentBitmap;
-            }
+            return controller.getMetadata().getDescription().getIconBitmap();
         }
 
         private Bitmap resolveUriAsBitmap(Uri uri) {
-
-            return null;//Picasso.get().load(uri).resize(NOTIFICATION_LARGE_ICON_SIZE, NOTIFICATION_LARGE_ICON_SIZE).get();
-
+            return null;//Picasso.get().load(uri).get();
         }
 
     }

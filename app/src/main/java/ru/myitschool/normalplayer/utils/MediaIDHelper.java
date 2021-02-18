@@ -1,8 +1,5 @@
 package ru.myitschool.normalplayer.utils;
 
-import android.support.v4.media.MediaMetadataCompat;
-import android.text.TextUtils;
-
 import androidx.annotation.NonNull;
 
 import java.util.Arrays;
@@ -116,15 +113,4 @@ public class MediaIDHelper {
         return createMediaID(null, parentHierarchy);
     }
 
-
-    public static boolean isMediaItemPlaying(MediaMetadataCompat metadata, String mediaId) {
-        // Media item is considered to be playing or paused based on the controller's current
-        // media id
-        if (metadata != null) {
-            String currentPlayingMediaId = metadata.getDescription().getMediaId();
-            String itemMusicId = MediaIDHelper.extractMusicIDFromMediaID(mediaId);
-            return currentPlayingMediaId != null && TextUtils.equals(currentPlayingMediaId, itemMusicId);
-        }
-        return false;
-    }
 }

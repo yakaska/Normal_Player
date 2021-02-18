@@ -5,7 +5,6 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -21,7 +20,7 @@ import ru.myitschool.normalplayer.utils.Utils;
 
 public class NowPlayingViewModel extends AndroidViewModel {
 
-    private static final long POSITION_UPDATE_INTERVAL_MILLIS = 100L;
+    private static final long POSITION_UPDATE_INTERVAL_MILLIS = 10L;
 
     private final Application app;
 
@@ -33,7 +32,11 @@ public class NowPlayingViewModel extends AndroidViewModel {
 
     private final MutableLiveData<Long> mediaPosition = new MutableLiveData<>();
 
-    private final MutableLiveData<Integer> mediaButtonRes = new MutableLiveData<>();
+    private final MutableLiveData<Integer> playButtonRes = new MutableLiveData<>();
+
+    private final MutableLiveData<Integer> shuffleButtonRes = new MutableLiveData<>();
+
+    private final MutableLiveData<Integer> repeatButtonRes = new MutableLiveData<>();
 
     private boolean updatePosition = true;
 
@@ -57,7 +60,6 @@ public class NowPlayingViewModel extends AndroidViewModel {
     private final Observer<MediaMetadataCompat> mediaMetadataObserver = new Observer<MediaMetadataCompat>() {
         @Override
         public void onChanged(MediaMetadataCompat metadataCompat) {
-            Log.d("Ass", "onChanged: " + metadataCompat.getDescription().getIconUri());
             updateState(playbackState, metadataCompat);
         }
     };
@@ -73,7 +75,7 @@ public class NowPlayingViewModel extends AndroidViewModel {
 
         mediaPosition.postValue(0L);
 
-        mediaButtonRes.postValue(R.drawable.ic_play_arrow_white_24);
+        playButtonRes.postValue(R.drawable.ic_play_24);
 
         this.connection.getPlaybackState().observeForever(playbackStateObserver);
 
@@ -87,7 +89,6 @@ public class NowPlayingViewModel extends AndroidViewModel {
             long currentPos = Utils.getCurrentPosition(playbackState);
             if (mediaPosition.getValue() != currentPos) {
                 mediaPosition.postValue(currentPos);
-                Log.d("Posted", "run: posted");
             }
             if (updatePosition) {
                 checkPlaybackPosition();
@@ -113,17 +114,17 @@ public class NowPlayingViewModel extends AndroidViewModel {
         int buttonRes = 0;
 
         if (Utils.isPlaying(playbackState)) {
-            buttonRes = R.drawable.ic_pause_white_24;
+            buttonRes = R.drawable.ic_pause_24;
         } else {
-            buttonRes = R.drawable.ic_play_arrow_white_24;
+            buttonRes = R.drawable.ic_play_24;
         }
 
-        mediaButtonRes.postValue(buttonRes);
+        playButtonRes.postValue(buttonRes);
 
     }
 
-    public MutableLiveData<Integer> getMediaButtonRes() {
-        return mediaButtonRes;
+    public MutableLiveData<Integer> getPlayButtonRes() {
+        return playButtonRes;
     }
 
     public MutableLiveData<Long> getMediaPosition() {
@@ -132,6 +133,14 @@ public class NowPlayingViewModel extends AndroidViewModel {
 
     public MutableLiveData<NowPlayingMetadata> getMediaMetadata() {
         return mediaMetadata;
+    }
+
+    public MutableLiveData<Integer> getShuffleButtonRes() {
+        return shuffleButtonRes;
+    }
+
+    public MutableLiveData<Integer> getRepeatButtonRes() {
+        return repeatButtonRes;
     }
 
     public void skipToNext() {
@@ -144,6 +153,29 @@ public class NowPlayingViewModel extends AndroidViewModel {
 
     public void seekTo(long position) {
         connection.getTransportControls().seekTo(position);
+    }
+
+    public void toggleShuffleMode() {
+        if (connection.getShuffleMode() == PlaybackStateCompat.SHUFFLE_MODE_NONE) {
+            connection.getTransportControls().setShuffleMode(PlaybackStateCompat.SHUFFLE_MODE_ALL);
+            shuffleButtonRes.postValue(R.drawable.ic_shuffle_on_24);
+        } else {
+            connection.getTransportControls().setShuffleMode(PlaybackStateCompat.SHUFFLE_MODE_NONE);
+            shuffleButtonRes.postValue(R.drawable.ic_shuffle_24);
+        }
+    }
+
+    public void toggleRepeatMode() {
+        if (connection.getRepeatMode() == PlaybackStateCompat.REPEAT_MODE_NONE) {
+            connection.getTransportControls().setRepeatMode(PlaybackStateCompat.REPEAT_MODE_ONE);
+            repeatButtonRes.postValue(R.drawable.ic_repeat_one_on_24);
+        } else if(connection.getRepeatMode() == PlaybackStateCompat.REPEAT_MODE_ONE) {
+            connection.getTransportControls().setRepeatMode(PlaybackStateCompat.REPEAT_MODE_ALL);
+            repeatButtonRes.postValue(R.drawable.ic_repeat_on_24);
+        } else if (connection.getRepeatMode() == PlaybackStateCompat.REPEAT_MODE_ALL) {
+            connection.getTransportControls().setRepeatMode(PlaybackStateCompat.REPEAT_MODE_NONE);
+            repeatButtonRes.postValue(R.drawable.ic_repeat_24);
+        }
     }
 
     @Override

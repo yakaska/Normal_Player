@@ -51,6 +51,8 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(activityMainBinding.getRoot());
 
+        activityMainBinding.bottomSheetInclude.textName.setSelected(true);
+
         BottomSheetBehavior sheetBehavior = BottomSheetBehavior.from(activityMainBinding.bottomSheetInclude.bottomSheet);
         sheetBehavior.setHideable(false);
         sheetBehavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
@@ -79,10 +81,8 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onSlide(@NonNull View bottomSheet, float slideOffset) {
-
             }
         });
-
 
         mainActivityViewModel = new ViewModelProvider(this, ProviderUtils.provideMainActivityViewModel(this)).get(MainActivityViewModel.class);
 
@@ -92,7 +92,6 @@ public class MainActivity extends AppCompatActivity {
 
         mainActivityViewModel.getNavigateToFragment().observe(this, fragmentNavigationRequestEvent -> {
             MainActivityViewModel.FragmentNavigationRequest request = fragmentNavigationRequestEvent.getContentIfNotHandled();
-            Log.d(TAG, "onCreate: " + request.getFragment().getClass().getName());
             if (request != null) {
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                 transaction.replace(R.id.fragment_container, request.getFragment(), request.getTag());
@@ -106,10 +105,9 @@ public class MainActivity extends AppCompatActivity {
         mainActivityViewModel.getRootMediaId().observe(this, new Observer<String>() {
             @Override
             public void onChanged(String mediaId) {
-                Log.d(TAG, "onChanged: observing root id");
-                if (mediaId != null) {
-                    navigateToMediaItem(mediaId);
-                }
+                //if (mediaId != null) {
+                //    navigateToMediaItem(mediaId);
+                //}
             }
         });
 
@@ -130,7 +128,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        nowPlayingViewModel.getMediaButtonRes().observe(this, new Observer<Integer>() {
+        nowPlayingViewModel.getPlayButtonRes().observe(this, new Observer<Integer>() {
             @Override
             public void onChanged(Integer integer) {
                 activityMainBinding.bottomSheetInclude.buttonPlay.setImageResource(integer);
@@ -141,11 +139,24 @@ public class MainActivity extends AppCompatActivity {
         nowPlayingViewModel.getMediaPosition().observe(this, new Observer<Long>() {
             @Override
             public void onChanged(Long aLong) {
-                Log.d(TAG, "onChanged: time" + aLong);
                 long time = aLong;
                 activityMainBinding.bottomSheetInclude.textCurrentTime.setText(NowPlayingMetadata.timestampToMSS(MainActivity.this, time));
                 activityMainBinding.bottomSheetInclude.playerSeekBar.setProgress((int) time);
                 activityMainBinding.bottomSheetInclude.progressBarPeek.setProgress((int) time);
+            }
+        });
+
+        nowPlayingViewModel.getShuffleButtonRes().observe(this, new Observer<Integer>() {
+            @Override
+            public void onChanged(Integer integer) {
+                activityMainBinding.bottomSheetInclude.buttonShuffle.setImageResource(integer);
+            }
+        });
+
+        nowPlayingViewModel.getRepeatButtonRes().observe(this, new Observer<Integer>() {
+            @Override
+            public void onChanged(Integer integer) {
+                activityMainBinding.bottomSheetInclude.buttonRepeat.setImageResource(integer);
             }
         });
 
@@ -207,6 +218,20 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        activityMainBinding.bottomSheetInclude.buttonShuffle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                nowPlayingViewModel.toggleShuffleMode();
+            }
+        });
+
+        activityMainBinding.bottomSheetInclude.buttonRepeat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                nowPlayingViewModel.toggleRepeatMode();
+            }
+        });
+
         activityMainBinding.bottomSheetInclude.textTotalTime.setText(NowPlayingMetadata.timestampToMSS(MainActivity.this, 0L));
 
         activityMainBinding.bottomSheetInclude.textCurrentTime.setText(NowPlayingMetadata.timestampToMSS(MainActivity.this, 0L));
@@ -240,9 +265,8 @@ public class MainActivity extends AppCompatActivity {
             Picasso.get().load(nowPlayingMetadata.getAlbumArtUri()).placeholder(R.drawable.ic_default_art).into(activityMainBinding.bottomSheetInclude.imageAlbumArtPeek);
         }
         activityMainBinding.bottomSheetInclude.textTitle.setText(nowPlayingMetadata.getTitle());
-        activityMainBinding.bottomSheetInclude.textTitlePeek.setText(nowPlayingMetadata.getTitle());
+        activityMainBinding.bottomSheetInclude.textName.setText(String.format(getString(R.string.song_format), nowPlayingMetadata.getTitle(), nowPlayingMetadata.getSubtitle()));
         activityMainBinding.bottomSheetInclude.textSubtitle.setText(nowPlayingMetadata.getSubtitle());
-        activityMainBinding.bottomSheetInclude.textSubtitlePeek.setText(nowPlayingMetadata.getSubtitle());
         activityMainBinding.bottomSheetInclude.textTotalTime.setText(nowPlayingMetadata.getDuration());
         activityMainBinding.bottomSheetInclude.playerSeekBar.setMax((int) nowPlayingMetadata.getDurationMs());
         activityMainBinding.bottomSheetInclude.playerSeekBar.setProgress(0);

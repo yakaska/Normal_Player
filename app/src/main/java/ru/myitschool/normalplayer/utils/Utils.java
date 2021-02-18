@@ -8,7 +8,7 @@ import android.support.v4.media.session.PlaybackStateCompat;
 import com.google.android.exoplayer2.source.ConcatenatingMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.source.ProgressiveMediaSource;
-import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
+import com.google.android.exoplayer2.upstream.cache.CacheDataSourceFactory;
 
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
@@ -22,7 +22,7 @@ public class Utils {
                         TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(milliSeconds)));
     }
 
-    public static ConcatenatingMediaSource metadataListToMediaSource(ArrayList<MediaMetadataCompat> metadataList, DefaultDataSourceFactory dataSourceFactory) {
+    public static ConcatenatingMediaSource metadataListToMediaSource(ArrayList<MediaMetadataCompat> metadataList, CacheDataSourceFactory dataSourceFactory) {
         ConcatenatingMediaSource mediaSource = new ConcatenatingMediaSource();
         for (MediaMetadataCompat metadata : metadataList) {
             mediaSource.addMediaSource(toMediaSource(metadata, dataSourceFactory));
@@ -30,7 +30,7 @@ public class Utils {
         return mediaSource;
     }
 
-    public static MediaSource toMediaSource(MediaMetadataCompat metadataCompat, DefaultDataSourceFactory dataSourceFactory) {
+    public static MediaSource toMediaSource(MediaMetadataCompat metadataCompat, CacheDataSourceFactory dataSourceFactory) {
         return new ProgressiveMediaSource.Factory(dataSourceFactory).createMediaSource(Uri.parse(metadataCompat.getString(MediaMetadataCompat.METADATA_KEY_MEDIA_URI)));
     }
 

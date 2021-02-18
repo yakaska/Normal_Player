@@ -4,29 +4,29 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="4dp"
-    android:id="@+id/item_root"
+    android:id="@+id/item_line_root"
     android:background="@color/colorBackground">
 
 
     <com.google.android.material.card.MaterialCardView
-        android:id="@+id/item_song_art_card"
+        android:id="@+id/item_line_art_card"
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:padding="8dp"
-        app:cardCornerRadius="7dp"
+        app:cardCornerRadius="8dp"
         app:cardElevation="0dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
-            android:id="@+id/item_song_art"
+            android:id="@+id/item_line_art"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
             android:src="@drawable/ic_default_art" />
 
         <ImageView
-            android:id="@+id/item_song_state"
+            android:id="@+id/item_line_state"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:padding="8dp"
@@ -37,7 +37,7 @@
 
 
     <TextView
-        android:id="@+id/item_song_title"
+        android:id="@+id/item_line_title"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:ellipsize="end"
@@ -46,16 +46,16 @@
         android:paddingStart="8dp"
         android:paddingEnd="8dp"
         android:text="Title"
-        android:textColor="@android:color/black"
+        android:textColor="@color/colorPrimaryText"
         android:textSize="16sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@id/item_song_artist"
-        app:layout_constraintEnd_toStartOf="@+id/item_song_duration"
-        app:layout_constraintStart_toEndOf="@+id/item_song_art_card"
+        app:layout_constraintBottom_toTopOf="@id/item_line_subtitle"
+        app:layout_constraintEnd_toStartOf="@+id/item_line_duration"
+        app:layout_constraintStart_toEndOf="@+id/item_line_art_card"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/item_song_artist"
+        android:id="@+id/item_line_subtitle"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:ellipsize="end"
@@ -66,12 +66,12 @@
         android:text="Artist"
         android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/item_song_duration"
-        app:layout_constraintStart_toEndOf="@+id/item_song_art_card"
-        app:layout_constraintTop_toBottomOf="@+id/item_song_title" />
+        app:layout_constraintEnd_toStartOf="@+id/item_line_duration"
+        app:layout_constraintStart_toEndOf="@+id/item_line_art_card"
+        app:layout_constraintTop_toBottomOf="@+id/item_line_title" />
 
     <TextView
-        android:id="@+id/item_song_duration"
+        android:id="@+id/item_line_duration"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="00:00"

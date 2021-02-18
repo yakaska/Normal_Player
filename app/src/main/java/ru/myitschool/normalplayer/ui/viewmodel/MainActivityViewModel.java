@@ -131,7 +131,6 @@ public class MainActivityViewModel extends ViewModel {
         Log.d(TAG, "browseToItem: " + clickedItem.getMediaId());
         Event<String> stringEvent = new Event<>(clickedItem.getMediaId());
         navigateToMediaItem.postValue(stringEvent);
-        Log.d(TAG, "browseToItem: " + navigateToMediaItem.hasObservers());
     }
 
     public static class Factory extends ViewModelProvider.NewInstanceFactory {

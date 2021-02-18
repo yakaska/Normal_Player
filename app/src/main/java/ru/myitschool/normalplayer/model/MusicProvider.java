@@ -370,7 +370,7 @@ public class MusicProvider {
         } else if (MEDIA_ID_MUSICS_ALL.equals(mediaId)) {
 
             for (String id : getAllMusic()) {
-                mediaItems.add(createMediaItem(getMusic(id)));
+                mediaItems.add(createMediaItem(getMusic(id), MEDIA_ID_MUSICS_ALL));
             }
 
         } else if (MEDIA_ID_MUSICS_BY_GENRE.equals(mediaId)) {
@@ -381,7 +381,7 @@ public class MusicProvider {
         } else if (mediaId.startsWith(MEDIA_ID_MUSICS_BY_GENRE)) {
             String genre = MediaIDHelper.getHierarchy(mediaId)[1];
             for (MediaMetadataCompat metadata : getMusicsByGenre(genre)) {
-                mediaItems.add(createMediaItem(metadata));
+                mediaItems.add(createMediaItem(metadata, MEDIA_ID_MUSICS_BY_GENRE));
             }
 
         } else if (MEDIA_ID_MUSICS_BY_ALBUM.equals(mediaId)) {
@@ -392,7 +392,7 @@ public class MusicProvider {
         } else if (mediaId.startsWith(MEDIA_ID_MUSICS_BY_ALBUM)) {
             String album = MediaIDHelper.getHierarchy(mediaId)[1];
             for (MediaMetadataCompat metadata : getMusicsByAlbum(album)) {
-                mediaItems.add(createMediaItem(metadata));
+                mediaItems.add(createMediaItem(metadata, MEDIA_ID_MUSICS_BY_ALBUM));
             }
 
         } else if(MEDIA_ID_MUSICS_BY_ARTIST.equals(mediaId)) {
@@ -403,7 +403,7 @@ public class MusicProvider {
         } else if (mediaId.startsWith(MEDIA_ID_MUSICS_BY_ARTIST)){
             String artist = MediaIDHelper.getHierarchy(mediaId)[1];
             for (MediaMetadataCompat metadata : getMusicsByArtist(artist)) {
-                mediaItems.add(createMediaItem(metadata));
+                mediaItems.add(createMediaItem(metadata, MEDIA_ID_MUSICS_BY_ARTIST));
             }
         } else {
             Log.w(TAG, "Skipping unmatched mediaId: " + mediaId);
@@ -461,15 +461,22 @@ public class MusicProvider {
                 MediaBrowserCompat.MediaItem.FLAG_BROWSABLE);
     }
 
-    private MediaBrowserCompat.MediaItem createMediaItem(MediaMetadataCompat metadata) {
+    private MediaBrowserCompat.MediaItem createMediaItem(MediaMetadataCompat metadata, String key) {
         Log.d(TAG, "createMediaItem: ");
-        // Since mediaMetadata fields are immutable, we need to create a copy, so we
-        // can set a hierarchy-aware mediaID. We will need to know the media hierarchy
-        // when we get a onPlayFromMusicID call, so we can create the proper queue based
-        // on where the music was selected from (by artist, by genre, random, etc)
-        String genre = metadata.getString(MediaMetadataCompat.METADATA_KEY_GENRE);
-        String hierarchyAwareMediaID = createMediaID(
-                metadata.getDescription().getMediaId(), MEDIA_ID_MUSICS_BY_GENRE, genre);
+
+        String uniq;
+
+        if (key.equals(MEDIA_ID_MUSICS_BY_GENRE)) {
+            uniq = metadata.getString(MediaMetadataCompat.METADATA_KEY_GENRE);
+        } else if (key.equals(MEDIA_ID_MUSICS_BY_ALBUM)) {
+            uniq = metadata.getString(MediaMetadataCompat.METADATA_KEY_ALBUM);
+        } else if (key.equals(MEDIA_ID_MUSICS_BY_ARTIST)) {
+            uniq = metadata.getString(MediaMetadataCompat.METADATA_KEY_ARTIST);
+        } else {
+            uniq = metadata.getString(MediaMetadataCompat.METADATA_KEY_GENRE);
+        }
+
+        String hierarchyAwareMediaID = createMediaID(metadata.getDescription().getMediaId(), key, uniq);
         Bundle extras = new Bundle();
         extras.putLong(EXTRA_DURATION, metadata.getLong(MediaMetadataCompat.METADATA_KEY_DURATION));
         MediaDescriptionCompat description = new MediaDescriptionCompat.Builder()
