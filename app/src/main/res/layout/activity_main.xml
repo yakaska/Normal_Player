@@ -26,12 +26,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:background="@color/colorBackground"
-                app:layout_scrollFlags="scroll|enterAlways"
+                android:fontFamily="sans-serif-condensed-medium"
                 android:gravity="center"
+                app:layout_scrollFlags="scroll|enterAlways"
+                app:logo="@drawable/ic_launcher"
                 app:navigationIcon="@drawable/ic_menu_24"
                 app:title="@string/app_name"
-                android:fontFamily="sans-serif-condensed-medium"
-                app:logo="@drawable/ic_launcher"
+                app:menu="@menu/app_bar"
                 app:titleTextAppearance="@style/TextAppearance.MaterialComponents.Headline6"
                 app:titleTextColor="@color/colorPrimaryText">
 
