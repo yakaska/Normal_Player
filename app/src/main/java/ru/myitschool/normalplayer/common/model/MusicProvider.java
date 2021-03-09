@@ -1,8 +1,7 @@
-package ru.myitschool.normalplayer.model;
+package ru.myitschool.normalplayer.common.model;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -21,14 +20,14 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 import ru.myitschool.normalplayer.R;
-import ru.myitschool.normalplayer.utils.MediaIDHelper;
+import ru.myitschool.normalplayer.utils.MediaIDUtil;
 
-import static ru.myitschool.normalplayer.utils.MediaIDHelper.MEDIA_ID_MUSICS_ALL;
-import static ru.myitschool.normalplayer.utils.MediaIDHelper.MEDIA_ID_MUSICS_BY_ALBUM;
-import static ru.myitschool.normalplayer.utils.MediaIDHelper.MEDIA_ID_MUSICS_BY_ARTIST;
-import static ru.myitschool.normalplayer.utils.MediaIDHelper.MEDIA_ID_MUSICS_BY_GENRE;
-import static ru.myitschool.normalplayer.utils.MediaIDHelper.MEDIA_ID_ROOT;
-import static ru.myitschool.normalplayer.utils.MediaIDHelper.createMediaID;
+import static ru.myitschool.normalplayer.utils.MediaIDUtil.MEDIA_ID_MUSICS_ALL;
+import static ru.myitschool.normalplayer.utils.MediaIDUtil.MEDIA_ID_MUSICS_BY_ALBUM;
+import static ru.myitschool.normalplayer.utils.MediaIDUtil.MEDIA_ID_MUSICS_BY_ARTIST;
+import static ru.myitschool.normalplayer.utils.MediaIDUtil.MEDIA_ID_MUSICS_BY_GENRE;
+import static ru.myitschool.normalplayer.utils.MediaIDUtil.MEDIA_ID_ROOT;
+import static ru.myitschool.normalplayer.utils.MediaIDUtil.createMediaID;
 
 public class MusicProvider {
 
@@ -213,30 +212,6 @@ public class MusicProvider {
         return musicListById.containsKey(musicId) ? musicListById.get(musicId).metadata : null;
     }
 
-    public synchronized void updateMusicArt(String musicId, Bitmap albumArt, Bitmap icon) {
-        MediaMetadataCompat metadata = getMusic(musicId);
-        metadata = new MediaMetadataCompat.Builder(metadata)
-
-                // set high resolution bitmap in METADATA_KEY_ALBUM_ART. This is used, for
-                // example, on the lockscreen background when the media session is active.
-                .putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, albumArt)
-
-                // set small version of the album art in the DISPLAY_ICON. This is used on
-                // the MediaDescription and thus it should be small to be serialized if
-                // necessary
-                .putBitmap(MediaMetadataCompat.METADATA_KEY_DISPLAY_ICON, icon)
-
-                .build();
-
-        MutableMediaMetadata mutableMetadata = musicListById.get(musicId);
-        if (mutableMetadata == null) {
-            throw new IllegalStateException("Unexpected error: Inconsistent data structures in " +
-                    "MusicProvider");
-        }
-
-        mutableMetadata.metadata = metadata;
-    }
-
     public void setFavorite(String musicId, boolean favorite) {
         if (favorite) {
             favoriteTracks.add(musicId);
@@ -359,7 +334,7 @@ public class MusicProvider {
         Log.d(TAG, "getChildren: ");
         List<MediaBrowserCompat.MediaItem> mediaItems = new ArrayList<>();
 
-        if (!MediaIDHelper.isBrowseable(mediaId)) {
+        if (!MediaIDUtil.isBrowseable(mediaId)) {
             return mediaItems;
         }
 
@@ -379,7 +354,7 @@ public class MusicProvider {
             }
 
         } else if (mediaId.startsWith(MEDIA_ID_MUSICS_BY_GENRE)) {
-            String genre = MediaIDHelper.getHierarchy(mediaId)[1];
+            String genre = MediaIDUtil.getHierarchy(mediaId)[1];
             for (MediaMetadataCompat metadata : getMusicsByGenre(genre)) {
                 mediaItems.add(createMediaItem(metadata, MEDIA_ID_MUSICS_BY_GENRE));
             }
@@ -390,7 +365,7 @@ public class MusicProvider {
             }
 
         } else if (mediaId.startsWith(MEDIA_ID_MUSICS_BY_ALBUM)) {
-            String album = MediaIDHelper.getHierarchy(mediaId)[1];
+            String album = MediaIDUtil.getHierarchy(mediaId)[1];
             for (MediaMetadataCompat metadata : getMusicsByAlbum(album)) {
                 mediaItems.add(createMediaItem(metadata, MEDIA_ID_MUSICS_BY_ALBUM));
             }
@@ -401,7 +376,7 @@ public class MusicProvider {
             }
 
         } else if (mediaId.startsWith(MEDIA_ID_MUSICS_BY_ARTIST)){
-            String artist = MediaIDHelper.getHierarchy(mediaId)[1];
+            String artist = MediaIDUtil.getHierarchy(mediaId)[1];
             for (MediaMetadataCompat metadata : getMusicsByArtist(artist)) {
                 mediaItems.add(createMediaItem(metadata, MEDIA_ID_MUSICS_BY_ARTIST));
             }

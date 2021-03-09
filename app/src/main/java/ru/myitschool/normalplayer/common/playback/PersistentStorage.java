@@ -1,4 +1,4 @@
-package ru.myitschool.normalplayer.playback;
+package ru.myitschool.normalplayer.common.playback;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -7,7 +7,7 @@ import android.os.Bundle;
 import android.support.v4.media.MediaBrowserCompat.MediaItem;
 import android.support.v4.media.MediaDescriptionCompat;
 
-import static ru.myitschool.normalplayer.playback.MusicService.MEDIA_DESCRIPTION_EXTRAS_START_PLAYBACK_POSITION_MS;
+import static ru.myitschool.normalplayer.common.playback.MusicService.MEDIA_DESCRIPTION_EXTRAS_START_PLAYBACK_POSITION_MS;
 
 public class PersistentStorage {
 

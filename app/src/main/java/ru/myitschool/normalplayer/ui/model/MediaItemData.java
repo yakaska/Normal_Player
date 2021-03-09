@@ -1,4 +1,4 @@
-package ru.myitschool.normalplayer.ui;
+package ru.myitschool.normalplayer.ui.model;
 
 import android.net.Uri;
 
@@ -35,15 +35,17 @@ public class MediaItemData {
     private String mediaId;
     private String title;
     private String subtitle;
+    private Uri mediaUri;
     private Uri albumArtUri;
     private long duration;
     private boolean browsable;
     private int playbackRes;
 
-    public MediaItemData(String mediaId, String title, String subtitle, Uri albumArtUri, long duration, boolean browsable, int playbackRes) {
+    public MediaItemData(String mediaId, String title, String subtitle, Uri mediaUri, Uri albumArtUri, long duration, boolean browsable, int playbackRes) {
         this.mediaId = mediaId;
         this.title = title;
         this.subtitle = subtitle;
+        this.mediaUri = mediaUri;
         this.albumArtUri = albumArtUri;
         this.duration = duration;
         this.browsable = browsable;
@@ -72,6 +74,14 @@ public class MediaItemData {
 
     public void setSubtitle(String subtitle) {
         this.subtitle = subtitle;
+    }
+
+    public Uri getMediaUri() {
+        return mediaUri;
+    }
+
+    public void setMediaUri(Uri mediaUri) {
+        this.mediaUri = mediaUri;
     }
 
     public Uri getAlbumArtUri() {

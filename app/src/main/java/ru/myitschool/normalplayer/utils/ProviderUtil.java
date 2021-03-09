@@ -4,13 +4,13 @@ import android.app.Application;
 import android.content.ComponentName;
 import android.content.Context;
 
-import ru.myitschool.normalplayer.playback.MusicService;
-import ru.myitschool.normalplayer.ui.MusicServiceConnection;
+import ru.myitschool.normalplayer.common.MusicServiceConnection;
+import ru.myitschool.normalplayer.common.playback.MusicService;
 import ru.myitschool.normalplayer.ui.viewmodel.MainActivityViewModel;
 import ru.myitschool.normalplayer.ui.viewmodel.NowPlayingViewModel;
 import ru.myitschool.normalplayer.ui.viewmodel.SongFragmentViewModel;
 
-public class ProviderUtils {
+public class ProviderUtil {
 
     public static MusicServiceConnection provideMusicServiceConnection(Context context) {
         return MusicServiceConnection.getInstance(context, new ComponentName(context, MusicService.class));

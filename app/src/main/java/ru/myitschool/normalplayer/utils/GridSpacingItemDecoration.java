@@ -1,4 +1,4 @@
-package ru.myitschool.normalplayer.ui;
+package ru.myitschool.normalplayer.utils;
 
 import android.graphics.Rect;
 import android.view.View;

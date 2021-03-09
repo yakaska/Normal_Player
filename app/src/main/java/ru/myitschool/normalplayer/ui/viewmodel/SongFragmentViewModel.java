@@ -15,10 +15,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ru.myitschool.normalplayer.R;
-import ru.myitschool.normalplayer.model.MusicProvider;
-import ru.myitschool.normalplayer.ui.MediaItemData;
-import ru.myitschool.normalplayer.ui.MusicServiceConnection;
-import ru.myitschool.normalplayer.utils.Utils;
+import ru.myitschool.normalplayer.common.MusicServiceConnection;
+import ru.myitschool.normalplayer.common.model.MusicProvider;
+import ru.myitschool.normalplayer.ui.model.MediaItemData;
+import ru.myitschool.normalplayer.utils.PlayerUtil;
 
 public class SongFragmentViewModel extends ViewModel {
 
@@ -48,6 +48,7 @@ public class SongFragmentViewModel extends ViewModel {
                         item.getMediaId(),
                         item.getDescription().getTitle().toString(),
                         item.getDescription().getSubtitle().toString(),
+                        item.getDescription().getMediaUri(),
                         item.getDescription().getIconUri(),
                         duration,
                         item.isBrowsable(),
@@ -103,7 +104,7 @@ public class SongFragmentViewModel extends ViewModel {
 
     private List<MediaItemData> updateState(PlaybackStateCompat playbackState, MediaMetadataCompat metadata) {
         int newResId = NO_RES_ID;
-        if (Utils.isPlaying(playbackState)) {
+        if (PlayerUtil.isPlaying(playbackState)) {
             newResId = R.drawable.ic_pause_24;
         } else {
             newResId = R.drawable.ic_play_24;
@@ -120,6 +121,7 @@ public class SongFragmentViewModel extends ViewModel {
                         item.getMediaId(),
                         item.getTitle(),
                         item.getSubtitle(),
+                        item.getMediaUri(),
                         item.getAlbumArtUri(),
                         item.getDuration(),
                         item.isBrowsable(),
@@ -139,7 +141,7 @@ public class SongFragmentViewModel extends ViewModel {
             isActive = false;
         }
         if (connection.getPlaybackState().getValue() != null) {
-            isPlaying = Utils.isPlaying(connection.getPlaybackState().getValue());
+            isPlaying = PlayerUtil.isPlaying(connection.getPlaybackState().getValue());
         } else {
             isPlaying = false;
         }

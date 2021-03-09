@@ -1,4 +1,4 @@
-package ru.myitschool.normalplayer.model;
+package ru.myitschool.normalplayer.common.model;
 
 import android.content.Context;
 import android.support.v4.media.MediaMetadataCompat;
@@ -40,6 +40,7 @@ public class InternalSource implements MusicProviderSource {
                 .putString(MediaMetadataCompat.METADATA_KEY_GENRE, "Not_implemented_yet")
                 .putString(MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI, String.valueOf(audioContent.getArt_uri()))
                 .putString(MediaMetadataCompat.METADATA_KEY_TITLE, audioContent.getTitle())
+                .putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_SUBTITLE, audioContent.getAlbum())
                 .putString(MediaMetadataCompat.METADATA_KEY_ART_URI, String.valueOf(audioContent.getArt_uri()))
                 .putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_ICON_URI, String.valueOf(audioContent.getArt_uri()))
                 .build();

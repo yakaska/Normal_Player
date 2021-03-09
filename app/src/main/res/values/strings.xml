@@ -1,15 +1,15 @@
 <resources>
     <string name="app_name">Normal Player</string>
-    <string name="previous" translatable="false">Previous</string>
-    <string name="pause" translatable="false">Pause</string>
-    <string name="play" translatable="false">Play</string>
-    <string name="next" translatable="false">Next</string>
+    <string name="previous">Previous</string>
+    <string name="pause">Pause</string>
+    <string name="play">Play</string>
+    <string name="next">Next</string>
     <string name="notification_channel_name" translatable="false">Normal Player Channel</string>
-    <string name="home" translatable="false">Home</string>
-    <string name="music" translatable="false">Music</string>
-    <string name="albums" translatable="false">Albums</string>
-    <string name="artists" translatable="false">Artists</string>
-    <string name="folders" translatable="false">Folders</string>
+    <string name="home">Home</string>
+    <string name="music">Music</string>
+    <string name="albums">Albums</string>
+    <string name="artists">Artists</string>
+    <string name="folders">Folders</string>
     <string name="favorite">Favorite</string>
     <string name="error_no_metadata">Unable to retrieve metadata.</string>
     <string name="browse_genres">Genres</string>
@@ -17,8 +17,6 @@
     <string name="browse_musics_by_genre_subtitle">%1$s songs</string>
     <string name="browse_musics_by_album_subtitle">%1$s songs</string>
     <string name="browse_musics_by_artist_subtitle">%1$s songs</string>
-    <string name="random_queue_title">Random music</string>
-    <string name="error_cannot_skip">Cannot skip</string>
     <string name="playback_service">Playback Service</string>
     <string name="error_loading_media">Error loading media</string>
     <string name="notification_channel_description">Channel description</string>
@@ -26,4 +24,5 @@
     <string name="duration_unknown">--:--</string>
     <string name="duration_format">%d:%02d</string>
     <string name="song_format">%s • %s</string>
+    <string name="now_playing">NOW PLAYING</string>
 </resources>

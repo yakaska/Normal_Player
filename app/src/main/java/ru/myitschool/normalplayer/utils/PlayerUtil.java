@@ -13,7 +13,7 @@ import com.google.android.exoplayer2.upstream.cache.CacheDataSourceFactory;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
-public class Utils {
+public class PlayerUtil {
 
     public static String convertMs(long milliSeconds) {
         return String.format("%02d:%02d",

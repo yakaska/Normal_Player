@@ -1,4 +1,4 @@
-package ru.myitschool.normalplayer.ui;
+package ru.myitschool.normalplayer.ui.activity;
 
 import android.Manifest;
 import android.media.AudioManager;
@@ -25,11 +25,13 @@ import permissions.dispatcher.OnPermissionDenied;
 import permissions.dispatcher.RuntimePermissions;
 import ru.myitschool.normalplayer.R;
 import ru.myitschool.normalplayer.databinding.ActivityMainBinding;
+import ru.myitschool.normalplayer.ui.fragment.SongFragment;
+import ru.myitschool.normalplayer.ui.model.NowPlayingMetadata;
 import ru.myitschool.normalplayer.ui.viewmodel.MainActivityViewModel;
 import ru.myitschool.normalplayer.ui.viewmodel.NowPlayingViewModel;
 import ru.myitschool.normalplayer.utils.Event;
-import ru.myitschool.normalplayer.utils.MediaIDHelper;
-import ru.myitschool.normalplayer.utils.ProviderUtils;
+import ru.myitschool.normalplayer.utils.MediaIDUtil;
+import ru.myitschool.normalplayer.utils.ProviderUtil;
 
 @RuntimePermissions
 public class MainActivity extends AppCompatActivity {
@@ -45,6 +47,8 @@ public class MainActivity extends AppCompatActivity {
     @NeedsPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setTheme(R.style.AppTheme);
+        
         super.onCreate(savedInstanceState);
 
         activityMainBinding = ActivityMainBinding.inflate(getLayoutInflater());
@@ -84,9 +88,9 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        mainActivityViewModel = new ViewModelProvider(this, ProviderUtils.provideMainActivityViewModel(this)).get(MainActivityViewModel.class);
+        mainActivityViewModel = new ViewModelProvider(this, ProviderUtil.provideMainActivityViewModel(this)).get(MainActivityViewModel.class);
 
-        nowPlayingViewModel = new ViewModelProvider(this, ProviderUtils.provideNowPlayingViewModel(this)).get(NowPlayingViewModel.class);
+        nowPlayingViewModel = new ViewModelProvider(this, ProviderUtil.provideNowPlayingViewModel(this)).get(NowPlayingViewModel.class);
 
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
 
@@ -94,6 +98,7 @@ public class MainActivity extends AppCompatActivity {
             MainActivityViewModel.FragmentNavigationRequest request = fragmentNavigationRequestEvent.getContentIfNotHandled();
             if (request != null) {
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                //transaction.setCustomAnimations(R.anim.fragment_fade_enter, R.anim.fragment_fade_exit);
                 transaction.replace(R.id.fragment_container, request.getFragment(), request.getTag());
                 if (request.isBackStack()) {
                     transaction.addToBackStack(null);
@@ -241,13 +246,13 @@ public class MainActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.nav_music:
-                        navigateToMediaItem(MediaIDHelper.MEDIA_ID_MUSICS_ALL);
+                        navigateToMediaItem(MediaIDUtil.MEDIA_ID_MUSICS_ALL);
                         break;
                     case R.id.nav_albums:
-                        navigateToMediaItem(MediaIDHelper.MEDIA_ID_MUSICS_BY_ALBUM);
+                        navigateToMediaItem(MediaIDUtil.MEDIA_ID_MUSICS_BY_ALBUM);
                         break;
                     case R.id.nav_artists:
-                        navigateToMediaItem(MediaIDHelper.MEDIA_ID_MUSICS_BY_ARTIST);
+                        navigateToMediaItem(MediaIDUtil.MEDIA_ID_MUSICS_BY_ARTIST);
                         break;
                 }
                 return true;

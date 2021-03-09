@@ -1,4 +1,4 @@
-package ru.myitschool.normalplayer.ui;
+package ru.myitschool.normalplayer.ui.fragment;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -10,15 +10,16 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import java.util.List;
 
 import ru.myitschool.normalplayer.databinding.FragmentSongBinding;
+import ru.myitschool.normalplayer.ui.adapter.MediaItemAdapter;
+import ru.myitschool.normalplayer.ui.model.MediaItemData;
 import ru.myitschool.normalplayer.ui.viewmodel.MainActivityViewModel;
 import ru.myitschool.normalplayer.ui.viewmodel.SongFragmentViewModel;
-import ru.myitschool.normalplayer.utils.ProviderUtils;
+import ru.myitschool.normalplayer.utils.ProviderUtil;
 
 
 public class SongFragment extends Fragment implements MediaItemAdapter.OnItemClickListener {
@@ -59,26 +60,20 @@ public class SongFragment extends Fragment implements MediaItemAdapter.OnItemCli
         if (mediaId == null) {
             return;
         }
-        mainActivityViewModel = new ViewModelProvider(getActivity(), ProviderUtils.provideMainActivityViewModel(requireActivity())).get(MainActivityViewModel.class);
-        songFragmentViewModel = new ViewModelProvider(this, ProviderUtils.provideSongFragmentViewModel(requireActivity(), mediaId)).get(SongFragmentViewModel.class);
+        mainActivityViewModel = new ViewModelProvider(getActivity(), ProviderUtil.provideMainActivityViewModel(requireActivity())).get(MainActivityViewModel.class);
+        songFragmentViewModel = new ViewModelProvider(this, ProviderUtil.provideSongFragmentViewModel(requireActivity(), mediaId)).get(SongFragmentViewModel.class);
         songFragmentViewModel.mediaItems.observe(getViewLifecycleOwner(), new Observer<List<MediaItemData>>() {
             @Override
             public void onChanged(List<MediaItemData> mediaItems) {
                 if (mediaItems != null && !mediaItems.isEmpty()) {
-                    binding.loadingSpinner.setVisibility(View.GONE);
-                    if (mediaItems.get(0).isBrowsable()) {
-                        binding.fragmentSongRecycler.setLayoutManager(new GridLayoutManager(getContext(), 2));
-                        binding.fragmentSongRecycler.addItemDecoration(new GridSpacingItemDecoration(2, 40, false));
-                    } else {
-                        binding.fragmentSongRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
-                        binding.fragmentSongRecycler.addItemDecoration(new GridSpacingItemDecoration(1, 0, false));
-                    }
+                    binding.fragmentSongLoadingSpinner.setVisibility(View.GONE);
                 } else {
-                    binding.loadingSpinner.setVisibility(View.VISIBLE);
+                    binding.fragmentSongLoadingSpinner.setVisibility(View.VISIBLE);
                 }
                 adapter.submitList(mediaItems);
             }
         });
+        binding.fragmentSongRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.fragmentSongRecycler.setAdapter(adapter);
     }
 

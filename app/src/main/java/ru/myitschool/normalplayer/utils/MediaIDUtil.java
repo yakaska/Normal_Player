@@ -4,7 +4,7 @@ import androidx.annotation.NonNull;
 
 import java.util.Arrays;
 
-public class MediaIDHelper {
+public class MediaIDUtil {
     // Media IDs used on browsable items of MediaBrowser
     public static final String MEDIA_ID_EMPTY_ROOT = "__EMPTY_ROOT__";
     public static final String MEDIA_ID_ROOT = "__ROOT__";

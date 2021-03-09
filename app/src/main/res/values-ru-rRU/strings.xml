@@ -9,4 +9,10 @@
     <string name="albums" translatable="false">Альбомы</string>
     <string name="artists" translatable="false">Исполнители</string>
     <string name="folders" translatable="false">Папки</string>
+    <string name="favorite">Избранные</string>
+    <string name="pause">Пауза</string>
+    <string name="error_no_metadata">Невозможно извлечь метадату</string>
+    <string name="browse_genres">Жанры</string>
+    <string name="browse_genre_subtitle">Песни по жанрам</string>
+    <string name="now_playing">СЕЙЧАС ИГРАЕТ</string>
 </resources>

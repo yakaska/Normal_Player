@@ -1,4 +1,4 @@
-package ru.myitschool.normalplayer.ui;
+package ru.myitschool.normalplayer.ui.model;
 
 import android.content.Context;
 import android.net.Uri;

@@ -1,6 +1,5 @@
-package ru.myitschool.normalplayer.ui;
+package ru.myitschool.normalplayer.ui.adapter;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,9 +18,10 @@ import java.util.Collections;
 import java.util.List;
 
 import ru.myitschool.normalplayer.R;
-import ru.myitschool.normalplayer.utils.Utils;
+import ru.myitschool.normalplayer.ui.model.MediaItemData;
+import ru.myitschool.normalplayer.utils.PlayerUtil;
 
-public class MediaItemAdapter extends ListAdapter<MediaItemData, RecyclerView.ViewHolder> {
+public class MediaItemAdapter extends ListAdapter<MediaItemData, MediaItemAdapter.LineViewHolder> {
 
     private static final String TAG = MediaItemAdapter.class.getSimpleName();
 
@@ -42,76 +42,48 @@ public class MediaItemAdapter extends ListAdapter<MediaItemData, RecyclerView.Vi
 
     @NonNull
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        switch (viewType) {
-            case VIEW_TYPE_LINE: {
-                return new LineViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_line, parent, false), itemClickListener);
-            }
-            case VIEW_TYPE_GRID: {
-                return new GridViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_grid, parent, false), itemClickListener);
-            }
-            default: {
-                Log.d(TAG, "onCreateViewHolder: ");
-                return null;
-            }
-        }
+    public LineViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        return new LineViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_line, parent, false), itemClickListener);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull LineViewHolder holder, int position) {
         onBindViewHolder(holder, position, Collections.emptyList());
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int position, @NonNull List<Object> payloads) {
+    public void onBindViewHolder(@NonNull LineViewHolder lineViewHolder, int position, @NonNull List<Object> payloads) {
         MediaItemData item = getItem(position);
-        switch (viewHolder.getItemViewType()) {
-            case VIEW_TYPE_LINE: {
-                LineViewHolder lineHolder = (LineViewHolder) viewHolder;
-                boolean fullRefresh = payloads.isEmpty();
-                if (!payloads.isEmpty()) {
-                    for (int i = 0; i < payloads.size(); i++) {
-                        if (payloads.get(i) instanceof Integer) {
-                            lineHolder.stateIv.setImageResource(item.getPlaybackRes());
-                            if (item.getPlaybackRes() == R.drawable.ic_pause_24 || item.getPlaybackRes() == R.drawable.ic_play_24) {
-                                lineHolder.rootView.setBackgroundResource(R.color.colorBackgroundSelected);
-                            } else {
-                                lineHolder.rootView.setBackgroundResource(R.color.colorBackground);
-                            }
-                        } else {
-                            fullRefresh = true;
-                        }
-                    }
-                }
-
-                if (fullRefresh) {
-                    lineHolder.item = item;
-                    lineHolder.titleTv.setText(item.getTitle());
-                    lineHolder.artistTv.setText(item.getSubtitle());
-                    if (item.isBrowsable()) {
-                        lineHolder.durationTv.setVisibility(View.INVISIBLE);
-                    } else {
-                        lineHolder.durationTv.setText(Utils.convertMs(item.getDuration()));
-                    }
+        boolean fullRefresh = payloads.isEmpty();
+        if (!payloads.isEmpty()) {
+            for (int i = 0; i < payloads.size(); i++) {
+                if (payloads.get(i) instanceof Integer) {
                     if (item.getPlaybackRes() == R.drawable.ic_pause_24 || item.getPlaybackRes() == R.drawable.ic_play_24) {
-                        lineHolder.rootView.setBackgroundResource(R.color.colorBackgroundSelected);
+                        lineViewHolder.rootView.setBackgroundResource(R.color.colorBackgroundSelected);
                     } else {
-                        lineHolder.rootView.setBackgroundResource(R.color.colorBackground);
+                        lineViewHolder.rootView.setBackgroundResource(R.color.colorBackground);
                     }
-                    lineHolder.stateIv.setImageResource(item.getPlaybackRes());
-                    Picasso.get().load(item.getAlbumArtUri()).placeholder(R.drawable.ic_default_art).into(lineHolder.artIv);
+                } else {
+                    fullRefresh = true;
                 }
-                break;
             }
+        }
 
-            case VIEW_TYPE_GRID: {
-                GridViewHolder gridViewHolder = (GridViewHolder) viewHolder;
-                gridViewHolder.item = item;
-                gridViewHolder.titleTv.setText(item.getTitle());
-                gridViewHolder.subtitleTv.setText(item.getSubtitle());
-                Picasso.get().load(item.getAlbumArtUri()).placeholder(R.drawable.ic_default_art).into(gridViewHolder.artIv);
+        if (fullRefresh) {
+            lineViewHolder.item = item;
+            lineViewHolder.titleTv.setText(item.getTitle());
+            lineViewHolder.artistTv.setText(item.getSubtitle());
+            if (item.isBrowsable()) {
+                lineViewHolder.durationTv.setVisibility(View.INVISIBLE);
+            } else {
+                lineViewHolder.durationTv.setText(PlayerUtil.convertMs(item.getDuration()));
             }
-
+            if (item.getPlaybackRes() == R.drawable.ic_pause_24 || item.getPlaybackRes() == R.drawable.ic_play_24) {
+                lineViewHolder.rootView.setBackgroundResource(R.color.colorBackgroundSelected);
+            } else {
+                lineViewHolder.rootView.setBackgroundResource(R.color.colorBackground);
+            }
+            Picasso.get().load(item.getAlbumArtUri()).placeholder(R.drawable.ic_default_art).into(lineViewHolder.artIv);
         }
     }
 
@@ -123,7 +95,6 @@ public class MediaItemAdapter extends ListAdapter<MediaItemData, RecyclerView.Vi
         private MediaItemData item = null;
         private final ConstraintLayout rootView;
         private final ImageView artIv;
-        private final ImageView stateIv;
         private final TextView titleTv;
         private final TextView artistTv;
         private final TextView durationTv;
@@ -132,7 +103,6 @@ public class MediaItemAdapter extends ListAdapter<MediaItemData, RecyclerView.Vi
             super(itemView);
             rootView = itemView.findViewById(R.id.item_line_root);
             artIv = itemView.findViewById(R.id.item_line_art);
-            stateIv = itemView.findViewById(R.id.item_line_state);
             titleTv = itemView.findViewById(R.id.item_line_title);
             artistTv = itemView.findViewById(R.id.item_line_subtitle);
             durationTv = itemView.findViewById(R.id.item_line_duration);

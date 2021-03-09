@@ -1,8 +1,7 @@
-package ru.myitschool.normalplayer.ui;
+package ru.myitschool.normalplayer.common;
 
 import android.content.ComponentName;
 import android.content.Context;
-import android.os.RemoteException;
 import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaControllerCompat;
@@ -93,11 +92,9 @@ public class MusicServiceConnection {
         @Override
         public void onConnected() {
             super.onConnected();
-            try {
-                mediaController = new MediaControllerCompat(context, mediaBrowser.getSessionToken());
-            } catch (RemoteException e) {
-                e.printStackTrace();
-            }
+
+            mediaController = new MediaControllerCompat(context, mediaBrowser.getSessionToken());
+
             mediaController.registerCallback(new MediaControllerCallback());
             isConnected.postValue(true);
         }

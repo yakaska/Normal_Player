@@ -1,4 +1,4 @@
-package ru.myitschool.normalplayer.model;
+package ru.myitschool.normalplayer.common.model;
 
 import android.support.v4.media.MediaMetadataCompat;
 import android.text.TextUtils;

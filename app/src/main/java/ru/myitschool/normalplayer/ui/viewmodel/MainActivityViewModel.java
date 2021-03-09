@@ -12,10 +12,10 @@ import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
-import ru.myitschool.normalplayer.ui.MediaItemData;
-import ru.myitschool.normalplayer.ui.MusicServiceConnection;
+import ru.myitschool.normalplayer.common.MusicServiceConnection;
+import ru.myitschool.normalplayer.ui.model.MediaItemData;
 import ru.myitschool.normalplayer.utils.Event;
-import ru.myitschool.normalplayer.utils.Utils;
+import ru.myitschool.normalplayer.utils.PlayerUtil;
 
 public class MainActivityViewModel extends ViewModel {
 
@@ -33,9 +33,6 @@ public class MainActivityViewModel extends ViewModel {
         this.connection = connection;
         navigateToMediaItem = new MutableLiveData<>();
         navigateToFragment = new MutableLiveData<>();
-        if (connection == null) {
-            Log.d(TAG, "MainActivityViewModel: null connection");
-        }
         rootMediaId = Transformations.map(connection.isConnected(), isConnected ->{
             if (isConnected) {
                 Log.d(TAG, "MainActivityViewModel: connected");
@@ -81,15 +78,15 @@ public class MainActivityViewModel extends ViewModel {
         MediaControllerCompat.TransportControls transportControls = connection.getTransportControls();
         boolean isPrepared;
         if (connection.getPlaybackState().getValue() != null) {
-            isPrepared = Utils.isPrepared(connection.getPlaybackState().getValue());
+            isPrepared = PlayerUtil.isPrepared(connection.getPlaybackState().getValue());
         } else {
             isPrepared = false;
         }
         if (isPrepared && mediaId.equals(nowPlaying.getString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID))) {
             if (connection.getPlaybackState().getValue() != null) {
-                if (Utils.isPlaying(connection.getPlaybackState().getValue())) {
+                if (PlayerUtil.isPlaying(connection.getPlaybackState().getValue())) {
                     transportControls.pause();
-                } else if (Utils.isPlayEnabled(connection.getPlaybackState().getValue())) {
+                } else if (PlayerUtil.isPlayEnabled(connection.getPlaybackState().getValue())) {
                     transportControls.play();
                 } else {
                     Log.d(TAG, "playMediaId: ПОШЕЛ НАХУЙ ПИДОРАС");
@@ -107,15 +104,15 @@ public class MainActivityViewModel extends ViewModel {
 
         boolean isPrepared;
         if (connection.getPlaybackState().getValue() != null) {
-            isPrepared = Utils.isPrepared(connection.getPlaybackState().getValue());
+            isPrepared = PlayerUtil.isPrepared(connection.getPlaybackState().getValue());
         } else {
             isPrepared = false;
         }
         if (isPrepared && clickedItem.getMediaId().equals(metadata.getString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID))) {
             if (connection.getPlaybackState().getValue() != null) {
-                if (Utils.isPlaying(connection.getPlaybackState().getValue())) {
+                if (PlayerUtil.isPlaying(connection.getPlaybackState().getValue())) {
                     if (pauseAllowed) transportControls.pause();
-                } else if (Utils.isPlayEnabled(connection.getPlaybackState().getValue())) {
+                } else if (PlayerUtil.isPlayEnabled(connection.getPlaybackState().getValue())) {
                     transportControls.play();
                 } else {
                     Log.d(TAG, "playMedia: ПОШЕЛ НАХУЙ ПИДОРАС");

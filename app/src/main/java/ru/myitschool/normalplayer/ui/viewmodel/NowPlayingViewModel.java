@@ -14,9 +14,9 @@ import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
 import ru.myitschool.normalplayer.R;
-import ru.myitschool.normalplayer.ui.MusicServiceConnection;
-import ru.myitschool.normalplayer.ui.NowPlayingMetadata;
-import ru.myitschool.normalplayer.utils.Utils;
+import ru.myitschool.normalplayer.common.MusicServiceConnection;
+import ru.myitschool.normalplayer.ui.model.NowPlayingMetadata;
+import ru.myitschool.normalplayer.utils.PlayerUtil;
 
 public class NowPlayingViewModel extends AndroidViewModel {
 
@@ -86,7 +86,7 @@ public class NowPlayingViewModel extends AndroidViewModel {
 
     public void checkPlaybackPosition() {
         handler.postDelayed(() -> {
-            long currentPos = Utils.getCurrentPosition(playbackState);
+            long currentPos = PlayerUtil.getCurrentPosition(playbackState);
             if (mediaPosition.getValue() != currentPos) {
                 mediaPosition.postValue(currentPos);
             }
@@ -113,7 +113,7 @@ public class NowPlayingViewModel extends AndroidViewModel {
 
         int buttonRes = 0;
 
-        if (Utils.isPlaying(playbackState)) {
+        if (PlayerUtil.isPlaying(playbackState)) {
             buttonRes = R.drawable.ic_pause_24;
         } else {
             buttonRes = R.drawable.ic_play_24;
