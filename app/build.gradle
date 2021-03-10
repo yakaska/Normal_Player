@@ -48,11 +48,9 @@ dependencies {
     implementation 'com.google.android.material:material:1.3.0'
     implementation 'com.github.CodeBoy722:MediaFacer:1.0.3'
     implementation 'com.squareup.picasso:picasso:2.71828'
-    implementation "org.permissionsdispatcher:permissionsdispatcher:4.8.0"
-    annotationProcessor "org.permissionsdispatcher:permissionsdispatcher-processor:4.8.0"
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
     implementation "androidx.lifecycle:lifecycle-viewmodel:2.3.0"
     implementation 'com.google.android.exoplayer:exoplayer:2.13.1'
     implementation 'com.google.android.exoplayer:extension-mediasession:2.13.1'
-    implementation 'com.github.claucookie.miniequalizer:library:1.0.0'
+    implementation 'com.karumi:dexter:6.2.2'
 }

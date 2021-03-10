@@ -20,8 +20,6 @@ public class NPNotificationManager {
 
     private static final int NOW_PLAYING_NOTIFICATION_ID = 0xb339;
 
-    private static final int NOTIFICATION_LARGE_ICON_SIZE = 144;
-
     private final PlayerNotificationManager notificationManager;
 
     public NPNotificationManager(Context context, MediaSessionCompat mediaSession, PlayerNotificationManager.NotificationListener notificationListener) {
@@ -53,6 +51,10 @@ public class NPNotificationManager {
 
         private final MediaControllerCompat controller;
 
+        private Uri currentIconUri;
+
+        private Bitmap currentBitmap;
+
         public DescriptionAdapter(MediaControllerCompat controller) {
             this.controller = controller;
         }
@@ -60,7 +62,7 @@ public class NPNotificationManager {
         @Override
         public CharSequence getCurrentContentTitle(Player player) {
             Log.d("TAG", "getCurrentContentTitle: " + controller.getMetadata().getDescription().getTitle());
-            return (String) controller.getMetadata().getDescription().getTitle();
+            return controller.getMetadata().getDescription().getTitle();
         }
 
         @Override
@@ -71,24 +73,13 @@ public class NPNotificationManager {
         @Override
         public CharSequence getCurrentContentText(Player player) {
             Log.d("TAG", "getCurrentContentText: " + controller.getMetadata().getDescription().getSubtitle());
-            return (String) controller.getMetadata().getDescription().getSubtitle();
-        }
-
-        @Nullable
-        @Override
-        public CharSequence getCurrentSubText(Player player) {
-            Log.d("TAG", "getCurrentSubText: " + controller.getMetadata().getDescription().getSubtitle());
-            return (String) controller.getMetadata().getDescription().getSubtitle();
+            return controller.getMetadata().getDescription().getSubtitle();
         }
 
         @Nullable
         @Override
         public Bitmap getCurrentLargeIcon(Player player, PlayerNotificationManager.BitmapCallback callback) {
             return controller.getMetadata().getDescription().getIconBitmap();
-        }
-
-        private Bitmap resolveUriAsBitmap(Uri uri) {
-            return null;//Picasso.get().load(uri).get();
         }
 
     }

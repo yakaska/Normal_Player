@@ -22,7 +22,7 @@
         android:id="@+id/item_line_art"
         android:layout_width="64dp"
         android:layout_height="64dp"
-        android:padding="4dp"
+        android:padding="8dp"
         android:src="@drawable/ic_default_art"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

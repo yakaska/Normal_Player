@@ -104,9 +104,9 @@ public class MusicService extends MediaBrowserServiceCompat {
         exoPlayer.addListener(playerListener);
 
         mediaSessionConnector = new MediaSessionConnector(mediaSession);
-        mediaSessionConnector.setPlayer(exoPlayer);
         mediaSessionConnector.setPlaybackPreparer(new NPPlaybackPreparer());
         mediaSessionConnector.setQueueNavigator(new NPQueueNavigator(mediaSession));
+        mediaSessionConnector.setPlayer(exoPlayer);
 
         notificationManager = new NPNotificationManager(getApplicationContext(), mediaSession, new PlayerNotificationListener());
         notificationManager.showNotificationForPlayer(exoPlayer);
@@ -191,8 +191,22 @@ public class MusicService extends MediaBrowserServiceCompat {
 
         @Override
         public MediaDescriptionCompat getMediaDescription(Player player, int windowIndex) {
-            Log.d(TAG, "getMediaDescription: " + currentPlaylistItems.get(windowIndex).getString(MediaMetadataCompat.METADATA_KEY_ARTIST));
-            return currentPlaylistItems.get(windowIndex).getDescription();
+            Bundle extras = new Bundle();
+            MediaDescriptionCompat oldDesc = currentPlaylistItems.get(windowIndex).getDescription();
+
+            extras.putString(MediaMetadataCompat.METADATA_KEY_ARTIST, String.valueOf(oldDesc.getSubtitle()));
+            extras.putString(MediaMetadataCompat.METADATA_KEY_ART_URI, String.valueOf(oldDesc.getIconUri()));
+            extras.putString(MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI, String.valueOf(oldDesc.getIconUri()));
+
+            return new MediaDescriptionCompat.Builder()
+                    .setMediaId(oldDesc.getMediaId())
+                    .setMediaUri(oldDesc.getMediaUri())
+                    .setIconUri(oldDesc.getIconUri())
+                    .setIconBitmap(oldDesc.getIconBitmap())
+                    .setTitle(oldDesc.getTitle())
+                    .setSubtitle(oldDesc.getSubtitle())
+                    .setExtras(extras)
+                    .build();//currentPlaylistItems.get(windowIndex).getDescription();
         }
     }
 
@@ -291,7 +305,6 @@ public class MusicService extends MediaBrowserServiceCompat {
                     }
                 }
             } else {
-                Log.d(TAG, "onPlayerStateChanged: fdddde");
                 notificationManager.hideNotification();
             }
 
