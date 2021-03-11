@@ -97,29 +97,28 @@ public class MediaItemAdapter extends ListAdapter<MediaItemData, MediaItemAdapte
                         @Override
                         public boolean onMenuItemClick(MenuItem menuItem) {
                             switch (menuItem.getItemId()) {
-                                case R.id.goto_album:
+                                case R.id.nav_goto_album:
                                     Toast.makeText(lineViewHolder.moreBtn.getContext(), "Go to album", Toast.LENGTH_SHORT).show();
                                     return true;
-                                case R.id.goto_artist:
+                                case R.id.nav_goto_artist:
                                     Toast.makeText(lineViewHolder.moreBtn.getContext(), "Go to artist", Toast.LENGTH_SHORT).show();
                                     return true;
-                                case R.id.share:
+                                case R.id.nav_share:
                                     Toast.makeText(lineViewHolder.moreBtn.getContext(), "Share", Toast.LENGTH_SHORT).show();
                                     return true;
-                                case R.id.edit_tags:
+                                case R.id.nav_edit_tags:
                                     Toast.makeText(lineViewHolder.moreBtn.getContext(), "Edit tags", Toast.LENGTH_SHORT).show();
                                     return true;
-                                case R.id.details:
+                                case R.id.nav_details:
                                     Toast.makeText(lineViewHolder.moreBtn.getContext(), "Details", Toast.LENGTH_SHORT).show();
                                     return true;
-                                case R.id.delete:
+                                case R.id.nav_delete:
                                     Toast.makeText(lineViewHolder.moreBtn.getContext(), "Delete", Toast.LENGTH_SHORT).show();
                                     return true;
                             }
                             return false;
                         }
                     });
-                    //MenuPopupHelper menuPopupHelper = new MenuPopupHelper(lineViewHolder.rootView.getContext(), popupMenu.getMenu())
                     popupMenu.show();
                 }
             });
