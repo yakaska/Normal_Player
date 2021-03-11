@@ -48,10 +48,21 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        Dexter.withContext(this).withPermission(Manifest.permission.READ_EXTERNAL_STORAGE).withListener(new PermissionListener() {
+        setTheme(R.style.AppTheme);
+
+        super.onCreate(savedInstanceState);
+
+        activityMainBinding = ActivityMainBinding.inflate(getLayoutInflater());
+
+        setContentView(activityMainBinding.getRoot());
+
+        Dexter
+                .withContext(this)
+                .withPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
+                .withListener(new PermissionListener() {
             @Override
             public void onPermissionGranted(PermissionGrantedResponse permissionGrantedResponse) {
-
+                initUI();
             }
 
             @Override
@@ -63,16 +74,10 @@ public class MainActivity extends AppCompatActivity {
             public void onPermissionRationaleShouldBeShown(PermissionRequest permissionRequest, PermissionToken permissionToken) {
 
             }
-        }).check();
+        }).onSameThread().check();
+    }
 
-        setTheme(R.style.AppTheme);
-        
-        super.onCreate(savedInstanceState);
-
-        activityMainBinding = ActivityMainBinding.inflate(getLayoutInflater());
-
-        setContentView(activityMainBinding.getRoot());
-
+    private void initUI() {
         activityMainBinding.bottomSheetInclude.textName.setSelected(true);
 
         BottomSheetBehavior sheetBehavior = BottomSheetBehavior.from(activityMainBinding.bottomSheetInclude.bottomSheet);

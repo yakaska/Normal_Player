@@ -22,8 +22,8 @@ public class App extends Application {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel nowPlayingChannel = new NotificationChannel(
                     NOW_PLAYING_CHANNEL_ID,
-                    "Channel 1",
-                    NotificationManager.IMPORTANCE_HIGH
+                    "Name",
+                    NotificationManager.IMPORTANCE_LOW
             );
             nowPlayingChannel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
             nowPlayingChannel.setDescription("This is Channel 1");

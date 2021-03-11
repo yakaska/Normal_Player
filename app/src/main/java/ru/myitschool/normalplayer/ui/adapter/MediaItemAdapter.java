@@ -1,10 +1,14 @@
 package ru.myitschool.normalplayer.ui.adapter;
 
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -84,6 +88,41 @@ public class MediaItemAdapter extends ListAdapter<MediaItemData, MediaItemAdapte
                 lineViewHolder.rootView.setBackgroundResource(R.color.colorBackground);
             }
             Picasso.get().load(item.getAlbumArtUri()).placeholder(R.drawable.ic_default_art).into(lineViewHolder.artIv);
+            lineViewHolder.moreBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    PopupMenu popupMenu = new PopupMenu(lineViewHolder.rootView.getContext(), lineViewHolder.moreBtn);
+                    popupMenu.inflate(R.menu.media_item);
+                    popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem menuItem) {
+                            switch (menuItem.getItemId()) {
+                                case R.id.goto_album:
+                                    Toast.makeText(lineViewHolder.moreBtn.getContext(), "Go to album", Toast.LENGTH_SHORT).show();
+                                    return true;
+                                case R.id.goto_artist:
+                                    Toast.makeText(lineViewHolder.moreBtn.getContext(), "Go to artist", Toast.LENGTH_SHORT).show();
+                                    return true;
+                                case R.id.share:
+                                    Toast.makeText(lineViewHolder.moreBtn.getContext(), "Share", Toast.LENGTH_SHORT).show();
+                                    return true;
+                                case R.id.edit_tags:
+                                    Toast.makeText(lineViewHolder.moreBtn.getContext(), "Edit tags", Toast.LENGTH_SHORT).show();
+                                    return true;
+                                case R.id.details:
+                                    Toast.makeText(lineViewHolder.moreBtn.getContext(), "Details", Toast.LENGTH_SHORT).show();
+                                    return true;
+                                case R.id.delete:
+                                    Toast.makeText(lineViewHolder.moreBtn.getContext(), "Delete", Toast.LENGTH_SHORT).show();
+                                    return true;
+                            }
+                            return false;
+                        }
+                    });
+                    //MenuPopupHelper menuPopupHelper = new MenuPopupHelper(lineViewHolder.rootView.getContext(), popupMenu.getMenu())
+                    popupMenu.show();
+                }
+            });
         }
     }
 
@@ -98,6 +137,7 @@ public class MediaItemAdapter extends ListAdapter<MediaItemData, MediaItemAdapte
         private final TextView titleTv;
         private final TextView artistTv;
         private final TextView durationTv;
+        private final ImageButton moreBtn;
 
         public LineViewHolder(@NonNull View itemView, OnItemClickListener itemClickListener) {
             super(itemView);
@@ -106,6 +146,7 @@ public class MediaItemAdapter extends ListAdapter<MediaItemData, MediaItemAdapte
             titleTv = itemView.findViewById(R.id.item_line_title);
             artistTv = itemView.findViewById(R.id.item_line_subtitle);
             durationTv = itemView.findViewById(R.id.item_line_duration);
+            moreBtn = itemView.findViewById(R.id.item_line_more);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
