@@ -15,7 +15,6 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.card.MaterialCardView;
 import com.squareup.picasso.Picasso;
 
 import java.util.Collections;
@@ -27,21 +26,15 @@ import ru.myitschool.normalplayer.utils.PlayerUtil;
 
 public class MediaItemAdapter extends ListAdapter<MediaItemData, MediaItemAdapter.LineViewHolder> {
 
-    private static final String TAG = MediaItemAdapter.class.getSimpleName();
-
-    private static final int VIEW_TYPE_LINE = 1;
-    private static final int VIEW_TYPE_GRID = 2;
+    public interface OnItemClickListener {
+        void onItemClick(MediaItemData clickedItem);
+    }
 
     private final OnItemClickListener itemClickListener;
 
     public MediaItemAdapter(OnItemClickListener itemClickListener) {
         super(MediaItemData.DIFF_CALLBACK);
         this.itemClickListener = itemClickListener;
-    }
-
-    @Override
-    public int getItemViewType(int position) {
-        return getItem(position).isBrowsable() ? VIEW_TYPE_GRID : VIEW_TYPE_LINE;
     }
 
     @NonNull
@@ -125,10 +118,6 @@ public class MediaItemAdapter extends ListAdapter<MediaItemData, MediaItemAdapte
         }
     }
 
-    public interface OnItemClickListener {
-        void onItemClick(MediaItemData clickedItem);
-    }
-
     public static class LineViewHolder extends RecyclerView.ViewHolder {
         private MediaItemData item = null;
         private final ConstraintLayout rootView;
@@ -156,30 +145,5 @@ public class MediaItemAdapter extends ListAdapter<MediaItemData, MediaItemAdapte
             });
         }
 
-    }
-
-    public static class GridViewHolder extends RecyclerView.ViewHolder {
-
-        private MediaItemData item = null;
-        private final MaterialCardView rootView;
-        private final ImageView artIv;
-        private final TextView titleTv;
-        private final TextView subtitleTv;
-
-        public GridViewHolder(@NonNull View itemView, OnItemClickListener itemClickListener) {
-            super(itemView);
-            rootView = itemView.findViewById(R.id.item_grid_root);
-            artIv = itemView.findViewById(R.id.item_grid_art);
-            titleTv = itemView.findViewById(R.id.item_grid_title);
-            subtitleTv = itemView.findViewById(R.id.item_grid_subtitle);
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (item != null) {
-                        itemClickListener.onItemClick(item);
-                    }
-                }
-            });
-        }
     }
 }
