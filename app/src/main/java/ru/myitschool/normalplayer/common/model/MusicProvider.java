@@ -228,10 +228,6 @@ public class MusicProvider {
         return favoriteTracks.contains(musicId);
     }
 
-    /**
-     * Get the list of music tracks from a server and caches the track information
-     * for future reference, keying tracks by musicId and grouping by genre.
-     */
     public void retrieveMediaAsync(final Callback callback) {
         Log.d(TAG, "retrieveMediaAsync called");
         if (currentState == State.INITIALIZED) {
@@ -305,7 +301,7 @@ public class MusicProvider {
         musicListByArtist = newMusicListByArtist;
     }
 
-    private synchronized void retrieveMedia() {
+    public synchronized void retrieveMedia() {
         try {
             if (currentState == State.NON_INITIALIZED) {
                 currentState = State.INITIALIZING;
@@ -441,14 +437,19 @@ public class MusicProvider {
 
         String uniq;
 
-        if (key.equals(MEDIA_ID_MUSICS_BY_GENRE)) {
-            uniq = metadata.getString(MediaMetadataCompat.METADATA_KEY_GENRE);
-        } else if (key.equals(MEDIA_ID_MUSICS_BY_ALBUM)) {
-            uniq = metadata.getString(MediaMetadataCompat.METADATA_KEY_ALBUM);
-        } else if (key.equals(MEDIA_ID_MUSICS_BY_ARTIST)) {
-            uniq = metadata.getString(MediaMetadataCompat.METADATA_KEY_ARTIST);
-        } else {
-            uniq = metadata.getString(MediaMetadataCompat.METADATA_KEY_GENRE);
+        switch (key) {
+            case MEDIA_ID_MUSICS_BY_GENRE:
+                uniq = metadata.getString(MediaMetadataCompat.METADATA_KEY_GENRE);
+                break;
+            case MEDIA_ID_MUSICS_BY_ALBUM:
+                uniq = metadata.getString(MediaMetadataCompat.METADATA_KEY_ALBUM);
+                break;
+            case MEDIA_ID_MUSICS_BY_ARTIST:
+                uniq = metadata.getString(MediaMetadataCompat.METADATA_KEY_ARTIST);
+                break;
+            default:
+                uniq = metadata.getString(MediaMetadataCompat.METADATA_KEY_GENRE);
+                break;
         }
 
         String hierarchyAwareMediaID = createMediaID(metadata.getDescription().getMediaId(), key, uniq);
@@ -459,6 +460,7 @@ public class MusicProvider {
                 .setSubtitle(metadata.getString(MediaMetadataCompat.METADATA_KEY_ARTIST))
                 .setIconUri(Uri.parse(metadata.getString(MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI)))
                 .setMediaId(hierarchyAwareMediaID)
+                .setIconBitmap(metadata.getBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART))
                 .setExtras(extras)
                 .build();
 

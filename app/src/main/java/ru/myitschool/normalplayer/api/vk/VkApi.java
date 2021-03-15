@@ -1,5 +1,6 @@
 package ru.myitschool.normalplayer.api.vk;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -11,7 +12,7 @@ public interface VkApi {
     String BASE_URL = "http://192.168.1.82:5000/";
 
     @GET("/audio")
-    Call<List<VkTrack>> getAllAudio(@Query("login") String login, @Query("token") String token);
+    Call<ArrayList<VkTrack>> getAllAudio(@Query("login") String login, @Query("token") String token);
 
     @GET("/token")
     Call<VkToken> getToken(@Query("login") String login, @Query("password") String password);

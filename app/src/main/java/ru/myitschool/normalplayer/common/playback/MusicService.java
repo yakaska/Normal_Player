@@ -39,6 +39,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ru.myitschool.normalplayer.common.model.MusicProvider;
+import ru.myitschool.normalplayer.common.model.VkSource;
 import ru.myitschool.normalplayer.ui.activity.MainActivity;
 import ru.myitschool.normalplayer.utils.CacheUtil;
 import ru.myitschool.normalplayer.utils.MediaIDUtil;
@@ -65,8 +66,6 @@ public class MusicService extends MediaBrowserServiceCompat {
 
     private ArrayList<MediaMetadataCompat> currentPlaylistItems = new ArrayList<>();
 
-    private PersistentStorage storage;
-
     private CacheDataSourceFactory cacheDataSourceFactory;
 
     private boolean isForegroundService;
@@ -85,34 +84,35 @@ public class MusicService extends MediaBrowserServiceCompat {
         super.onCreate();
         Log.d(TAG, "onCreate");
 
-        musicProvider = new MusicProvider(getApplicationContext());
-        musicProvider.retrieveMediaAsync(null);
+        musicProvider = new MusicProvider(new VkSource(getApplicationContext()));
+        musicProvider.retrieveMediaAsync(success -> {
+            if (success) {
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                PendingIntent pi = PendingIntent.getActivity(getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                mediaSession = new MediaSessionCompat(getApplicationContext(), "MusicService");
+                mediaSession.setSessionActivity(pi);
+                mediaSession.setActive(true);
 
-        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-        PendingIntent pi = PendingIntent.getActivity(getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        mediaSession = new MediaSessionCompat(getApplicationContext(), "MusicService");
-        mediaSession.setSessionActivity(pi);
-        mediaSession.setActive(true);
+                setSessionToken(mediaSession.getSessionToken());
 
-        setSessionToken(mediaSession.getSessionToken());
+                DefaultDataSourceFactory dataSourceFactory = new DefaultDataSourceFactory(getApplicationContext(), Util.getUserAgent(getApplicationContext(), NP_USER_AGENT), null);
 
-        DefaultDataSourceFactory dataSourceFactory = new DefaultDataSourceFactory(getApplicationContext(), Util.getUserAgent(getApplicationContext(), NP_USER_AGENT), null);
+                cacheDataSourceFactory = new CacheDataSourceFactory(CacheUtil.getCache(getApplicationContext()), dataSourceFactory, CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR);
 
-        cacheDataSourceFactory = new CacheDataSourceFactory(CacheUtil.getCache(getApplicationContext()), dataSourceFactory, CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR);
+                exoPlayer = new SimpleExoPlayer.Builder(getApplicationContext()).build();
+                exoPlayer.setAudioAttributes(audioAttributes, true);
+                exoPlayer.setHandleAudioBecomingNoisy(true);
+                exoPlayer.addListener(playerListener);
 
-        exoPlayer = new SimpleExoPlayer.Builder(getApplicationContext()).build();
-        exoPlayer.setAudioAttributes(audioAttributes, true);
-        exoPlayer.setHandleAudioBecomingNoisy(true);
-        exoPlayer.addListener(playerListener);
+                mediaSessionConnector = new MediaSessionConnector(mediaSession);
+                mediaSessionConnector.setPlaybackPreparer(new NPPlaybackPreparer());
+                mediaSessionConnector.setQueueNavigator(new NPQueueNavigator(mediaSession));
+                mediaSessionConnector.setPlayer(exoPlayer);
 
-        mediaSessionConnector = new MediaSessionConnector(mediaSession);
-        mediaSessionConnector.setPlaybackPreparer(new NPPlaybackPreparer());
-        mediaSessionConnector.setQueueNavigator(new NPQueueNavigator(mediaSession));
-        mediaSessionConnector.setPlayer(exoPlayer);
-
-        notificationManager = new NPNotificationManager(getApplicationContext(), mediaSession, new PlayerNotificationListener());
-        notificationManager.showNotificationForPlayer(exoPlayer);
-        storage = PersistentStorage.getInstance(getApplicationContext());
+                notificationManager = new NPNotificationManager(getApplicationContext(), mediaSession, new PlayerNotificationListener());
+                notificationManager.showNotificationForPlayer(exoPlayer);
+            }
+        });
     }
 
     @Override
@@ -179,12 +179,6 @@ public class MusicService extends MediaBrowserServiceCompat {
         exoPlayer.seekTo(initialWindowIndex, playbackStartPositionMs);
     }
 
-    private void saveRecentSongToStorage() {
-        MediaDescriptionCompat description = currentPlaylistItems.get(exoPlayer.getCurrentWindowIndex()).getDescription();
-        long position = exoPlayer.getCurrentPosition();
-        storage.saveRecentSong(description, position);
-    }
-
     private class NPQueueNavigator extends TimelineQueueNavigator {
 
         public NPQueueNavigator(MediaSessionCompat mediaSession) {
@@ -226,12 +220,6 @@ public class MusicService extends MediaBrowserServiceCompat {
 
         @Override
         public void onPrepare(boolean playWhenReady) {
-            MediaItem recentSong = storage.loadRecentSong();
-            if (recentSong == null) {
-                return;
-            }
-            onPrepareFromMediaId(recentSong.getMediaId(), playWhenReady, recentSong.getDescription().getExtras());
-
         }
 
         @Override
@@ -301,7 +289,6 @@ public class MusicService extends MediaBrowserServiceCompat {
             if (playbackState == Player.STATE_BUFFERING || playbackState == Player.STATE_READY) {
                 notificationManager.showNotificationForPlayer(exoPlayer);
                 if (playbackState == Player.STATE_READY) {
-                    saveRecentSongToStorage();
                     if (!playWhenReady) {
                         stopForeground(false);
                     }
