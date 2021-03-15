@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <item
+        android:id="@+id/nav_vk"
+        android:icon="@drawable/ic_vk_24"
+        android:title="@string/vk_music" />
 
     <item
         android:id="@+id/nav_music"
