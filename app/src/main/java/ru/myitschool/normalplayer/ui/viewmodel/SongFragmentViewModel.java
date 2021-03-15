@@ -63,6 +63,7 @@ public class SongFragmentViewModel extends ViewModel {
     private final Observer<PlaybackStateCompat> playbackStateObserver = new Observer<PlaybackStateCompat>() {
         @Override
         public void onChanged(PlaybackStateCompat playbackStateCompat) {
+            Log.d(TAG, "onChanged: " + playbackStateCompat);
             PlaybackStateCompat playbackState = playbackStateCompat;
             if (playbackState == null) {
                 playbackState = MusicServiceConnection.EMPTY_PLAYBACK_STATE;
@@ -80,6 +81,7 @@ public class SongFragmentViewModel extends ViewModel {
     private final Observer<MediaMetadataCompat> mediaMetadataObserver = new Observer<MediaMetadataCompat>() {
         @Override
         public void onChanged(MediaMetadataCompat metadataCompat) {
+            Log.d(TAG, "onChanged: " + metadataCompat);
             PlaybackStateCompat playbackState = connection.getPlaybackState().getValue();
             if (playbackState == null) {
                 playbackState = MusicServiceConnection.EMPTY_PLAYBACK_STATE;

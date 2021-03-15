@@ -296,8 +296,8 @@ public class MusicService extends MediaBrowserServiceCompat {
             } else {
                 notificationManager.hideNotification();
             }
-
         }
+
 
         @Override
         public void onPlayerError(ExoPlaybackException error) {

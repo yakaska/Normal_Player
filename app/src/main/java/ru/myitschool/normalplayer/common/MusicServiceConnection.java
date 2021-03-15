@@ -94,7 +94,6 @@ public class MusicServiceConnection {
             super.onConnected();
 
             mediaController = new MediaControllerCompat(context, mediaBrowser.getSessionToken());
-
             mediaController.registerCallback(new MediaControllerCallback());
             isConnected.postValue(true);
         }

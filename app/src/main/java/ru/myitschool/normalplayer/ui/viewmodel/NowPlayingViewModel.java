@@ -20,7 +20,7 @@ import ru.myitschool.normalplayer.utils.PlayerUtil;
 
 public class NowPlayingViewModel extends AndroidViewModel {
 
-    private static final long POSITION_UPDATE_INTERVAL_MILLIS = 10L;
+    private static final long POSITION_UPDATE_INTERVAL_MILLIS = 500L;
 
     private final Application app;
 
