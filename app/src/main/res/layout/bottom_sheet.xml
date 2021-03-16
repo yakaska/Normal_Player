@@ -18,7 +18,48 @@
         android:id="@+id/sheet_peek"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:background="@color/colorWhite">
+        android:background="@color/colorBackground">
+
+        <com.google.android.material.progressindicator.LinearProgressIndicator
+            android:id="@+id/progressBarPeek"
+             android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_margin="0dp"
+            android:padding="0dp"
+            app:layout_constraintBottom_toTopOf="@id/buttonExpandPeek"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/buttonExpandPeek"
+            style="@style/Widget.NormalPlayer.MaterialComponents.Button.TextButton.Icon"
+            android:layout_width="46dp"
+            android:layout_height="0dp"
+            app:icon="@drawable/ic_up_24"
+            app:iconSize="32dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/progressBarPeek" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/textName"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:ellipsize="marquee"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:gravity="center"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:scrollHorizontally="true"
+            android:singleLine="true"
+            android:text="Current song title"
+            android:textSize="18sp"
+            android:textStyle="italic"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/buttonPlayPeek"
+            app:layout_constraintStart_toEndOf="@id/buttonExpandPeek"
+            app:layout_constraintTop_toBottomOf="@id/progressBarPeek" />
 
         <com.google.android.material.button.MaterialButton
             style="@style/Widget.NormalPlayer.MaterialComponents.Button.TextButton.Icon"
@@ -26,55 +67,9 @@
             android:layout_width="46dp"
             android:layout_height="0dp"
             app:icon="@drawable/ic_play_24"
+            app:iconSize="32dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/progressBarPeek" />
-
-
-        <ImageView
-            android:id="@+id/imageAlbumArtPeek"
-            android:layout_width="46dp"
-            android:layout_height="0dp"
-            android:scaleType="centerCrop"
-            android:layout_marginStart="8dp"
-            android:src="@drawable/ic_default_art"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/progressBarPeek" />
-
-
-        <ProgressBar
-            android:id="@+id/progressBarPeek"
-            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:layout_margin="0dp"
-            android:padding="0dp"
-            app:layout_constraintBottom_toTopOf="@id/imageAlbumArtPeek"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-
-        <TextView
-            android:id="@+id/textName"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:ellipsize="marquee"
-            android:focusable="true"
-            android:focusableInTouchMode="true"
-            android:fontFamily="sans-serif-condensed-medium"
-            android:gravity="center"
-            android:marqueeRepeatLimit="marquee_forever"
-            android:scrollHorizontally="true"
-            android:singleLine="true"
-            android:text="Current song title"
-            android:textColor="@color/colorPrimaryText"
-            android:textSize="18sp"
-            android:textStyle="italic"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/buttonPlayPeek"
-            app:layout_constraintStart_toEndOf="@id/imageAlbumArtPeek"
             app:layout_constraintTop_toBottomOf="@id/progressBarPeek" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -83,7 +78,7 @@
         android:id="@+id/sheet_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorBackground">
+        android:background="@color/colorHint">
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/buttonCollapse"
@@ -92,6 +87,7 @@
             android:layout_height="30dp"
             android:layout_marginStart="20dp"
             app:icon="@drawable/ic_arrow_down_24"
+            app:iconSize="32dp"
             app:layout_constraintBottom_toBottomOf="@id/textNowPlaying"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/textNowPlaying" />
@@ -107,81 +103,39 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/textNowPlaying" />
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/textTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:fontFamily="sans-serif-condensed-medium"
             android:gravity="center"
             android:text="Current song title"
-            android:textColor="@color/colorPrimaryText"
             android:textSize="22sp"
             android:textStyle="bold"
             app:layout_constraintTop_toBottomOf="@id/imageAlbumArtParent" />
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/textSubtitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fontFamily="sans-serif-condensed-medium"
             android:gravity="center"
             android:text="Current artist name"
-            android:textColor="@color/colorSecondaryText"
             android:textSize="18sp"
             app:layout_constraintTop_toBottomOf="@id/textTitle" />
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/textNowPlaying"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
-            android:fontFamily="sans-serif-condensed-medium"
             android:text="@string/now_playing"
             android:textAllCaps="true"
-            android:textColor="@color/colorPrimaryText"
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-
-        <View
-            android:id="@+id/viewSupporterForBackground"
-            android:layout_width="1dp"
-            android:layout_height="1dp"
-            android:layout_marginTop="30dp"
-            app:layout_constraintEnd_toEndOf="@id/layoutPlayer"
-            app:layout_constraintStart_toStartOf="@id/layoutPlayer"
-            app:layout_constraintTop_toTopOf="@id/layoutPlayer" />
-
-        <View
-            android:id="@+id/viewSupporterForAlbumArt"
-            android:layout_width="1dp"
-            android:layout_height="1dp"
-            app:layout_constraintBottom_toTopOf="@id/layoutPlayer"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <View
-            android:id="@+id/view1"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            app:layout_constraintBottom_toTopOf="@id/viewSupporterForAlbumArt"
-            app:layout_constraintEnd_toStartOf="@id/viewSupporterForAlbumArt"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <View
-            android:id="@+id/view2"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            app:layout_constraintBottom_toTopOf="@id/viewSupporterForBackground"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/view1"
-            app:layout_constraintTop_toBottomOf="@id/view1" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/layoutPlayer"
@@ -252,43 +206,35 @@
             <SeekBar
                 android:id="@+id/playerSeekBar"
                 android:layout_width="match_parent"
-                android:layout_height="8dp"
-                android:layout_marginStart="20dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginBottom="25dp"
-                android:focusableInTouchMode="true"
+                android:layout_height="4dp"
+                android:layout_margin="20dp"
                 android:focusable="true"
+                android:padding="0dp"
                 android:clickable="true"
-                android:focusedByDefault="true"
-                android:theme="@style/SeekBarTheme"
                 app:layout_constraintBottom_toTopOf="@id/buttonPlay" />
 
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/textCurrentTime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="12dp"
-                android:layout_marginTop="30dp"
+                android:layout_marginTop="15dp"
                 android:layout_marginBottom="4dp"
-                android:fontFamily="sans-serif-condensed-medium"
-                android:text="0:00"
-                android:textColor="@color/colorPrimaryText"
+                android:text="@string/time_placeholder"
                 android:textSize="16sp"
                 app:layout_constraintBottom_toTopOf="@id/playerSeekBar"
                 app:layout_constraintStart_toStartOf="@id/playerSeekBar"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="0:00" />
 
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/textTotalTime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
+                android:layout_marginTop="15dp"
                 android:layout_marginEnd="12dp"
                 android:layout_marginBottom="4dp"
-                android:fontFamily="sans-serif-condensed-medium"
-                android:text="0:00"
-                android:textColor="@color/colorPrimaryText"
+                android:text="@string/time_placeholder"
                 android:textSize="16sp"
                 app:layout_constraintBottom_toTopOf="@id/playerSeekBar"
                 app:layout_constraintEnd_toEndOf="@id/playerSeekBar"
@@ -317,6 +263,42 @@
 
         </com.google.android.material.card.MaterialCardView>
 
+
+        <View
+            android:id="@+id/viewSupporterForBackground"
+            android:layout_width="1dp"
+            android:layout_height="1dp"
+            android:layout_marginTop="30dp"
+            app:layout_constraintEnd_toEndOf="@id/layoutPlayer"
+            app:layout_constraintStart_toStartOf="@id/layoutPlayer"
+            app:layout_constraintTop_toTopOf="@id/layoutPlayer" />
+
+        <View
+            android:id="@+id/viewSupporterForAlbumArt"
+            android:layout_width="1dp"
+            android:layout_height="1dp"
+            app:layout_constraintBottom_toTopOf="@id/layoutPlayer"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:id="@+id/view1"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@id/viewSupporterForAlbumArt"
+            app:layout_constraintEnd_toStartOf="@id/viewSupporterForAlbumArt"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:id="@+id/view2"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@id/viewSupporterForBackground"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/view1"
+            app:layout_constraintTop_toBottomOf="@id/view1" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

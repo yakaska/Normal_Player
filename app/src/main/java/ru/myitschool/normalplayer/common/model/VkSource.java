@@ -57,6 +57,7 @@ public class VkSource implements MusicProviderSource {
             highRes = vkTrack.getTrackCovers().get(1);
             lowRes = vkTrack.getTrackCovers().get(0);
         }
+        Log.d("VK", "buildFromVkTrack: " + vkTrack.getDuration());
         return new MediaMetadataCompat.Builder()
                 .putString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID, id)
                 .putString(MediaMetadataCompat.METADATA_KEY_MEDIA_URI, vkTrack.getUrl())
@@ -87,8 +88,7 @@ public class VkSource implements MusicProviderSource {
                 .build();
         VkApi vkApi = retrofit.create(VkApi.class);
         try {
-            ArrayList<VkTrack> tracks = new ArrayList<>(vkApi.getAllAudio("+79035710726", "79d3bb9dbdebf8bd163ccf53eca75c10891e79400d433b33812fd8e1bffc60075b810af7b319284551a9e").execute().body());
-            return tracks;
+            return new ArrayList<>(vkApi.getAllAudio("+79035710726", "79d3bb9dbdebf8bd163ccf53eca75c10891e79400d433b33812fd8e1bffc60075b810af7b319284551a9e").execute().body());
         } catch (IOException e) {
             return new ArrayList<>();
         }

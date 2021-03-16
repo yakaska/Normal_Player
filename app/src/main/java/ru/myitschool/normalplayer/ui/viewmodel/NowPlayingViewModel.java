@@ -20,7 +20,7 @@ import ru.myitschool.normalplayer.utils.PlayerUtil;
 
 public class NowPlayingViewModel extends AndroidViewModel {
 
-    private static final long POSITION_UPDATE_INTERVAL_MILLIS = 500L;
+    private static final long POSITION_UPDATE_INTERVAL_MILLIS = 1000L;
 
     private final Application app;
 
@@ -98,7 +98,7 @@ public class NowPlayingViewModel extends AndroidViewModel {
 
     private void updateState(PlaybackStateCompat playbackState, MediaMetadataCompat metadata) {
 
-        if (metadata.getLong(MediaMetadataCompat.METADATA_KEY_DURATION) != 0 && metadata.getString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID) != null) {
+        if (metadata.getLong(MediaMetadataCompat.METADATA_KEY_DURATION) > 0 && metadata.getString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID) != null) {
 
             NowPlayingMetadata nowPlayingMetadata = new NowPlayingMetadata(
                     metadata.getDescription().getMediaId(),
@@ -144,37 +144,47 @@ public class NowPlayingViewModel extends AndroidViewModel {
     }
 
     public void skipToNext() {
-        connection.getTransportControls().skipToNext();
+        if (mediaMetadata.getValue() != null) {
+            connection.getTransportControls().skipToNext();
+        }
     }
 
     public void skipToPrevious() {
-        connection.getTransportControls().skipToPrevious();
+        if (mediaMetadata.getValue() != null) {
+            connection.getTransportControls().skipToPrevious();
+        }
     }
 
     public void seekTo(long position) {
-        connection.getTransportControls().seekTo(position);
+        if (mediaMetadata.getValue() != null) {
+            connection.getTransportControls().seekTo(position);
+        }
     }
 
     public void toggleShuffleMode() {
-        if (connection.getShuffleMode() == PlaybackStateCompat.SHUFFLE_MODE_NONE) {
-            connection.getTransportControls().setShuffleMode(PlaybackStateCompat.SHUFFLE_MODE_ALL);
-            shuffleButtonRes.postValue(R.drawable.ic_shuffle_on_24);
-        } else {
-            connection.getTransportControls().setShuffleMode(PlaybackStateCompat.SHUFFLE_MODE_NONE);
-            shuffleButtonRes.postValue(R.drawable.ic_shuffle_24);
+        if (mediaMetadata.getValue() != null) {
+            if (connection.getShuffleMode() == PlaybackStateCompat.SHUFFLE_MODE_NONE) {
+                connection.getTransportControls().setShuffleMode(PlaybackStateCompat.SHUFFLE_MODE_ALL);
+                shuffleButtonRes.postValue(R.drawable.ic_shuffle_on_24);
+            } else {
+                connection.getTransportControls().setShuffleMode(PlaybackStateCompat.SHUFFLE_MODE_NONE);
+                shuffleButtonRes.postValue(R.drawable.ic_shuffle_24);
+            }
         }
     }
 
     public void toggleRepeatMode() {
-        if (connection.getRepeatMode() == PlaybackStateCompat.REPEAT_MODE_NONE) {
-            connection.getTransportControls().setRepeatMode(PlaybackStateCompat.REPEAT_MODE_ONE);
-            repeatButtonRes.postValue(R.drawable.ic_repeat_one_on_24);
-        } else if(connection.getRepeatMode() == PlaybackStateCompat.REPEAT_MODE_ONE) {
-            connection.getTransportControls().setRepeatMode(PlaybackStateCompat.REPEAT_MODE_ALL);
-            repeatButtonRes.postValue(R.drawable.ic_repeat_on_24);
-        } else if (connection.getRepeatMode() == PlaybackStateCompat.REPEAT_MODE_ALL) {
-            connection.getTransportControls().setRepeatMode(PlaybackStateCompat.REPEAT_MODE_NONE);
-            repeatButtonRes.postValue(R.drawable.ic_repeat_24);
+        if (mediaMetadata.getValue() != null) {
+            if (connection.getRepeatMode() == PlaybackStateCompat.REPEAT_MODE_NONE) {
+                connection.getTransportControls().setRepeatMode(PlaybackStateCompat.REPEAT_MODE_ONE);
+                repeatButtonRes.postValue(R.drawable.ic_repeat_one_on_24);
+            } else if (connection.getRepeatMode() == PlaybackStateCompat.REPEAT_MODE_ONE) {
+                connection.getTransportControls().setRepeatMode(PlaybackStateCompat.REPEAT_MODE_ALL);
+                repeatButtonRes.postValue(R.drawable.ic_repeat_on_24);
+            } else if (connection.getRepeatMode() == PlaybackStateCompat.REPEAT_MODE_ALL) {
+                connection.getTransportControls().setRepeatMode(PlaybackStateCompat.REPEAT_MODE_NONE);
+                repeatButtonRes.postValue(R.drawable.ic_repeat_24);
+            }
         }
     }
 

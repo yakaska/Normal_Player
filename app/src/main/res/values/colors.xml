@@ -9,7 +9,7 @@
     <color name="colorBackground">#FFFFFF</color>
     <color name="colorBackgroundSelected">#EEEEEE</color>
     <color name="colorStroke">#BDBDBD</color>
-    <color name="colorHint">#ECECEC</color>
+    <color name="colorHint">#F7F7F7</color>
     <color name="colorBlack">#000000</color>
     <color name="colorTint">#111111</color>
 </resources>

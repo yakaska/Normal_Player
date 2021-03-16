@@ -61,4 +61,15 @@ public class NowPlayingMetadata {
         return durationMs;
     }
 
+    @Override
+    public String toString() {
+        return "NowPlayingMetadata{" +
+                "mediaId='" + mediaId + '\'' +
+                ", albumArtUri=" + albumArtUri +
+                ", title='" + title + '\'' +
+                ", subtitle='" + subtitle + '\'' +
+                ", duration='" + duration + '\'' +
+                ", durationMs=" + durationMs +
+                '}';
+    }
 }

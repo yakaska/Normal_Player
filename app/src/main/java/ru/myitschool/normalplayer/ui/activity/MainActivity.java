@@ -2,6 +2,7 @@ package ru.myitschool.normalplayer.ui.activity;
 
 import android.Manifest;
 import android.media.AudioManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -18,6 +19,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.google.android.exoplayer2.ui.DefaultTimeBar;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.slider.Slider;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.PermissionDeniedResponse;
@@ -172,8 +174,13 @@ public class MainActivity extends AppCompatActivity {
                 long time = aLong;
                 Log.d(TAG, "seekTo: " + aLong);
                 activityMainBinding.bottomSheetInclude.textCurrentTime.setText(NowPlayingMetadata.timestampToMSS(MainActivity.this, time));
-                activityMainBinding.bottomSheetInclude.playerSeekBar.setProgress((int) (time));
-                activityMainBinding.bottomSheetInclude.progressBarPeek.setProgress((int) (time));
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    activityMainBinding.bottomSheetInclude.playerSeekBar.setProgress((int) time, true);
+                    activityMainBinding.bottomSheetInclude.progressBarPeek.setProgress((int) (time), true);
+                } else {
+                    activityMainBinding.bottomSheetInclude.playerSeekBar.setProgress((int) time);
+                    activityMainBinding.bottomSheetInclude.progressBarPeek.setProgress((int) (time));
+                }
             }
         });
 
@@ -205,6 +212,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if (nowPlayingViewModel.getMediaMetadata().getValue() != null) {
                     mainActivityViewModel.playMediaId(nowPlayingViewModel.getMediaMetadata().getValue().getMediaId());
+
                 }
             }
         });
@@ -212,35 +220,28 @@ public class MainActivity extends AppCompatActivity {
         activityMainBinding.bottomSheetInclude.buttonNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (nowPlayingViewModel.getMediaMetadata().getValue() != null) {
-                    nowPlayingViewModel.skipToNext();
-                }
+                nowPlayingViewModel.skipToNext();
+
             }
         });
 
         activityMainBinding.bottomSheetInclude.buttonPrevious.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (nowPlayingViewModel.getMediaMetadata().getValue() != null) {
-                    nowPlayingViewModel.skipToPrevious();
-                }
+                nowPlayingViewModel.skipToPrevious();
             }
         });
 
         activityMainBinding.bottomSheetInclude.playerSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                if (nowPlayingViewModel.getMediaMetadata().getValue() != null) {
-                    if (fromUser) {
-                        seekBar.setProgress(progress);
-                        nowPlayingViewModel.seekTo(progress);
-                    }
+                if (fromUser) {
+                    nowPlayingViewModel.seekTo(progress);
                 }
             }
 
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
-
             }
 
             @Override
@@ -255,21 +256,24 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        activityMainBinding.bottomSheetInclude.buttonExpandPeek.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+            }
+        });
+
         activityMainBinding.bottomSheetInclude.buttonShuffle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (nowPlayingViewModel.getMediaMetadata().getValue() != null) {
-                    nowPlayingViewModel.toggleShuffleMode();
-                }
+                nowPlayingViewModel.toggleShuffleMode();
             }
         });
 
         activityMainBinding.bottomSheetInclude.buttonRepeat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (nowPlayingViewModel.getMediaMetadata().getValue() != null) {
-                    nowPlayingViewModel.toggleRepeatMode();
-                }
+                nowPlayingViewModel.toggleRepeatMode();
             }
         });
 
@@ -299,21 +303,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void updateUI(NowPlayingMetadata nowPlayingMetadata) {
-        Log.d(TAG, "updateUI: ");
         if (nowPlayingMetadata.getAlbumArtUri() == null) {
             activityMainBinding.bottomSheetInclude.imageAlbumArt.setImageResource(R.drawable.ic_default_art);
         } else {
             Picasso.get().load(nowPlayingMetadata.getAlbumArtUri()).placeholder(R.drawable.ic_default_art).into(activityMainBinding.bottomSheetInclude.imageAlbumArt);
-            Picasso.get().load(nowPlayingMetadata.getAlbumArtUri()).placeholder(R.drawable.ic_default_art).into(activityMainBinding.bottomSheetInclude.imageAlbumArtPeek);
         }
         activityMainBinding.bottomSheetInclude.textTitle.setText(nowPlayingMetadata.getTitle());
         activityMainBinding.bottomSheetInclude.textName.setText(String.format(getString(R.string.song_format), nowPlayingMetadata.getTitle(), nowPlayingMetadata.getSubtitle()));
         activityMainBinding.bottomSheetInclude.textSubtitle.setText(nowPlayingMetadata.getSubtitle());
         activityMainBinding.bottomSheetInclude.textTotalTime.setText(nowPlayingMetadata.getDuration());
         activityMainBinding.bottomSheetInclude.playerSeekBar.setMax((int) nowPlayingMetadata.getDurationMs());
-        //activityMainBinding.bottomSheetInclude.playerSeekBar.setProgress(0);
         activityMainBinding.bottomSheetInclude.progressBarPeek.setMax((int) nowPlayingMetadata.getDurationMs());
-        //activityMainBinding.bottomSheetInclude.progressBarPeek.setProgress(0);
     }
 
     private void navigateToMediaItem(String mediaId) {
