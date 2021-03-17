@@ -7,10 +7,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.ResultReceiver;
 import android.support.v4.media.MediaBrowserCompat;
-import android.support.v4.media.MediaBrowserCompat.MediaItem;
 import android.support.v4.media.MediaDescriptionCompat;
 import android.support.v4.media.MediaMetadataCompat;
-import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.util.Log;
@@ -26,7 +24,6 @@ import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.audio.AudioAttributes;
 import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector;
-import com.google.android.exoplayer2.ext.mediasession.TimelineQueueEditor;
 import com.google.android.exoplayer2.ext.mediasession.TimelineQueueNavigator;
 import com.google.android.exoplayer2.source.ConcatenatingMediaSource;
 import com.google.android.exoplayer2.ui.PlayerNotificationManager;
@@ -97,7 +94,7 @@ public class MusicService extends MediaBrowserServiceCompat {
 
                 DefaultDataSourceFactory dataSourceFactory = new DefaultDataSourceFactory(getApplicationContext(), Util.getUserAgent(getApplicationContext(), NP_USER_AGENT), null);
 
-                cacheDataSourceFactory = new CacheDataSourceFactory(CacheUtil.getCache(getApplicationContext()), dataSourceFactory, CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR);
+                cacheDataSourceFactory = new CacheDataSourceFactory(CacheUtil.getPlayerCache(getApplicationContext()), dataSourceFactory, CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR);
 
                 exoPlayer = new SimpleExoPlayer.Builder(getApplicationContext()).build();
                 exoPlayer.setAudioAttributes(audioAttributes, true);

@@ -2,12 +2,10 @@ package ru.myitschool.normalplayer.ui.activity;
 
 import android.Manifest;
 import android.media.AudioManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.SeekBar;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,7 +14,6 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.google.android.exoplayer2.ui.DefaultTimeBar;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.slider.Slider;
@@ -172,15 +169,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onChanged(Long aLong) {
                 long time = aLong;
-                Log.d(TAG, "seekTo: " + aLong);
                 activityMainBinding.bottomSheetInclude.textCurrentTime.setText(NowPlayingMetadata.timestampToMSS(MainActivity.this, time));
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                    activityMainBinding.bottomSheetInclude.playerSeekBar.setProgress((int) time, true);
-                    activityMainBinding.bottomSheetInclude.progressBarPeek.setProgress((int) (time), true);
-                } else {
-                    activityMainBinding.bottomSheetInclude.playerSeekBar.setProgress((int) time);
-                    activityMainBinding.bottomSheetInclude.progressBarPeek.setProgress((int) (time));
-                }
+                activityMainBinding.bottomSheetInclude.playerSeekBar.setValue((int) time);
+                activityMainBinding.bottomSheetInclude.progressBarPeek.setProgress((int) (time));
             }
         });
 
@@ -212,7 +203,6 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if (nowPlayingViewModel.getMediaMetadata().getValue() != null) {
                     mainActivityViewModel.playMediaId(nowPlayingViewModel.getMediaMetadata().getValue().getMediaId());
-
                 }
             }
         });
@@ -232,22 +222,31 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        activityMainBinding.bottomSheetInclude.playerSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+        activityMainBinding.bottomSheetInclude.playerSeekBar.addOnChangeListener(new Slider.OnChangeListener() {
             @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+            public void onValueChange(@NonNull Slider slider, float value, boolean fromUser) {
                 if (fromUser) {
-                    nowPlayingViewModel.seekTo(progress);
+                    nowPlayingViewModel.seekTo((long) value);
                 }
             }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-            }
         });
+
+        //activityMainBinding.bottomSheetInclude.playerSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+        //    @Override
+        //    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+        //        if (fromUser) {
+        //            nowPlayingViewModel.seekTo(progress);
+        //        }
+        //    }
+//
+        //    @Override
+        //    public void onStartTrackingTouch(SeekBar seekBar) {
+        //    }
+//
+        //    @Override
+        //    public void onStopTrackingTouch(SeekBar seekBar) {
+        //    }
+        //});
 
         activityMainBinding.bottomSheetInclude.buttonCollapse.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -303,6 +302,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void updateUI(NowPlayingMetadata nowPlayingMetadata) {
+        String id = nowPlayingMetadata.getMediaId();
+        Log.d(TAG, "updateUI: ");
         if (nowPlayingMetadata.getAlbumArtUri() == null) {
             activityMainBinding.bottomSheetInclude.imageAlbumArt.setImageResource(R.drawable.ic_default_art);
         } else {
@@ -312,7 +313,9 @@ public class MainActivity extends AppCompatActivity {
         activityMainBinding.bottomSheetInclude.textName.setText(String.format(getString(R.string.song_format), nowPlayingMetadata.getTitle(), nowPlayingMetadata.getSubtitle()));
         activityMainBinding.bottomSheetInclude.textSubtitle.setText(nowPlayingMetadata.getSubtitle());
         activityMainBinding.bottomSheetInclude.textTotalTime.setText(nowPlayingMetadata.getDuration());
-        activityMainBinding.bottomSheetInclude.playerSeekBar.setMax((int) nowPlayingMetadata.getDurationMs());
+        activityMainBinding.bottomSheetInclude.playerSeekBar.setValue(0);
+        activityMainBinding.bottomSheetInclude.playerSeekBar.setValueFrom(0);
+        activityMainBinding.bottomSheetInclude.playerSeekBar.setValueTo((int) nowPlayingMetadata.getDurationMs() + 1000);
         activityMainBinding.bottomSheetInclude.progressBarPeek.setMax((int) nowPlayingMetadata.getDurationMs());
     }
 

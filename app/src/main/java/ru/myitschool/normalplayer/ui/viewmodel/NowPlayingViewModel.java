@@ -98,7 +98,14 @@ public class NowPlayingViewModel extends AndroidViewModel {
 
     private void updateState(PlaybackStateCompat playbackState, MediaMetadataCompat metadata) {
 
-        if (metadata.getLong(MediaMetadataCompat.METADATA_KEY_DURATION) > 0 && metadata.getString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID) != null) {
+        String mediaId = "";
+        if (mediaMetadata.getValue() != null) {
+            mediaId = mediaMetadata.getValue().getMediaId();
+        }
+
+        if (metadata.getLong(MediaMetadataCompat.METADATA_KEY_DURATION) > 0
+                && metadata.getString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID) != null
+                && !metadata.getString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID).equals(mediaId)) {
 
             NowPlayingMetadata nowPlayingMetadata = new NowPlayingMetadata(
                     metadata.getDescription().getMediaId(),

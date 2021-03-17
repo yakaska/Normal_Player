@@ -203,13 +203,15 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@id/buttonPlay" />
 
-            <SeekBar
+            <com.google.android.material.slider.Slider
                 android:id="@+id/playerSeekBar"
+                style="@style/Widget.AppCompat.SeekBar"
                 android:layout_width="match_parent"
-                android:layout_height="4dp"
+                android:layout_height="32dp"
                 android:layout_margin="20dp"
                 android:focusable="true"
-                android:padding="0dp"
+                app:tickVisible="false"
+                app:labelBehavior="gone"
                 android:clickable="true"
                 app:layout_constraintBottom_toTopOf="@id/buttonPlay" />
 

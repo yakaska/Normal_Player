@@ -27,12 +27,13 @@
                 android:layout_height="?attr/actionBarSize"
                 android:background="@color/colorBackground"
                 android:gravity="center"
+                android:scrollbarThumbHorizontal="@color/colorPrimary"
                 app:layout_scrollFlags="scroll|enterAlways"
                 app:logo="@drawable/ic_launcher"
-                app:navigationIconTint="@color/colorTint"
-                app:navigationIcon="@drawable/ic_menu_24"
-                app:title="@string/app_name"
                 app:menu="@menu/app_bar"
+                app:navigationIcon="@drawable/ic_menu_24"
+                app:navigationIconTint="@color/colorTint"
+                app:title="@string/app_name"
                 app:titleTextAppearance="@style/TextAppearance.MaterialComponents.Headline6"
                 app:titleTextColor="@color/colorPrimaryText">
 
@@ -44,6 +45,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:paddingBottom="48dp"
+            android:scrollbars="vertical"
             app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
             <FrameLayout
                 android:id="@+id/fragment_container"

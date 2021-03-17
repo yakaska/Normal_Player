@@ -3,34 +3,27 @@ package ru.myitschool.normalplayer.common.model;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.support.v4.media.MediaMetadataCompat;
-import android.util.Log;
 
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
 
-import okhttp3.OkHttpClient;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 import ru.myitschool.normalplayer.R;
-import ru.myitschool.normalplayer.api.vk.VkApi;
+import ru.myitschool.normalplayer.api.vk.VkService;
 import ru.myitschool.normalplayer.api.vk.VkTrack;
 
 public class VkSource implements MusicProviderSource {
 
+    private final Context context;
+
     private final Bitmap defaultArt;
 
     public VkSource(Context context) {
-        defaultArt = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_notification);
+        this.context = context;
+        this.defaultArt = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_notification);
     }
 
     @Override
@@ -57,7 +50,6 @@ public class VkSource implements MusicProviderSource {
             highRes = vkTrack.getTrackCovers().get(1);
             lowRes = vkTrack.getTrackCovers().get(0);
         }
-        Log.d("VK", "buildFromVkTrack: " + vkTrack.getDuration());
         return new MediaMetadataCompat.Builder()
                 .putString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID, id)
                 .putString(MediaMetadataCompat.METADATA_KEY_MEDIA_URI, vkTrack.getUrl())
@@ -76,19 +68,9 @@ public class VkSource implements MusicProviderSource {
     }
 
     private ArrayList<VkTrack> fetchVkTracks() {
-        OkHttpClient okHttpClient = new OkHttpClient().newBuilder()
-                .connectTimeout(180, TimeUnit.SECONDS)
-                .readTimeout(180, TimeUnit.SECONDS)
-                .writeTimeout(180, TimeUnit.SECONDS)
-                .build();
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(VkApi.BASE_URL)
-                .client(okHttpClient)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        VkApi vkApi = retrofit.create(VkApi.class);
         try {
-            return new ArrayList<>(vkApi.getAllAudio("+79035710726", "79d3bb9dbdebf8bd163ccf53eca75c10891e79400d433b33812fd8e1bffc60075b810af7b319284551a9e").execute().body());
+            ArrayList<VkTrack> tracks = VkService.getInstance(context).getVkApi().getAllAudio("79035710726", "79d3bb9dbdebf8bd163ccf53eca75c10891e79400d433b33812fd8e1bffc60075b810af7b319284551a9e").execute().body();
+            return tracks == null ? new ArrayList<>() : tracks;
         } catch (IOException e) {
             return new ArrayList<>();
         }

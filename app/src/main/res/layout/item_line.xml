@@ -4,41 +4,50 @@
     android:id="@+id/item_line_root"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:paddingTop="4dp"
+    android:paddingBottom="4dp"
     android:background="@color/colorBackground">
-
-
-    <ImageButton
-        android:id="@+id/item_line_more"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@null"
-        android:src="@drawable/ic_more_24"
-        android:tint="@color/colorSecondaryText"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/item_line_art"
-        android:layout_width="64dp"
-        android:layout_height="64dp"
-        android:padding="8dp"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:padding="4dp"
         android:src="@drawable/ic_default_art"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
+        android:id="@+id/item_line_title"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:ellipsize="end"
+        android:gravity="bottom|start"
+        android:maxLines="1"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        android:text="Title"
+        android:textSize="16sp"
+
+        android:textColor="@color/colorPrimaryText"
+        app:layout_constraintBottom_toTopOf="@id/item_line_subtitle"
+        app:layout_constraintEnd_toStartOf="@+id/item_line_duration"
+        app:layout_constraintStart_toEndOf="@+id/item_line_art"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/item_line_subtitle"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:ellipsize="end"
-        android:fontFamily="sans-serif-condensed-medium"
         android:gravity="top|start"
+        android:maxLines="1"
+        android:textColor="@color/colorSecondaryText"
         android:paddingStart="8dp"
         android:paddingEnd="8dp"
         android:text="Artist"
-        android:textColor="@color/colorSecondaryText"
         android:textSize="14sp"
+        android:textStyle="normal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/item_line_duration"
         app:layout_constraintStart_toEndOf="@+id/item_line_art"
@@ -47,29 +56,23 @@
     <TextView
         android:id="@+id/item_line_duration"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:text="00:00"
-        android:layout_marginEnd="4dp"
+        android:gravity="center"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@id/item_line_title"
         app:layout_constraintEnd_toStartOf="@id/item_line_more"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/item_line_title"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:ellipsize="end"
-        android:fontFamily="sans-serif-condensed-medium"
-        android:gravity="bottom|start"
-        android:paddingStart="8dp"
-        android:paddingEnd="8dp"
-        android:text="Title"
-        android:textColor="@color/colorPrimaryText"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@id/item_line_subtitle"
-        app:layout_constraintEnd_toStartOf="@+id/item_line_duration"
-        app:layout_constraintStart_toEndOf="@+id/item_line_art"
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/item_line_more"
+        style="@style/Widget.NormalPlayer.MaterialComponents.Button.TextButton.Icon"
+        android:layout_width="24dp"
+        android:layout_height="match_parent"
+        app:icon="@drawable/ic_more_24"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
