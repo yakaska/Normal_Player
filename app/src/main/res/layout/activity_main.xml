@@ -18,24 +18,25 @@
             android:id="@+id/appBarLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:elevation="@dimen/design_appbar_elevation"
-
+            android:elevation="0dp"
+            app:elevation="0dp"
+            android:background="@color/colorBackground"
             app:layout_behavior="com.google.android.material.appbar.AppBarLayout$Behavior">
 
             <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/toolbar"
                 android:layout_width="match_parent"
+                style="@style/Widget.MaterialComponents.Toolbar.Surface"
                 android:layout_height="?attr/actionBarSize"
-                android:background="@color/colorBackground"
+                android:layout_margin="8dp"
                 android:gravity="center"
                 android:scrollbarThumbHorizontal="@color/colorPrimary"
                 app:layout_scrollFlags="scroll|enterAlways"
                 app:logo="@drawable/ic_launcher"
                 app:menu="@menu/app_bar"
                 app:navigationIcon="@drawable/ic_menu_24"
-                app:navigationIconTint="@color/colorTint"
                 app:title="@string/app_name"
-                app:titleTextAppearance="@style/TextAppearance.MaterialComponents.Headline6"
-                app:titleTextColor="@color/colorPrimaryText">
+                app:titleTextAppearance="@style/TextAppearance.MaterialComponents.Headline6">
 
             </com.google.android.material.appbar.MaterialToolbar>
 

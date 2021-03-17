@@ -18,7 +18,7 @@
         android:id="@+id/sheet_peek"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:background="@color/colorBackground">
+        android:background="@color/colorWhite">
 
         <com.google.android.material.progressindicator.LinearProgressIndicator
             android:id="@+id/progressBarPeek"

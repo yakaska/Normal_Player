@@ -10,11 +10,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.card.MaterialCardView;
 import com.squareup.picasso.Picasso;
 
 import java.util.Collections;
@@ -120,7 +120,7 @@ public class MediaItemAdapter extends ListAdapter<MediaItemData, MediaItemAdapte
 
     public static class LineViewHolder extends RecyclerView.ViewHolder {
         private MediaItemData item = null;
-        private final ConstraintLayout rootView;
+        private final MaterialCardView rootView;
         private final ImageView artIv;
         private final TextView titleTv;
         private final TextView artistTv;

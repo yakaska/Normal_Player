@@ -16,6 +16,8 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.shape.CornerFamily;
+import com.google.android.material.shape.MaterialShapeDrawable;
 import com.google.android.material.slider.Slider;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.PermissionToken;
@@ -79,6 +81,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initUI() {
+        setToolbar();
         activityMainBinding.bottomSheetInclude.textName.setSelected(true);
 
         BottomSheetBehavior sheetBehavior = BottomSheetBehavior.from(activityMainBinding.bottomSheetInclude.bottomSheet);
@@ -317,6 +320,15 @@ public class MainActivity extends AppCompatActivity {
         activityMainBinding.bottomSheetInclude.playerSeekBar.setValueFrom(0);
         activityMainBinding.bottomSheetInclude.playerSeekBar.setValueTo((int) nowPlayingMetadata.getDurationMs() + 1000);
         activityMainBinding.bottomSheetInclude.progressBarPeek.setMax((int) nowPlayingMetadata.getDurationMs());
+    }
+
+    private void setToolbar() {
+        float radius = 32; //32dp
+        MaterialShapeDrawable materialShapeDrawable = (MaterialShapeDrawable)activityMainBinding.toolbar.getBackground();
+        materialShapeDrawable.setShapeAppearanceModel(materialShapeDrawable.getShapeAppearanceModel()
+                .toBuilder()
+                .setAllCorners(CornerFamily.ROUNDED,radius)
+                .build());
     }
 
     private void navigateToMediaItem(String mediaId) {
