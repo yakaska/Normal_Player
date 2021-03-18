@@ -20,9 +20,9 @@ import ru.myitschool.normalplayer.common.model.MusicProvider;
 import ru.myitschool.normalplayer.ui.model.MediaItemData;
 import ru.myitschool.normalplayer.utils.PlayerUtil;
 
-public class SongFragmentViewModel extends ViewModel {
+public class MediaItemFragmentViewModel extends ViewModel {
 
-    private static final String TAG = SongFragmentViewModel.class.getSimpleName();
+    private static final String TAG = MediaItemFragmentViewModel.class.getSimpleName();
 
     private static final int NO_RES_ID = 0;
 
@@ -96,7 +96,7 @@ public class SongFragmentViewModel extends ViewModel {
         }
     };
 
-    public SongFragmentViewModel(String mediaId, MusicServiceConnection connection) {
+    public MediaItemFragmentViewModel(String mediaId, MusicServiceConnection connection) {
         this.connection = connection;
         this.mediaId = mediaId;
         this.connection.subscribe(mediaId, subscriptionCallback);
@@ -177,7 +177,7 @@ public class SongFragmentViewModel extends ViewModel {
         @NonNull
         @Override
         public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-            return (T) new SongFragmentViewModel(mediaId, connection);
+            return (T) new MediaItemFragmentViewModel(mediaId, connection);
         }
     }
 

@@ -8,10 +8,7 @@ import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 
-import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
-
-import java.util.List;
 
 public class MusicServiceConnection {
 
@@ -88,18 +85,6 @@ public class MusicServiceConnection {
 
     public String getBrowserRoot() {
         return mediaBrowser.getRoot();
-    }
-
-    private class MediaSearchCallback extends MediaBrowserCompat.SearchCallback {
-        @Override
-        public void onSearchResult(@NonNull String query, Bundle extras, @NonNull List<MediaBrowserCompat.MediaItem> items) {
-            super.onSearchResult(query, extras, items);
-        }
-
-        @Override
-        public void onError(@NonNull String query, Bundle extras) {
-            super.onError(query, extras);
-        }
     }
 
     private class MediaBrowserConnectionCallback extends MediaBrowserCompat.ConnectionCallback {

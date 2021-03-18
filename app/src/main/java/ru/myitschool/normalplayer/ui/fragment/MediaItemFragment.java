@@ -15,7 +15,7 @@ import ru.myitschool.normalplayer.databinding.FragmentMediaitemBinding;
 import ru.myitschool.normalplayer.ui.adapter.MediaItemAdapter;
 import ru.myitschool.normalplayer.ui.model.MediaItemData;
 import ru.myitschool.normalplayer.ui.viewmodel.MainActivityViewModel;
-import ru.myitschool.normalplayer.ui.viewmodel.SongFragmentViewModel;
+import ru.myitschool.normalplayer.ui.viewmodel.MediaItemFragmentViewModel;
 import ru.myitschool.normalplayer.utils.ProviderUtil;
 
 
@@ -29,7 +29,7 @@ public class MediaItemFragment extends Fragment implements MediaItemAdapter.OnIt
 
     private MainActivityViewModel mainActivityViewModel;
 
-    private SongFragmentViewModel songFragmentViewModel;
+    private MediaItemFragmentViewModel mediaItemFragmentViewModel;
 
     private FragmentMediaitemBinding binding;
 
@@ -57,8 +57,8 @@ public class MediaItemFragment extends Fragment implements MediaItemAdapter.OnIt
             return;
         }
         mainActivityViewModel = new ViewModelProvider(getActivity(), ProviderUtil.provideMainActivityViewModel(requireActivity())).get(MainActivityViewModel.class);
-        songFragmentViewModel = new ViewModelProvider(this, ProviderUtil.provideSongFragmentViewModel(requireActivity(), mediaId)).get(SongFragmentViewModel.class);
-        songFragmentViewModel.mediaItems.observe(getViewLifecycleOwner(), mediaItems -> {
+        mediaItemFragmentViewModel = new ViewModelProvider(this, ProviderUtil.provideSongFragmentViewModel(requireActivity(), mediaId)).get(MediaItemFragmentViewModel.class);
+        mediaItemFragmentViewModel.mediaItems.observe(getViewLifecycleOwner(), mediaItems -> {
             if (mediaItems != null && !mediaItems.isEmpty()) {
                 binding.fragmentSongLoadingSpinner.setVisibility(View.GONE);
             } else {
