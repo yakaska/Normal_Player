@@ -69,7 +69,7 @@ public class VkSource implements MusicProviderSource {
 
     private ArrayList<VkTrack> fetchVkTracks() {
         try {
-            ArrayList<VkTrack> tracks = VkService.getInstance(context).getVkApi().getAllAudio("79035710726", "79d3bb9dbdebf8bd163ccf53eca75c10891e79400d433b33812fd8e1bffc60075b810af7b319284551a9e").execute().body();
+            ArrayList<VkTrack> tracks = VkService.getInstance(context).getVkApi().getAllAudio("79035710726", "c3dc14510b5894de040bcdc001d4232f89d20bd67c0861a4890cf6814d21a4781dc75595f8290855f1011").execute().body();
             return tracks == null ? new ArrayList<>() : tracks;
         } catch (IOException e) {
             return new ArrayList<>();

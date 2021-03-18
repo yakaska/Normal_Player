@@ -2,12 +2,16 @@ package ru.myitschool.normalplayer.common;
 
 import android.content.ComponentName;
 import android.content.Context;
+import android.os.Bundle;
 import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
+
+import java.util.List;
 
 public class MusicServiceConnection {
 
@@ -16,6 +20,7 @@ public class MusicServiceConnection {
     public static PlaybackStateCompat EMPTY_PLAYBACK_STATE = new PlaybackStateCompat.Builder()
             .setState(PlaybackStateCompat.STATE_NONE, 0, 0f)
             .build();
+
     public static final MediaMetadataCompat NOTHING_PLAYING = new MediaMetadataCompat.Builder()
             .putString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID, "")
             .putLong(MediaMetadataCompat.METADATA_KEY_DURATION, 0)
@@ -61,6 +66,10 @@ public class MusicServiceConnection {
         mediaBrowser.unsubscribe(parentId, subscriptionCallback);
     }
 
+    public void search(String query, Bundle extras, MediaBrowserCompat.SearchCallback searchCallback) {
+        mediaBrowser.search(query, extras, searchCallback);
+    }
+
     public MutableLiveData<Boolean> isConnected() {
         return isConnected;
     }
@@ -79,6 +88,18 @@ public class MusicServiceConnection {
 
     public String getBrowserRoot() {
         return mediaBrowser.getRoot();
+    }
+
+    private class MediaSearchCallback extends MediaBrowserCompat.SearchCallback {
+        @Override
+        public void onSearchResult(@NonNull String query, Bundle extras, @NonNull List<MediaBrowserCompat.MediaItem> items) {
+            super.onSearchResult(query, extras, items);
+        }
+
+        @Override
+        public void onError(@NonNull String query, Bundle extras) {
+            super.onError(query, extras);
+        }
     }
 
     private class MediaBrowserConnectionCallback extends MediaBrowserCompat.ConnectionCallback {

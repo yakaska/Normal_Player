@@ -10,7 +10,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class VkService {
 
-    private static final String BASE_URL = "http://192.168.1.82:5000/";
+    private static final String BASE_URL = "https://mp3-api.herokuapp.com/";
 
     private static VkService instance;
 

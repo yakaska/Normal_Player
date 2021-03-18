@@ -26,6 +26,7 @@ import static ru.myitschool.normalplayer.utils.MediaIDUtil.MEDIA_ID_MUSICS_ALL;
 import static ru.myitschool.normalplayer.utils.MediaIDUtil.MEDIA_ID_MUSICS_BY_ALBUM;
 import static ru.myitschool.normalplayer.utils.MediaIDUtil.MEDIA_ID_MUSICS_BY_ARTIST;
 import static ru.myitschool.normalplayer.utils.MediaIDUtil.MEDIA_ID_MUSICS_BY_GENRE;
+import static ru.myitschool.normalplayer.utils.MediaIDUtil.MEDIA_ID_MUSICS_BY_SEARCH;
 import static ru.myitschool.normalplayer.utils.MediaIDUtil.MEDIA_ID_ROOT;
 import static ru.myitschool.normalplayer.utils.MediaIDUtil.createMediaID;
 
@@ -432,9 +433,7 @@ public class MusicProvider {
                 MediaBrowserCompat.MediaItem.FLAG_BROWSABLE);
     }
 
-    private MediaBrowserCompat.MediaItem createMediaItem(MediaMetadataCompat metadata, String key) {
-        Log.d(TAG, "createMediaItem: ");
-
+    public MediaBrowserCompat.MediaItem createMediaItem(MediaMetadataCompat metadata, String key) {
         String uniq;
 
         switch (key) {
@@ -446,6 +445,9 @@ public class MusicProvider {
                 break;
             case MEDIA_ID_MUSICS_BY_ARTIST:
                 uniq = metadata.getString(MediaMetadataCompat.METADATA_KEY_ARTIST);
+                break;
+            case MEDIA_ID_MUSICS_BY_SEARCH:
+                uniq = MEDIA_ID_MUSICS_BY_SEARCH;
                 break;
             default:
                 uniq = metadata.getString(MediaMetadataCompat.METADATA_KEY_GENRE);

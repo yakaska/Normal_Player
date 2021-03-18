@@ -16,8 +16,6 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
-import com.google.android.material.shape.CornerFamily;
-import com.google.android.material.shape.MaterialShapeDrawable;
 import com.google.android.material.slider.Slider;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.PermissionToken;
@@ -29,7 +27,7 @@ import com.squareup.picasso.Picasso;
 
 import ru.myitschool.normalplayer.R;
 import ru.myitschool.normalplayer.databinding.ActivityMainBinding;
-import ru.myitschool.normalplayer.ui.fragment.SongFragment;
+import ru.myitschool.normalplayer.ui.fragment.MediaItemFragment;
 import ru.myitschool.normalplayer.ui.model.NowPlayingMetadata;
 import ru.myitschool.normalplayer.ui.viewmodel.MainActivityViewModel;
 import ru.myitschool.normalplayer.ui.viewmodel.NowPlayingViewModel;
@@ -81,7 +79,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initUI() {
-        setToolbar();
         activityMainBinding.bottomSheetInclude.textName.setSelected(true);
 
         BottomSheetBehavior sheetBehavior = BottomSheetBehavior.from(activityMainBinding.bottomSheetInclude.bottomSheet);
@@ -322,19 +319,12 @@ public class MainActivity extends AppCompatActivity {
         activityMainBinding.bottomSheetInclude.progressBarPeek.setMax((int) nowPlayingMetadata.getDurationMs());
     }
 
-    private void setToolbar() {
-        float radius = 32; //32dp
-        MaterialShapeDrawable materialShapeDrawable = (MaterialShapeDrawable)activityMainBinding.toolbar.getBackground();
-        materialShapeDrawable.setShapeAppearanceModel(materialShapeDrawable.getShapeAppearanceModel()
-                .toBuilder()
-                .setAllCorners(CornerFamily.ROUNDED,radius)
-                .build());
-    }
+
 
     private void navigateToMediaItem(String mediaId) {
         Fragment fragment = getBrowseFragment(mediaId);
         if (fragment == null) {
-            fragment = SongFragment.newInstance(mediaId);
+            fragment = MediaItemFragment.newInstance(mediaId);
         }
         mainActivityViewModel.showFragment(fragment, !isRootId(mediaId), mediaId);
     }

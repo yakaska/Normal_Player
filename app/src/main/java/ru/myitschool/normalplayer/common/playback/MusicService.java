@@ -44,6 +44,7 @@ import ru.myitschool.normalplayer.utils.PlayerUtil;
 import ru.myitschool.normalplayer.utils.QueueUtil;
 
 import static ru.myitschool.normalplayer.utils.MediaIDUtil.MEDIA_ID_EMPTY_ROOT;
+import static ru.myitschool.normalplayer.utils.MediaIDUtil.MEDIA_ID_MUSICS_BY_SEARCH;
 import static ru.myitschool.normalplayer.utils.MediaIDUtil.MEDIA_ID_ROOT;
 
 public class MusicService extends MediaBrowserServiceCompat {
@@ -80,7 +81,6 @@ public class MusicService extends MediaBrowserServiceCompat {
     public void onCreate() {
         super.onCreate();
         Log.d(TAG, "onCreate");
-
         musicProvider = new MusicProvider(new VkSource(getApplicationContext()));
         musicProvider.retrieveMediaAsync(success -> {
             if (success) {
@@ -153,7 +153,11 @@ public class MusicService extends MediaBrowserServiceCompat {
 
     @Override
     public void onSearch(@NonNull String query, Bundle extras, @NonNull Result<List<MediaBrowserCompat.MediaItem>> result) {
-        super.onSearch(query, extras, result);
+        List<MediaBrowserCompat.MediaItem> resultList = new ArrayList<>();
+        for (MediaMetadataCompat metadata : musicProvider.searchMusicBySongTitle(query)) {
+            resultList.add(musicProvider.createMediaItem(metadata, MEDIA_ID_MUSICS_BY_SEARCH));
+        }
+        result.sendResult(resultList);
     }
 
     private void preparePlaylist(ArrayList<MediaMetadataCompat> metadataList, @Nullable String mediaIdToPlay, boolean playWhenReady, long playbackStartPositionMs) {

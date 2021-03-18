@@ -10,12 +10,15 @@
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:indeterminate="true"
-        android:layout_gravity="center|center_horizontal|center_vertical" />
+        app:layout_anchor="@id/fragment_song_recycler"
+        app:layout_anchorGravity="center"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/fragment_song_recycler"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        app:layout_anchorGravity="bottom"
+        android:layout_gravity="bottom"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
         tools:listitem="@layout/item_line" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
