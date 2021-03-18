@@ -56,7 +56,7 @@ public class MusicProvider {
     }
 
     public MusicProvider(Context context) {
-        this(new InternalSource(context));
+        this(new MultipleSource(context));
     }
 
     public MusicProvider(MusicProviderSource source) {

@@ -55,7 +55,6 @@
             android:singleLine="true"
             android:text="Current song title"
             android:textSize="18sp"
-            android:textStyle="italic"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/buttonPlayPeek"
             app:layout_constraintStart_toEndOf="@id/buttonExpandPeek"

@@ -4,7 +4,6 @@ import android.Manifest;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -187,17 +186,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onChanged(Integer integer) {
                 activityMainBinding.bottomSheetInclude.buttonRepeat.setIconResource(integer);
-            }
-        });
-
-        activityMainBinding.toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (activityMainBinding.main.isDrawerOpen(Gravity.LEFT)) {
-                    activityMainBinding.main.closeDrawer(Gravity.LEFT);
-                } else {
-                    activityMainBinding.main.openDrawer(Gravity.LEFT);
-                }
             }
         });
 

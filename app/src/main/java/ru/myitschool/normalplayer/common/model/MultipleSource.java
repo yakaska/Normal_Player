@@ -16,13 +16,13 @@ import java.util.Iterator;
 
 import ru.myitschool.normalplayer.R;
 
-public class InternalSource implements MusicProviderSource {
+public class MultipleSource implements MusicProviderSource {
 
     private final Context context;
 
     private final Bitmap defaultArt;
 
-    public InternalSource(Context context) {
+    public MultipleSource(Context context) {
         this.context = context;
         defaultArt = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_notification);
     }
