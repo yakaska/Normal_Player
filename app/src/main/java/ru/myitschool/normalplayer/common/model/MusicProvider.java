@@ -433,28 +433,28 @@ public class MusicProvider {
                 MediaBrowserCompat.MediaItem.FLAG_BROWSABLE);
     }
 
-    public MediaBrowserCompat.MediaItem createMediaItem(MediaMetadataCompat metadata, String key) {
-        String uniq;
+    private MediaBrowserCompat.MediaItem createMediaItem(MediaMetadataCompat metadata, String key) {
+        String unique;
 
         switch (key) {
             case MEDIA_ID_MUSICS_BY_GENRE:
-                uniq = metadata.getString(MediaMetadataCompat.METADATA_KEY_GENRE);
+                unique = metadata.getString(MediaMetadataCompat.METADATA_KEY_GENRE);
                 break;
             case MEDIA_ID_MUSICS_BY_ALBUM:
-                uniq = metadata.getString(MediaMetadataCompat.METADATA_KEY_ALBUM);
+                unique = metadata.getString(MediaMetadataCompat.METADATA_KEY_ALBUM);
                 break;
             case MEDIA_ID_MUSICS_BY_ARTIST:
-                uniq = metadata.getString(MediaMetadataCompat.METADATA_KEY_ARTIST);
+                unique = metadata.getString(MediaMetadataCompat.METADATA_KEY_ARTIST);
                 break;
             case MEDIA_ID_MUSICS_BY_SEARCH:
-                uniq = MEDIA_ID_MUSICS_BY_SEARCH;
+                unique = MEDIA_ID_MUSICS_BY_SEARCH;
                 break;
             default:
-                uniq = metadata.getString(MediaMetadataCompat.METADATA_KEY_GENRE);
+                unique = metadata.getString(MediaMetadataCompat.METADATA_KEY_GENRE);
                 break;
         }
 
-        String hierarchyAwareMediaID = createMediaID(metadata.getDescription().getMediaId(), key, uniq);
+        String hierarchyAwareMediaID = createMediaID(metadata.getDescription().getMediaId(), key, unique);
         Bundle extras = new Bundle();
         extras.putLong(EXTRA_DURATION, metadata.getLong(MediaMetadataCompat.METADATA_KEY_DURATION));
         MediaDescriptionCompat description = new MediaDescriptionCompat.Builder()

@@ -44,7 +44,6 @@ import ru.myitschool.normalplayer.utils.PlayerUtil;
 import ru.myitschool.normalplayer.utils.QueueUtil;
 
 import static ru.myitschool.normalplayer.utils.MediaIDUtil.MEDIA_ID_EMPTY_ROOT;
-import static ru.myitschool.normalplayer.utils.MediaIDUtil.MEDIA_ID_MUSICS_BY_SEARCH;
 import static ru.myitschool.normalplayer.utils.MediaIDUtil.MEDIA_ID_ROOT;
 
 public class MusicService extends MediaBrowserServiceCompat {
@@ -155,7 +154,7 @@ public class MusicService extends MediaBrowserServiceCompat {
     public void onSearch(@NonNull String query, Bundle extras, @NonNull Result<List<MediaBrowserCompat.MediaItem>> result) {
         List<MediaBrowserCompat.MediaItem> resultList = new ArrayList<>();
         for (MediaMetadataCompat metadata : musicProvider.searchMusicBySongTitle(query)) {
-            resultList.add(musicProvider.createMediaItem(metadata, MEDIA_ID_MUSICS_BY_SEARCH));
+            resultList.add(new MediaBrowserCompat.MediaItem(metadata.getDescription(), MediaBrowserCompat.MediaItem.FLAG_PLAYABLE));
         }
         result.sendResult(resultList);
     }
