@@ -56,7 +56,7 @@ public class MusicProvider {
     }
 
     public MusicProvider(Context context) {
-        this(new MultipleSource(context));
+        this(new InternalSource(context));
     }
 
     public MusicProvider(MusicProviderSource source) {
@@ -66,6 +66,10 @@ public class MusicProvider {
         musicListByGenre = new ConcurrentHashMap<>();
         musicListById = new ConcurrentHashMap<>();
         favoriteTracks = Collections.newSetFromMap(new ConcurrentHashMap<String, Boolean>());
+    }
+
+    public void setSource(MusicProviderSource source) {
+        this.source = source;
     }
 
     /**

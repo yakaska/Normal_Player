@@ -78,6 +78,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+
     private void initUI() {
         activityMainBinding.bottomSheetInclude.textName.setSelected(true);
 
@@ -318,8 +319,6 @@ public class MainActivity extends AppCompatActivity {
         activityMainBinding.bottomSheetInclude.playerSeekBar.setValueTo((int) nowPlayingMetadata.getDurationMs() + 1000);
         activityMainBinding.bottomSheetInclude.progressBarPeek.setMax((int) nowPlayingMetadata.getDurationMs());
     }
-
-
 
     private void navigateToMediaItem(String mediaId) {
         Fragment fragment = getBrowseFragment(mediaId);

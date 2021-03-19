@@ -14,16 +14,16 @@
     <string name="error_no_metadata">Unable to retrieve metadata.</string>
     <string name="browse_genres">Genres</string>
     <string name="browse_genre_subtitle">Songs by genre</string>
-    <string name="browse_musics_by_genre_subtitle">%1$s songs</string>
-    <string name="browse_musics_by_album_subtitle">%1$s songs</string>
-    <string name="browse_musics_by_artist_subtitle">%1$s songs</string>
+    <string name="browse_musics_by_genre_subtitle" translatable="false">%1$s songs</string>
+    <string name="browse_musics_by_album_subtitle" translatable="false">%1$s songs</string>
+    <string name="browse_musics_by_artist_subtitle" translatable="false">%1$s songs</string>
     <string name="playback_service">Playback Service</string>
     <string name="error_loading_media">Error loading media</string>
     <string name="notification_channel_description">Channel description</string>
-    <string name="search">Поиск</string>
-    <string name="duration_unknown">--:--</string>
-    <string name="duration_format">%d:%02d</string>
-    <string name="song_format">%s • %s</string>
+    <string name="search">Search</string>
+    <string name="duration_unknown" translatable="false">--:--</string>
+    <string name="duration_format" translatable="false">%d:%02d</string>
+    <string name="song_format" translatable="false">%s • %s</string>
     <string name="now_playing">NOW PLAYING</string>
     <string name="delete">Delete</string>
     <string name="details">Details</string>
@@ -32,5 +32,7 @@
     <string name="goto_artist">Go to artist</string>
     <string name="goto_album">Go to album</string>
     <string name="vk_music">VK music</string>
-    <string name="time_placeholder">0:00</string>
+    <string name="time_placeholder" translatable="false">0:00</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
 </resources>

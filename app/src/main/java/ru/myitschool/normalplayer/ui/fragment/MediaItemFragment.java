@@ -1,9 +1,12 @@
 package ru.myitschool.normalplayer.ui.fragment;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.SearchView;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -11,6 +14,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import ru.myitschool.normalplayer.R;
 import ru.myitschool.normalplayer.databinding.FragmentMediaitemBinding;
 import ru.myitschool.normalplayer.ui.adapter.MediaItemAdapter;
 import ru.myitschool.normalplayer.ui.model.MediaItemData;
@@ -44,6 +48,12 @@ public class MediaItemFragment extends Fragment implements MediaItemAdapter.OnIt
     }
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentMediaitemBinding.inflate(inflater, container, false);
         return binding.getRoot();
@@ -53,6 +63,7 @@ public class MediaItemFragment extends Fragment implements MediaItemAdapter.OnIt
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mediaId = getArguments().getString(MEDIA_ID_ARG);
+        Log.d(TAG, "onActivityCreated: ");
         if (mediaId == null) {
             return;
         }
@@ -60,16 +71,30 @@ public class MediaItemFragment extends Fragment implements MediaItemAdapter.OnIt
         mediaItemFragmentViewModel = new ViewModelProvider(this, ProviderUtil.provideSongFragmentViewModel(requireActivity(), mediaId)).get(MediaItemFragmentViewModel.class);
         mediaItemFragmentViewModel.mediaItems.observe(getViewLifecycleOwner(), mediaItems -> {
             if (mediaItems != null && !mediaItems.isEmpty()) {
-                binding.fragmentSongLoadingSpinner.setVisibility(View.GONE);
+                binding.spinner.setVisibility(View.GONE);
             } else {
-                binding.fragmentSongLoadingSpinner.setVisibility(View.VISIBLE);
+                binding.spinner.setVisibility(View.VISIBLE);
             }
-            adapter.submitList(mediaItems);
+            adapter.modifyList(mediaItems);
         });
-        binding.fragmentSongRecycler.setNestedScrollingEnabled(true);
-        binding.fragmentSongRecycler.setItemAnimator(new DefaultItemAnimator());
-        binding.fragmentSongRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
-        binding.fragmentSongRecycler.setAdapter(adapter);
+        binding.recycler.setNestedScrollingEnabled(true);
+        binding.recycler.setItemAnimator(new DefaultItemAnimator());
+        binding.recycler.setLayoutManager(new LinearLayoutManager(getContext()));
+        binding.recycler.setAdapter(adapter);
+        MenuItem searchMenuItem = binding.toolbar.getMenu().findItem(R.id.app_bar_search);
+        SearchView searchView = (SearchView) searchMenuItem.getActionView();
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                adapter.filter(newText);
+                return false;
+            }
+        });
     }
 
     @Override

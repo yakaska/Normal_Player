@@ -35,8 +35,8 @@ import com.google.android.exoplayer2.util.Util;
 import java.util.ArrayList;
 import java.util.List;
 
+import ru.myitschool.normalplayer.common.model.InternalSource;
 import ru.myitschool.normalplayer.common.model.MusicProvider;
-import ru.myitschool.normalplayer.common.model.VkSource;
 import ru.myitschool.normalplayer.ui.activity.MainActivity;
 import ru.myitschool.normalplayer.utils.CacheUtil;
 import ru.myitschool.normalplayer.utils.MediaIDUtil;
@@ -47,40 +47,29 @@ import static ru.myitschool.normalplayer.utils.MediaIDUtil.MEDIA_ID_EMPTY_ROOT;
 import static ru.myitschool.normalplayer.utils.MediaIDUtil.MEDIA_ID_ROOT;
 
 public class MusicService extends MediaBrowserServiceCompat {
-    private static final String TAG = MusicService.class.getSimpleName();
-
-    private static final String NP_USER_AGENT = "NP_USER_AGENT";
-
     public static final String MEDIA_DESCRIPTION_EXTRAS_START_PLAYBACK_POSITION_MS = "playback_start_position_ms";
-
-    private NPNotificationManager notificationManager;
-
-    private MusicProvider musicProvider;
-
-    protected MediaSessionCompat mediaSession;
-
-    protected MediaSessionConnector mediaSessionConnector;
-
-    private ArrayList<MediaMetadataCompat> currentPlaylistItems = new ArrayList<>();
-
-    private CacheDataSourceFactory cacheDataSourceFactory;
-
-    private boolean isForegroundService;
-
+    private static final String TAG = MusicService.class.getSimpleName();
+    private static final String NP_USER_AGENT = "NP_USER_AGENT";
     private final AudioAttributes audioAttributes = new AudioAttributes.Builder()
             .setContentType(C.CONTENT_TYPE_MUSIC)
             .setUsage(C.USAGE_MEDIA)
             .build();
-
     private final PlayerEventListener playerListener = new PlayerEventListener();
+    protected MediaSessionCompat mediaSession;
 
+    protected MediaSessionConnector mediaSessionConnector;
+    private NPNotificationManager notificationManager;
+    private MusicProvider musicProvider;
+    private ArrayList<MediaMetadataCompat> currentPlaylistItems = new ArrayList<>();
+    private CacheDataSourceFactory cacheDataSourceFactory;
+    private boolean isForegroundService;
     private SimpleExoPlayer exoPlayer;
 
     @Override
     public void onCreate() {
         super.onCreate();
         Log.d(TAG, "onCreate");
-        musicProvider = new MusicProvider(new VkSource(getApplicationContext()));
+        musicProvider = new MusicProvider(new InternalSource(getApplicationContext()));
         musicProvider.retrieveMediaAsync(success -> {
             if (success) {
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);

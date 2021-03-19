@@ -86,7 +86,7 @@
             android:layout_height="32dp"
             app:icon="@drawable/ic_more_24"
             android:gravity="end"
-            android:tint="@color/colorSecondaryText"
+            app:iconTint="@color/colorSecondaryText"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

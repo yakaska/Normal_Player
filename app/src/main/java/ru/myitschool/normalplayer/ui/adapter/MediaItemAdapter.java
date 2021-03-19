@@ -17,6 +17,7 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.card.MaterialCardView;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -24,7 +25,9 @@ import ru.myitschool.normalplayer.R;
 import ru.myitschool.normalplayer.ui.model.MediaItemData;
 import ru.myitschool.normalplayer.utils.PlayerUtil;
 
-public class MediaItemAdapter extends ListAdapter<MediaItemData, MediaItemAdapter.LineViewHolder> {
+public class MediaItemAdapter extends ListAdapter<MediaItemData, MediaItemAdapter.LineViewHolder>  {
+
+    private List<MediaItemData> unfilteredList = new ArrayList<>();
 
     public interface OnItemClickListener {
         void onItemClick(MediaItemData clickedItem);
@@ -116,6 +119,26 @@ public class MediaItemAdapter extends ListAdapter<MediaItemData, MediaItemAdapte
                 }
             });
         }
+    }
+
+    public void filter(String query) {
+        ArrayList<MediaItemData> filteredList = new ArrayList<>();
+        if (query ==  null || query.length() == 0) {
+            filteredList.addAll(unfilteredList);
+        } else {
+            String filterPattern = query.toLowerCase().trim();
+            for (MediaItemData mediaItemData: getCurrentList()) {
+                if (mediaItemData.getTitle().toLowerCase().trim().contains(filterPattern)) {
+                    filteredList.add(mediaItemData);
+                }
+            }
+        }
+        submitList(filteredList);
+    }
+
+    public void modifyList(List<MediaItemData> mediaItemDataList) {
+        unfilteredList = mediaItemDataList;
+        submitList(mediaItemDataList);
     }
 
     public static class LineViewHolder extends RecyclerView.ViewHolder {
