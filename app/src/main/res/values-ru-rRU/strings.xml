@@ -15,4 +15,15 @@
     <string name="browse_genres">Жанры</string>
     <string name="browse_genre_subtitle">Песни по жанрам</string>
     <string name="now_playing">СЕЙЧАС ИГРАЕТ</string>
+    <string name="playback_service">Сервис проигрывания музыки</string>
+    <string name="error_loading_media">Ошибка загрузки медиа</string>
+    <string name="notification_channel_description">Описание канала уведомлений</string>
+    <string name="search">Поиск</string>
+    <string name="delete">Удалить</string>
+    <string name="details">Подробнее</string>
+    <string name="edit_tags">Редактор тегов</string>
+    <string name="share">Поделиться</string>
+    <string name="goto_artist">Перейти к исполнителю</string>
+    <string name="goto_album">Перейти к альбому</string>
+    <string name="vk_music">ВК музыка</string>
 </resources>
