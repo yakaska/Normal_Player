@@ -17,7 +17,7 @@ import java.util.Iterator;
 import ru.myitschool.normalplayer.R;
 
 public class InternalSource implements MusicProviderSource {
-
+    
     private final Context context;
 
     private final Bitmap defaultArt;

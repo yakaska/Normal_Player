@@ -58,6 +58,10 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(activityMainBinding.getRoot());
 
+        checkPermissions();
+    }
+
+    private void checkPermissions() {
         Dexter
                 .withContext(this)
                 .withPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
@@ -77,9 +81,7 @@ public class MainActivity extends AppCompatActivity {
 
                     }
                 }).onSameThread().check();
-
     }
-
 
     private void initUI() {
         activityMainBinding.bottomSheetInclude.textName.setSelected(true);
