@@ -167,6 +167,5 @@ public class MediaItemAdapter extends ListAdapter<MediaItemData, MediaItemAdapte
                 }
             });
         }
-
     }
 }

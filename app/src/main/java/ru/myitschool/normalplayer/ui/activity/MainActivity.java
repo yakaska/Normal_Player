@@ -45,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding activityMainBinding;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -123,7 +124,6 @@ public class MainActivity extends AppCompatActivity {
             MainActivityViewModel.FragmentNavigationRequest request = fragmentNavigationRequestEvent.getContentIfNotHandled();
             if (request != null) {
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                //transaction.setCustomAnimations(R.anim.fragment_fade_enter, R.anim.fragment_fade_exit);
                 transaction.replace(R.id.fragment_container, request.getFragment(), request.getTag());
                 if (request.isBackStack()) {
                     transaction.addToBackStack(null);
@@ -132,21 +132,10 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        mainActivityViewModel.getRootMediaId().observe(this, new Observer<String>() {
-            @Override
-            public void onChanged(String mediaId) {
-                //if (mediaId != null) {
-                //    navigateToMediaItem(mediaId);
-                //}
-            }
-        });
-
         mainActivityViewModel.getNavigateToMediaItem().observe(MainActivity.this, new Observer<Event<String>>() {
             @Override
             public void onChanged(Event<String> event) {
-                Log.d(TAG, "onChanged: navigate");
                 String content = event.getContentIfNotHandled();
-                Log.d(TAG, "onChanged: navigate: " + content);
                 navigateToMediaItem(content);
             }
         });
@@ -231,23 +220,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-
-        //activityMainBinding.bottomSheetInclude.playerSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-        //    @Override
-        //    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-        //        if (fromUser) {
-        //            nowPlayingViewModel.seekTo(progress);
-        //        }
-        //    }
-//
-        //    @Override
-        //    public void onStartTrackingTouch(SeekBar seekBar) {
-        //    }
-//
-        //    @Override
-        //    public void onStopTrackingTouch(SeekBar seekBar) {
-        //    }
-        //});
 
         activityMainBinding.bottomSheetInclude.buttonCollapse.setOnClickListener(new View.OnClickListener() {
             @Override

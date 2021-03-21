@@ -10,7 +10,9 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class VkService {
 
-    private static final String BASE_URL = "https://mp3-api.herokuapp.com/";
+    private static final String BASE_URL = "https://api.vk.com/method/";
+
+    private static final String USER_AGENT = "VKAndroidApp/5.52-4543 (Android 5.1.1; SDK 22; x86_64; unknown Android SDK built for x86_64; en; 320x240)";
 
     private static VkService instance;
 

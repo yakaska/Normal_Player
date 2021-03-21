@@ -72,7 +72,6 @@ public class MainActivityViewModel extends ViewModel {
         return navigateToMediaItem;
     }
 
-    //TODO maybe should start playback from 0pos?
     public void playMediaId(String mediaId) {
         MediaMetadataCompat nowPlaying = connection.getNowPlaying().getValue();
         MediaControllerCompat.TransportControls transportControls = connection.getTransportControls();
@@ -89,7 +88,7 @@ public class MainActivityViewModel extends ViewModel {
                 } else if (PlayerUtil.isPlayEnabled(connection.getPlaybackState().getValue())) {
                     transportControls.play();
                 } else {
-                    Log.d(TAG, "playMediaId: ПОШЕЛ НАХУЙ ПИДОРАС");
+                    Log.d(TAG, "playMediaId: пшлнхпдрс");
                 }
             }
         } else {

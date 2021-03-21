@@ -15,7 +15,6 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -43,8 +42,6 @@ public class MusicProvider {
     private ConcurrentMap<String, List<MediaMetadataCompat>> musicListByGenre;
     private final ConcurrentMap<String, MutableMediaMetadata> musicListById;
 
-    private final Set<String> favoriteTracks;
-
     enum State {
         NON_INITIALIZED, INITIALIZING, INITIALIZED
     }
@@ -65,11 +62,6 @@ public class MusicProvider {
         musicListByAlbum = new ConcurrentHashMap<>();
         musicListByGenre = new ConcurrentHashMap<>();
         musicListById = new ConcurrentHashMap<>();
-        favoriteTracks = Collections.newSetFromMap(new ConcurrentHashMap<String, Boolean>());
-    }
-
-    public void setSource(MusicProviderSource source) {
-        this.source = source;
     }
 
     /**
@@ -165,12 +157,10 @@ public class MusicProvider {
         return musicListByAlbum.get(album);
     }
 
-
     /**
      * Very basic implementation of a search that filter music tracks with title containing
      * the given query.
      */
-
     public Iterable<MediaMetadataCompat> searchMusicBySongTitle(String query) {
         return searchMusic(MediaMetadataCompat.METADATA_KEY_TITLE, query);
     }
@@ -192,7 +182,7 @@ public class MusicProvider {
         return searchMusic(MediaMetadataCompat.METADATA_KEY_ARTIST, query);
     }
 
-    Iterable<MediaMetadataCompat> searchMusic(String metadataField, String query) {
+    private Iterable<MediaMetadataCompat> searchMusic(String metadataField, String query) {
         if (currentState != State.INITIALIZED) {
             return Collections.emptyList();
         }
@@ -207,7 +197,6 @@ public class MusicProvider {
         return result;
     }
 
-
     /**
      * Return the MediaMetadataCompat for the given musicID.
      *
@@ -217,20 +206,8 @@ public class MusicProvider {
         return musicListById.containsKey(musicId) ? musicListById.get(musicId).metadata : null;
     }
 
-    public void setFavorite(String musicId, boolean favorite) {
-        if (favorite) {
-            favoriteTracks.add(musicId);
-        } else {
-            favoriteTracks.remove(musicId);
-        }
-    }
-
     public boolean isInitialized() {
         return currentState == State.INITIALIZED;
-    }
-
-    public boolean isFavorite(String musicId) {
-        return favoriteTracks.contains(musicId);
     }
 
     public void retrieveMediaAsync(final Callback callback) {
@@ -260,6 +237,29 @@ public class MusicProvider {
         }.execute();
     }
 
+    private synchronized void retrieveMedia() {
+        try {
+            if (currentState == State.NON_INITIALIZED) {
+                currentState = State.INITIALIZING;
+
+                Iterator<MediaMetadataCompat> tracks = source.iterator();
+                while (tracks.hasNext()) {
+                    MediaMetadataCompat item = tracks.next();
+                    String musicId = item.getString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID);
+                    musicListById.put(musicId, new MutableMediaMetadata(musicId, item));
+                }
+                buildListsByGenre();
+                buildListsByAlbum();
+                buildListsByArtist();
+                currentState = State.INITIALIZED;
+            }
+        } finally {
+            if (currentState != State.INITIALIZED) {
+                currentState = State.NON_INITIALIZED;
+            }
+        }
+    }
+
     private synchronized void buildListsByGenre() {
         ConcurrentMap<String, List<MediaMetadataCompat>> newMusicListByGenre = new ConcurrentHashMap<>();
 
@@ -275,7 +275,6 @@ public class MusicProvider {
         musicListByGenre = newMusicListByGenre;
     }
 
-    //buildListsByAlbum
     private synchronized void buildListsByAlbum() {
         ConcurrentMap<String, List<MediaMetadataCompat>> newMusicListByAlbum = new ConcurrentHashMap<>();
 
@@ -304,31 +303,6 @@ public class MusicProvider {
             list.add(m.metadata);
         }
         musicListByArtist = newMusicListByArtist;
-    }
-
-    public synchronized void retrieveMedia() {
-        try {
-            if (currentState == State.NON_INITIALIZED) {
-                currentState = State.INITIALIZING;
-
-                Iterator<MediaMetadataCompat> tracks = source.iterator();
-                while (tracks.hasNext()) {
-                    MediaMetadataCompat item = tracks.next();
-                    String musicId = item.getString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID);
-                    musicListById.put(musicId, new MutableMediaMetadata(musicId, item));
-                }
-                buildListsByGenre();
-                buildListsByAlbum();
-                buildListsByArtist();
-                currentState = State.INITIALIZED;
-            }
-        } finally {
-            if (currentState != State.INITIALIZED) {
-                // Something bad happened, so we reset state to NON_INITIALIZED to allow
-                // retries (eg if the network connection is temporary unavailable)
-                currentState = State.NON_INITIALIZED;
-            }
-        }
     }
 
     public List<MediaBrowserCompat.MediaItem> getChildren(String mediaId, Resources resources) {
@@ -409,7 +383,6 @@ public class MusicProvider {
                 MediaBrowserCompat.MediaItem.FLAG_BROWSABLE);
     }
 
-    //createBrowsableMediaItemForAlbum
     private MediaBrowserCompat.MediaItem createBrowsableMediaItemForAlbum(String album, Resources resources) {
         MediaMetadataCompat metadata = searchMusicByAlbum(album).iterator().next();
         String iconUri = "";
