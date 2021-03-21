@@ -13,13 +13,14 @@
         android:paddingStart="8dp"
         android:paddingTop="4dp"
         android:paddingEnd="8dp"
+        android:padding="8dp"
         android:paddingBottom="4dp">
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/item_line_art_card"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:padding="4dp"
+            android:padding="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
@@ -37,7 +38,6 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:ellipsize="end"
-            android:gravity="bottom|start"
             android:maxLines="1"
             android:paddingStart="8dp"
             android:paddingEnd="8dp"
@@ -55,7 +55,6 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:ellipsize="end"
-            android:gravity="top|start"
             android:maxLines="1"
             android:textColor="@color/colorSecondaryText"
             android:paddingStart="8dp"
