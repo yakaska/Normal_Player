@@ -44,16 +44,14 @@ import ru.myitschool.normalplayer.utils.PlayerUtil;
 import ru.myitschool.normalplayer.utils.QueueUtil;
 
 import static ru.myitschool.normalplayer.utils.MediaIDUtil.MEDIA_ID_EMPTY_ROOT;
+import static ru.myitschool.normalplayer.utils.MediaIDUtil.MEDIA_ID_MUSICS_BY_VK;
 import static ru.myitschool.normalplayer.utils.MediaIDUtil.MEDIA_ID_ROOT;
 
 public class MusicService extends MediaBrowserServiceCompat {
     public static final String MEDIA_DESCRIPTION_EXTRAS_START_PLAYBACK_POSITION_MS = "playback_start_position_ms";
     private static final String TAG = MusicService.class.getSimpleName();
     private static final String NP_USER_AGENT = "NP_USER_AGENT";
-    private final AudioAttributes audioAttributes = new AudioAttributes.Builder()
-            .setContentType(C.CONTENT_TYPE_MUSIC)
-            .setUsage(C.USAGE_MEDIA)
-            .build();
+    private final AudioAttributes audioAttributes = new AudioAttributes.Builder().setContentType(C.CONTENT_TYPE_MUSIC).setUsage(C.USAGE_MEDIA).build();
     private final PlayerEventListener playerListener = new PlayerEventListener();
     protected MediaSessionCompat mediaSession;
 
@@ -128,6 +126,18 @@ public class MusicService extends MediaBrowserServiceCompat {
             result.sendResult(new ArrayList<>());
         } else if (musicProvider.isInitialized()) {
             result.sendResult(musicProvider.getChildren(parentMediaId, getResources()));
+        } else if (MEDIA_ID_MUSICS_BY_VK.equals(parentMediaId)) {
+            if (musicProvider.isVkInitialized()) {
+                result.sendResult(musicProvider.getChildren(parentMediaId, getResources()));
+            } else {
+                result.detach();
+                musicProvider.retrieveVkMusicAsync(getApplicationContext(), new MusicProvider.Callback() {
+                    @Override
+                    public void onMusicCatalogReady(boolean success) {
+                        result.sendResult(musicProvider.getChildren(parentMediaId, getResources()));
+                    }
+                });
+            }
         } else {
             result.detach();
             musicProvider.retrieveMediaAsync(new MusicProvider.Callback() {

@@ -11,6 +11,7 @@ import static ru.myitschool.normalplayer.utils.MediaIDUtil.MEDIA_ID_MUSICS_ALL;
 import static ru.myitschool.normalplayer.utils.MediaIDUtil.MEDIA_ID_MUSICS_BY_ALBUM;
 import static ru.myitschool.normalplayer.utils.MediaIDUtil.MEDIA_ID_MUSICS_BY_ARTIST;
 import static ru.myitschool.normalplayer.utils.MediaIDUtil.MEDIA_ID_MUSICS_BY_GENRE;
+import static ru.myitschool.normalplayer.utils.MediaIDUtil.MEDIA_ID_MUSICS_BY_VK;
 
 public class QueueUtil {
 
@@ -25,6 +26,9 @@ public class QueueUtil {
         String categoryValue = hierarchy[1];
         Iterable<MediaMetadataCompat> tracks = null;
         switch (categoryType) {
+            case MEDIA_ID_MUSICS_BY_VK:
+                tracks = musicProvider.getMusicsByVk();
+                break;
             case MEDIA_ID_MUSICS_BY_GENRE:
                 tracks = musicProvider.getMusicsByGenre(categoryValue);
                 break;

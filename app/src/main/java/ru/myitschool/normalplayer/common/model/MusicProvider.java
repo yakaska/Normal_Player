@@ -26,6 +26,7 @@ import static ru.myitschool.normalplayer.utils.MediaIDUtil.MEDIA_ID_MUSICS_BY_AL
 import static ru.myitschool.normalplayer.utils.MediaIDUtil.MEDIA_ID_MUSICS_BY_ARTIST;
 import static ru.myitschool.normalplayer.utils.MediaIDUtil.MEDIA_ID_MUSICS_BY_GENRE;
 import static ru.myitschool.normalplayer.utils.MediaIDUtil.MEDIA_ID_MUSICS_BY_SEARCH;
+import static ru.myitschool.normalplayer.utils.MediaIDUtil.MEDIA_ID_MUSICS_BY_VK;
 import static ru.myitschool.normalplayer.utils.MediaIDUtil.MEDIA_ID_ROOT;
 import static ru.myitschool.normalplayer.utils.MediaIDUtil.createMediaID;
 
@@ -41,6 +42,9 @@ public class MusicProvider {
     private ConcurrentMap<String, List<MediaMetadataCompat>> musicListByAlbum;
     private ConcurrentMap<String, List<MediaMetadataCompat>> musicListByGenre;
     private final ConcurrentMap<String, MutableMediaMetadata> musicListById;
+    private final ConcurrentMap<String, MutableMediaMetadata> musicListVk;
+
+    private boolean vkInitialized = false;
 
     enum State {
         NON_INITIALIZED, INITIALIZING, INITIALIZED
@@ -62,6 +66,7 @@ public class MusicProvider {
         musicListByAlbum = new ConcurrentHashMap<>();
         musicListByGenre = new ConcurrentHashMap<>();
         musicListById = new ConcurrentHashMap<>();
+        musicListVk = new ConcurrentHashMap<>();
     }
 
     /**
@@ -74,6 +79,13 @@ public class MusicProvider {
             return Collections.emptyList();
         }
         return musicListById.keySet();
+    }
+
+    public Iterable<String> getVkMusic() {
+        if (!vkInitialized) {
+            return Collections.emptyList();
+        }
+        return musicListVk.keySet();
     }
 
     /**
@@ -145,6 +157,17 @@ public class MusicProvider {
             return Collections.emptyList();
         }
         return musicListByGenre.get(genre);
+    }
+
+    public Iterable<MediaMetadataCompat> getMusicsByVk() {
+        if (!vkInitialized || musicListVk.isEmpty()) {
+            return Collections.emptyList();
+        }
+        ArrayList<MediaMetadataCompat> result = new ArrayList<>();
+        for (String id : musicListVk.keySet()) {
+            result.add(musicListVk.get(id).metadata);
+        }
+        return result;
     }
 
     /**
@@ -260,6 +283,39 @@ public class MusicProvider {
         }
     }
 
+    public void retrieveVkMusicAsync(Context context, final Callback callback) {
+        if (vkInitialized) {
+            if (callback != null) {
+                callback.onMusicCatalogReady(true);
+            }
+            return;
+        }
+        new AsyncTask<Void, Void, State>() {
+            @Override
+            protected State doInBackground(Void... params) {
+                retrieveVkMusic(context);
+                return currentState;
+            }
+
+            @Override
+            protected void onPostExecute(State current) {
+                if (callback != null) {
+                    callback.onMusicCatalogReady(isVkInitialized());
+                }
+            }
+        }.execute();
+    }
+
+    private synchronized void retrieveVkMusic(Context context) {
+        Iterator<MediaMetadataCompat> tracks = new VkSource(context).iterator();
+        while (tracks.hasNext()) {
+            MediaMetadataCompat item = tracks.next();
+            String musicId = item.getString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID);
+            musicListVk.put(musicId, new MutableMediaMetadata(musicId, item));
+            vkInitialized = true;
+        }
+    }
+
     private synchronized void buildListsByGenre() {
         ConcurrentMap<String, List<MediaMetadataCompat>> newMusicListByGenre = new ConcurrentHashMap<>();
 
@@ -318,9 +374,13 @@ public class MusicProvider {
 
 
         } else if (MEDIA_ID_MUSICS_ALL.equals(mediaId)) {
-
             for (String id : getAllMusic()) {
                 mediaItems.add(createMediaItem(getMusic(id), MEDIA_ID_MUSICS_ALL));
+            }
+
+        } else if (MEDIA_ID_MUSICS_BY_VK.equals(mediaId)) {
+            for (String id : getVkMusic()) {
+                mediaItems.add(createMediaItem(getMusic(id), MEDIA_ID_MUSICS_BY_VK));
             }
 
         } else if (MEDIA_ID_MUSICS_BY_GENRE.equals(mediaId)) {
@@ -449,4 +509,7 @@ public class MusicProvider {
 
     }
 
+    public boolean isVkInitialized() {
+        return vkInitialized;
+    }
 }

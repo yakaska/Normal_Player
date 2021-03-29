@@ -259,6 +259,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
+                    case R.id.nav_vk:
+                        navigateToVk();
+                        break;
                     case R.id.nav_music:
                         navigateToMediaItem(MediaIDUtil.MEDIA_ID_MUSICS_ALL);
                         break;
@@ -292,6 +295,10 @@ public class MainActivity extends AppCompatActivity {
         activityMainBinding.bottomSheetInclude.playerSeekBar.setValueFrom(0);
         activityMainBinding.bottomSheetInclude.playerSeekBar.setValueTo((int) nowPlayingMetadata.getDurationMs() + 1000);
         activityMainBinding.bottomSheetInclude.progressBarPeek.setMax((int) nowPlayingMetadata.getDurationMs());
+    }
+
+    private void navigateToVk() {
+
     }
 
     private void navigateToMediaItem(String mediaId) {

@@ -6,6 +6,7 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.os.Build;
 
+
 public class App extends Application {
 
     public static final String NOW_PLAYING_CHANNEL_ID = "ru.myitschool.normalplayer.NOW_PLAYING";
@@ -15,7 +16,6 @@ public class App extends Application {
         super.onCreate();
         
         createNotificationChannels();
-        
     }
 
     private void createNotificationChannels() {

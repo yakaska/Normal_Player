@@ -40,6 +40,7 @@ public class MediaItemFragment extends Fragment implements MediaItemAdapter.OnIt
     private final MediaItemAdapter adapter = new MediaItemAdapter(this);
 
     public static MediaItemFragment newInstance(String mediaId) {
+        Log.d(TAG, "newInstance: ");
         Bundle args = new Bundle();
         args.putString(MEDIA_ID_ARG, mediaId);
         MediaItemFragment mediaItemFragment = new MediaItemFragment();
