@@ -41,7 +41,7 @@ public class VkSource implements MusicProviderSource {
     }
 
     private MediaMetadataCompat buildFromVkTrack(Item item) {
-        String id = String.valueOf(item.getId());
+        String id = item.getUrl();
         String url = toMp3(item.getUrl());
         Log.d("URL", url);
         String highRes = "android.resource://ru.myitschool.normalplayer/" + R.drawable.ic_default_art;

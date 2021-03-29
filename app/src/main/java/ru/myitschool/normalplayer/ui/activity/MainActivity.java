@@ -259,9 +259,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
-                    case R.id.nav_vk:
-                        navigateToVk();
-                        break;
                     case R.id.nav_music:
                         navigateToMediaItem(MediaIDUtil.MEDIA_ID_MUSICS_ALL);
                         break;
@@ -270,6 +267,9 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     case R.id.nav_artists:
                         navigateToMediaItem(MediaIDUtil.MEDIA_ID_MUSICS_BY_ARTIST);
+                        break;
+                    case R.id.nav_genres:
+                        navigateToMediaItem(MediaIDUtil.MEDIA_ID_MUSICS_BY_GENRE);
                         break;
                 }
                 return true;

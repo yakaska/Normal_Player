@@ -35,8 +35,8 @@ import com.google.android.exoplayer2.util.Util;
 import java.util.ArrayList;
 import java.util.List;
 
-import ru.myitschool.normalplayer.common.model.InternalSource;
 import ru.myitschool.normalplayer.common.model.MusicProvider;
+import ru.myitschool.normalplayer.common.model.VkSource;
 import ru.myitschool.normalplayer.ui.activity.MainActivity;
 import ru.myitschool.normalplayer.utils.CacheUtil;
 import ru.myitschool.normalplayer.utils.MediaIDUtil;
@@ -44,7 +44,6 @@ import ru.myitschool.normalplayer.utils.PlayerUtil;
 import ru.myitschool.normalplayer.utils.QueueUtil;
 
 import static ru.myitschool.normalplayer.utils.MediaIDUtil.MEDIA_ID_EMPTY_ROOT;
-import static ru.myitschool.normalplayer.utils.MediaIDUtil.MEDIA_ID_MUSICS_BY_VK;
 import static ru.myitschool.normalplayer.utils.MediaIDUtil.MEDIA_ID_ROOT;
 
 public class MusicService extends MediaBrowserServiceCompat {
@@ -67,7 +66,7 @@ public class MusicService extends MediaBrowserServiceCompat {
     public void onCreate() {
         super.onCreate();
         Log.d(TAG, "onCreate");
-        musicProvider = new MusicProvider(new InternalSource(getApplicationContext()));
+        musicProvider = new MusicProvider(new VkSource(getApplicationContext()));
         musicProvider.retrieveMediaAsync(success -> {
             if (success) {
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
@@ -126,18 +125,6 @@ public class MusicService extends MediaBrowserServiceCompat {
             result.sendResult(new ArrayList<>());
         } else if (musicProvider.isInitialized()) {
             result.sendResult(musicProvider.getChildren(parentMediaId, getResources()));
-        } else if (MEDIA_ID_MUSICS_BY_VK.equals(parentMediaId)) {
-            if (musicProvider.isVkInitialized()) {
-                result.sendResult(musicProvider.getChildren(parentMediaId, getResources()));
-            } else {
-                result.detach();
-                musicProvider.retrieveVkMusicAsync(getApplicationContext(), new MusicProvider.Callback() {
-                    @Override
-                    public void onMusicCatalogReady(boolean success) {
-                        result.sendResult(musicProvider.getChildren(parentMediaId, getResources()));
-                    }
-                });
-            }
         } else {
             result.detach();
             musicProvider.retrieveMediaAsync(new MusicProvider.Callback() {

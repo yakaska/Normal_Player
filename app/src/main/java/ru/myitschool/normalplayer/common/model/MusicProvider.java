@@ -26,35 +26,20 @@ import static ru.myitschool.normalplayer.utils.MediaIDUtil.MEDIA_ID_MUSICS_BY_AL
 import static ru.myitschool.normalplayer.utils.MediaIDUtil.MEDIA_ID_MUSICS_BY_ARTIST;
 import static ru.myitschool.normalplayer.utils.MediaIDUtil.MEDIA_ID_MUSICS_BY_GENRE;
 import static ru.myitschool.normalplayer.utils.MediaIDUtil.MEDIA_ID_MUSICS_BY_SEARCH;
-import static ru.myitschool.normalplayer.utils.MediaIDUtil.MEDIA_ID_MUSICS_BY_VK;
 import static ru.myitschool.normalplayer.utils.MediaIDUtil.MEDIA_ID_ROOT;
 import static ru.myitschool.normalplayer.utils.MediaIDUtil.createMediaID;
 
 public class MusicProvider {
 
-    private static final String TAG = MusicProvider.class.getSimpleName();
     public static final String EXTRA_DURATION = "extra_duration";
-
+    private static final String TAG = MusicProvider.class.getSimpleName();
+    private final ConcurrentMap<String, MutableMediaMetadata> musicListById;
     private MusicProviderSource source;
-
     // Categorized caches for music track data:
     private ConcurrentMap<String, List<MediaMetadataCompat>> musicListByArtist;
     private ConcurrentMap<String, List<MediaMetadataCompat>> musicListByAlbum;
     private ConcurrentMap<String, List<MediaMetadataCompat>> musicListByGenre;
-    private final ConcurrentMap<String, MutableMediaMetadata> musicListById;
-    private final ConcurrentMap<String, MutableMediaMetadata> musicListVk;
-
-    private boolean vkInitialized = false;
-
-    enum State {
-        NON_INITIALIZED, INITIALIZING, INITIALIZED
-    }
-
     private volatile State currentState = State.NON_INITIALIZED;
-
-    public interface Callback {
-        void onMusicCatalogReady(boolean success);
-    }
 
     public MusicProvider(Context context) {
         this(new InternalSource(context));
@@ -66,7 +51,6 @@ public class MusicProvider {
         musicListByAlbum = new ConcurrentHashMap<>();
         musicListByGenre = new ConcurrentHashMap<>();
         musicListById = new ConcurrentHashMap<>();
-        musicListVk = new ConcurrentHashMap<>();
     }
 
     /**
@@ -79,13 +63,6 @@ public class MusicProvider {
             return Collections.emptyList();
         }
         return musicListById.keySet();
-    }
-
-    public Iterable<String> getVkMusic() {
-        if (!vkInitialized) {
-            return Collections.emptyList();
-        }
-        return musicListVk.keySet();
     }
 
     /**
@@ -139,6 +116,17 @@ public class MusicProvider {
         return shuffled;
     }
 
+    public Iterable<MediaMetadataCompat> getAllMusics() {
+        if (currentState != State.INITIALIZED) {
+            return Collections.emptyList();
+        }
+        List<MediaMetadataCompat> result = new ArrayList<>(musicListById.size());
+        for (MutableMediaMetadata mutableMetadata : musicListById.values()) {
+            result.add(mutableMetadata.metadata);
+        }
+        return result;
+    }
+
     /**
      * Get music tracks of the given genre
      */
@@ -159,17 +147,6 @@ public class MusicProvider {
         return musicListByGenre.get(genre);
     }
 
-    public Iterable<MediaMetadataCompat> getMusicsByVk() {
-        if (!vkInitialized || musicListVk.isEmpty()) {
-            return Collections.emptyList();
-        }
-        ArrayList<MediaMetadataCompat> result = new ArrayList<>();
-        for (String id : musicListVk.keySet()) {
-            result.add(musicListVk.get(id).metadata);
-        }
-        return result;
-    }
-
     /**
      * Get music tracks of the given album
      */
@@ -187,7 +164,6 @@ public class MusicProvider {
     public Iterable<MediaMetadataCompat> searchMusicBySongTitle(String query) {
         return searchMusic(MediaMetadataCompat.METADATA_KEY_TITLE, query);
     }
-
 
     /**
      * Very basic implementation of a search that filter music tracks with album containing
@@ -283,39 +259,6 @@ public class MusicProvider {
         }
     }
 
-    public void retrieveVkMusicAsync(Context context, final Callback callback) {
-        if (vkInitialized) {
-            if (callback != null) {
-                callback.onMusicCatalogReady(true);
-            }
-            return;
-        }
-        new AsyncTask<Void, Void, State>() {
-            @Override
-            protected State doInBackground(Void... params) {
-                retrieveVkMusic(context);
-                return currentState;
-            }
-
-            @Override
-            protected void onPostExecute(State current) {
-                if (callback != null) {
-                    callback.onMusicCatalogReady(isVkInitialized());
-                }
-            }
-        }.execute();
-    }
-
-    private synchronized void retrieveVkMusic(Context context) {
-        Iterator<MediaMetadataCompat> tracks = new VkSource(context).iterator();
-        while (tracks.hasNext()) {
-            MediaMetadataCompat item = tracks.next();
-            String musicId = item.getString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID);
-            musicListVk.put(musicId, new MutableMediaMetadata(musicId, item));
-            vkInitialized = true;
-        }
-    }
-
     private synchronized void buildListsByGenre() {
         ConcurrentMap<String, List<MediaMetadataCompat>> newMusicListByGenre = new ConcurrentHashMap<>();
 
@@ -377,12 +320,6 @@ public class MusicProvider {
             for (String id : getAllMusic()) {
                 mediaItems.add(createMediaItem(getMusic(id), MEDIA_ID_MUSICS_ALL));
             }
-
-        } else if (MEDIA_ID_MUSICS_BY_VK.equals(mediaId)) {
-            for (String id : getVkMusic()) {
-                mediaItems.add(createMediaItem(getMusic(id), MEDIA_ID_MUSICS_BY_VK));
-            }
-
         } else if (MEDIA_ID_MUSICS_BY_GENRE.equals(mediaId)) {
             for (String genre : getGenres()) {
                 mediaItems.add(createBrowsableMediaItemForGenre(genre, resources));
@@ -405,12 +342,13 @@ public class MusicProvider {
                 mediaItems.add(createMediaItem(metadata, MEDIA_ID_MUSICS_BY_ALBUM));
             }
 
-        } else if(MEDIA_ID_MUSICS_BY_ARTIST.equals(mediaId)) {
+        } else if (MEDIA_ID_MUSICS_BY_ARTIST.equals(mediaId)) {
             for (String artist : getArtists()) {
+                Log.d(TAG, "getChildren: " + artist);
                 mediaItems.add(createBrowsableMediaItemForArtist(artist, resources));
             }
 
-        } else if (mediaId.startsWith(MEDIA_ID_MUSICS_BY_ARTIST)){
+        } else if (mediaId.startsWith(MEDIA_ID_MUSICS_BY_ARTIST)) {
             String artist = MediaIDUtil.getHierarchy(mediaId)[1];
             for (MediaMetadataCompat metadata : getMusicsByArtist(artist)) {
                 mediaItems.add(createMediaItem(metadata, MEDIA_ID_MUSICS_BY_ARTIST));
@@ -450,7 +388,7 @@ public class MusicProvider {
             iconUri = metadata.getString(MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI);
         }
         MediaDescriptionCompat description = new MediaDescriptionCompat.Builder()
-                .setMediaId(createMediaID(null, MEDIA_ID_MUSICS_BY_ALBUM, album))
+                .setMediaId(createMediaID(MEDIA_ID_MUSICS_BY_ALBUM, album))
                 .setTitle(album)
                 .setSubtitle(resources.getString(
                         R.string.browse_musics_by_album_subtitle, album))
@@ -509,7 +447,11 @@ public class MusicProvider {
 
     }
 
-    public boolean isVkInitialized() {
-        return vkInitialized;
+    enum State {
+        NON_INITIALIZED, INITIALIZING, INITIALIZED
+    }
+
+    public interface Callback {
+        void onMusicCatalogReady(boolean success);
     }
 }

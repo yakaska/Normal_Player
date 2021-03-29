@@ -1,5 +1,7 @@
 package ru.myitschool.normalplayer.utils;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 
 import java.util.Arrays;
@@ -13,7 +15,6 @@ public class MediaIDUtil {
     public static final String MEDIA_ID_MUSICS_BY_ALBUM = "__BY_ALBUM__";
     public static final String MEDIA_ID_MUSICS_BY_ARTIST = "__BY_ARTIST__";
     public static final String MEDIA_ID_MUSICS_BY_SEARCH = "__BY_SEARCH__";
-    public static final String MEDIA_ID_MUSICS_BY_VK = "__BY_VK__";
 
     private static final char CATEGORY_SEPARATOR = '/';
     private static final char LEAF_SEPARATOR = '|';
@@ -35,11 +36,12 @@ public class MediaIDUtil {
      * @return a hierarchy-aware media ID
      */
     public static String createMediaID(String musicID, String... categories) {
+        Log.d("TAG", "createMediaID: " + musicID);
         StringBuilder sb = new StringBuilder();
         if (categories != null) {
             for (int i = 0; i < categories.length; i++) {
                 if (!isValidCategory(categories[i])) {
-                    throw new IllegalArgumentException("Invalid category: " + categories[0]);
+                    throw new IllegalArgumentException("Invalid category: " + categories[i]);
                 }
                 sb.append(categories[i]);
                 if (i < categories.length - 1) {
@@ -54,7 +56,11 @@ public class MediaIDUtil {
     }
 
     private static boolean isValidCategory(String category) {
-        return category == null || (category.indexOf(CATEGORY_SEPARATOR) < 0 && category.indexOf(LEAF_SEPARATOR) < 0);
+        return category == null ||
+                (
+                        category.indexOf(CATEGORY_SEPARATOR) < 0 &&
+                                category.indexOf(LEAF_SEPARATOR) < 0
+                );
     }
 
     /**

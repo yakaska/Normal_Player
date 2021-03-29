@@ -26,4 +26,5 @@
     <string name="goto_artist">Перейти к исполнителю</string>
     <string name="goto_album">Перейти к альбому</string>
     <string name="vk_music">ВК музыка</string>
+    <string name="genres">Жанры</string>
 </resources>
