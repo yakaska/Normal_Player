@@ -33,4 +33,5 @@ public class ProviderUtil {
         MusicServiceConnection connection = provideMusicServiceConnection(appContext);
         return new NowPlayingViewModel.Factory((Application) appContext, connection);
     }
+
 }

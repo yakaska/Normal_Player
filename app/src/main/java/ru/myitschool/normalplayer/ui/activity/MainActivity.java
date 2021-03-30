@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
+        Log.d(TAG, "onCreate: ");
         setTheme(R.style.AppTheme);
 
         super.onCreate(savedInstanceState);
@@ -59,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(activityMainBinding.getRoot());
 
         checkPermissions();
+
     }
 
     private void checkPermissions() {
@@ -115,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
             public void onSlide(@NonNull View bottomSheet, float slideOffset) {
             }
         });
-
+        
         mainActivityViewModel = new ViewModelProvider(this, ProviderUtil.provideMainActivityViewModel(this)).get(MainActivityViewModel.class);
 
         nowPlayingViewModel = new ViewModelProvider(this, ProviderUtil.provideNowPlayingViewModel(this)).get(NowPlayingViewModel.class);
@@ -295,10 +296,6 @@ public class MainActivity extends AppCompatActivity {
         activityMainBinding.bottomSheetInclude.playerSeekBar.setValueFrom(0);
         activityMainBinding.bottomSheetInclude.playerSeekBar.setValueTo((int) nowPlayingMetadata.getDurationMs() + 1000);
         activityMainBinding.bottomSheetInclude.progressBarPeek.setMax((int) nowPlayingMetadata.getDurationMs());
-    }
-
-    private void navigateToVk() {
-
     }
 
     private void navigateToMediaItem(String mediaId) {

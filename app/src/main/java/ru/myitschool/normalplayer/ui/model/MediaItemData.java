@@ -6,6 +6,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.DiffUtil;
 
+import java.util.Comparator;
+
 public class MediaItemData {
 
     public static final int PLAYBACK_RES_CHANGED = 1;
@@ -29,6 +31,22 @@ public class MediaItemData {
             } else {
                 return null;
             }
+        }
+    };
+
+    //A-Z ... А-Я
+    public static Comparator<MediaItemData> byTitleAsc = new Comparator<MediaItemData>() {
+        @Override
+        public int compare(MediaItemData o1, MediaItemData o2) {
+            return o1.getTitle().compareTo(o2.getTitle());
+        }
+    };
+
+    //Z-A ... Я-А
+    public static Comparator<MediaItemData> byTitleDesc = new Comparator<MediaItemData>() {
+        @Override
+        public int compare(MediaItemData o1, MediaItemData o2) {
+            return -(o1.getTitle().compareTo(o2.getTitle()));
         }
     };
 
@@ -115,4 +133,6 @@ public class MediaItemData {
     public void setPlaybackRes(int playbackRes) {
         this.playbackRes = playbackRes;
     }
+
+
 }

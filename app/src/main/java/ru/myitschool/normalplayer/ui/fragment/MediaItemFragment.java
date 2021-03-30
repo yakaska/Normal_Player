@@ -3,12 +3,16 @@ package ru.myitschool.normalplayer.ui.fragment;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SearchView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DefaultItemAnimator;
@@ -82,7 +86,26 @@ public class MediaItemFragment extends Fragment implements MediaItemAdapter.OnIt
         binding.recycler.setItemAnimator(new DefaultItemAnimator());
         binding.recycler.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.recycler.setAdapter(adapter);
-        MenuItem searchMenuItem = binding.toolbar.getMenu().findItem(R.id.app_bar_search);
+        initMenu();
+    }
+
+    private void initMenu() {
+        binding.toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.menu_vk:
+                        getActivity().recreate();
+                        break;
+                    case R.id.menu_settings:
+                        break;
+                    case R.id.menu_sort:
+                        break;
+                }
+                return true;
+            }
+        });
+        MenuItem searchMenuItem = binding.toolbar.getMenu().findItem(R.id.menu_search);
         SearchView searchView = (SearchView) searchMenuItem.getActionView();
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -103,4 +126,25 @@ public class MediaItemFragment extends Fragment implements MediaItemAdapter.OnIt
         mainActivityViewModel.mediaItemClicked(clickedItem);
     }
 
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_vk:
+                Log.d(TAG, "onOptionsItemSelected: " + "VK");
+                break;
+            case R.id.menu_settings:
+                Log.d(TAG, "onOptionsItemSelected: " + "SETTINGS");
+                break;
+            case R.id.menu_sort:
+                Log.d(TAG, "onOptionsItemSelected: " + "SORT");
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 }

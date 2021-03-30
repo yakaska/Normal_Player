@@ -355,7 +355,6 @@ public class MusicProvider {
             }
         } else {
             Log.w(TAG, "Skipping unmatched mediaId: " + mediaId);
-
         }
         return mediaItems;
     }
@@ -388,7 +387,7 @@ public class MusicProvider {
             iconUri = metadata.getString(MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI);
         }
         MediaDescriptionCompat description = new MediaDescriptionCompat.Builder()
-                .setMediaId(createMediaID(MEDIA_ID_MUSICS_BY_ALBUM, album))
+                .setMediaId(createMediaID(null, MEDIA_ID_MUSICS_BY_ALBUM, album))
                 .setTitle(album)
                 .setSubtitle(resources.getString(
                         R.string.browse_musics_by_album_subtitle, album))

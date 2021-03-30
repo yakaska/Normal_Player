@@ -48,9 +48,15 @@ public class VkSource implements MusicProviderSource {
         String lowRes = "android.resource://ru.myitschool.normalplayer/" + R.drawable.ic_default_art;
         String title = item.getTitle();
         String artist = item.getArtist();
+        String album = "NO ALBUM";
         Integer duration = item.getDuration() * 1000;
         Bitmap icon = defaultArt;
         if (item.getAlbum() != null) {
+
+            if(item.getAlbum().getTitle() != null) {
+                album = item.getAlbum().getTitle();
+            }
+
             if (item.getAlbum().getThumb() != null) {
                 highRes = item.getAlbum().getThumb().getPhoto600();
                 lowRes = item.getAlbum().getThumb().getPhoto300();
@@ -71,7 +77,7 @@ public class VkSource implements MusicProviderSource {
                 .putString(MediaMetadataCompat.METADATA_KEY_TITLE, title)
                 .putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_TITLE, title)
                 .putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_SUBTITLE, artist)
-                .putString(MediaMetadataCompat.METADATA_KEY_ALBUM, artist)
+                .putString(MediaMetadataCompat.METADATA_KEY_ALBUM, album)
                 .putString(MediaMetadataCompat.METADATA_KEY_ARTIST, artist)
                 .putString(MediaMetadataCompat.METADATA_KEY_GENRE, "Not_implemented_yet")
                 .putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, icon)

@@ -16,8 +16,8 @@ public class MediaIDUtil {
     public static final String MEDIA_ID_MUSICS_BY_ARTIST = "__BY_ARTIST__";
     public static final String MEDIA_ID_MUSICS_BY_SEARCH = "__BY_SEARCH__";
 
-    private static final char CATEGORY_SEPARATOR = '/';
-    private static final char LEAF_SEPARATOR = '|';
+    private static final char CATEGORY_SEPARATOR = '@';
+    private static final char LEAF_SEPARATOR = '#';
 
     /**
      * Create a String value that represents a playable or a browsable media.

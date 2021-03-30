@@ -27,6 +27,7 @@ public class MediaItemFragmentViewModel extends ViewModel {
     private static final int NO_RES_ID = 0;
 
     private final String mediaId;
+
     private final MusicServiceConnection connection;
 
     public MutableLiveData<List<MediaItemData>> mediaItems = new MutableLiveData<>();
@@ -59,6 +60,14 @@ public class MediaItemFragmentViewModel extends ViewModel {
         }
     };
 
+
+    public MediaItemFragmentViewModel(String mediaId, MusicServiceConnection connection) {
+        this.connection = connection;
+        this.mediaId = mediaId;
+        this.connection.subscribe(mediaId, subscriptionCallback);
+        this.connection.getPlaybackState().observeForever(playbackStateObserver);
+        this.connection.getNowPlaying().observeForever(mediaMetadataObserver);
+    }
 
     private final Observer<PlaybackStateCompat> playbackStateObserver = new Observer<PlaybackStateCompat>() {
         @Override
@@ -95,14 +104,6 @@ public class MediaItemFragmentViewModel extends ViewModel {
             }
         }
     };
-
-    public MediaItemFragmentViewModel(String mediaId, MusicServiceConnection connection) {
-        this.connection = connection;
-        this.mediaId = mediaId;
-        this.connection.subscribe(mediaId, subscriptionCallback);
-        this.connection.getPlaybackState().observeForever(playbackStateObserver);
-        this.connection.getNowPlaying().observeForever(mediaMetadataObserver);
-    }
 
     private List<MediaItemData> updateState(PlaybackStateCompat playbackState, MediaMetadataCompat metadata) {
         int newResId = NO_RES_ID;

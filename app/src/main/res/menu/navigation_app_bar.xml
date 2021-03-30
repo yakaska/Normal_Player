@@ -3,10 +3,29 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/app_bar_search"
+        android:id="@+id/menu_search"
         android:icon="@drawable/ic_search_24"
         app:showAsAction="ifRoom"
         android:title="@string/search"
         app:actionViewClass="android.widget.SearchView" />
+
+    <group
+        android:id="@+id/group1">
+        <item
+            android:id="@+id/menu_vk"
+            android:orderInCategory="1"
+            android:title="@string/vkontakte">
+        </item>
+        <item
+            android:id="@+id/menu_settings"
+            android:orderInCategory="2"
+            android:title="@string/settings">
+        </item>
+        <item
+            android:id="@+id/menu_sort"
+            android:orderInCategory="4"
+            android:title="@string/sort">
+        </item>
+    </group>
 
 </menu>

@@ -35,8 +35,8 @@ import com.google.android.exoplayer2.util.Util;
 import java.util.ArrayList;
 import java.util.List;
 
+import ru.myitschool.normalplayer.common.model.InternalSource;
 import ru.myitschool.normalplayer.common.model.MusicProvider;
-import ru.myitschool.normalplayer.common.model.VkSource;
 import ru.myitschool.normalplayer.ui.activity.MainActivity;
 import ru.myitschool.normalplayer.utils.CacheUtil;
 import ru.myitschool.normalplayer.utils.MediaIDUtil;
@@ -66,7 +66,7 @@ public class MusicService extends MediaBrowserServiceCompat {
     public void onCreate() {
         super.onCreate();
         Log.d(TAG, "onCreate");
-        musicProvider = new MusicProvider(new VkSource(getApplicationContext()));
+        musicProvider = new MusicProvider(new InternalSource(getApplicationContext()));
         musicProvider.retrieveMediaAsync(success -> {
             if (success) {
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
@@ -74,23 +74,17 @@ public class MusicService extends MediaBrowserServiceCompat {
                 mediaSession = new MediaSessionCompat(getApplicationContext(), "MusicService");
                 mediaSession.setSessionActivity(pi);
                 mediaSession.setActive(true);
-
                 setSessionToken(mediaSession.getSessionToken());
-
                 DefaultDataSourceFactory dataSourceFactory = new DefaultDataSourceFactory(getApplicationContext(), Util.getUserAgent(getApplicationContext(), NP_USER_AGENT), null);
-
                 cacheDataSourceFactory = new CacheDataSourceFactory(CacheUtil.getPlayerCache(getApplicationContext()), dataSourceFactory, CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR);
-
                 exoPlayer = new SimpleExoPlayer.Builder(getApplicationContext()).build();
                 exoPlayer.setAudioAttributes(audioAttributes, true);
                 exoPlayer.setHandleAudioBecomingNoisy(true);
                 exoPlayer.addListener(playerListener);
-
                 mediaSessionConnector = new MediaSessionConnector(mediaSession);
                 mediaSessionConnector.setPlaybackPreparer(new NPPlaybackPreparer());
                 mediaSessionConnector.setQueueNavigator(new NPQueueNavigator(mediaSession));
                 mediaSessionConnector.setPlayer(exoPlayer);
-
                 notificationManager = new NPNotificationManager(getApplicationContext(), mediaSession, new PlayerNotificationListener());
                 notificationManager.showNotificationForPlayer(exoPlayer);
             }
@@ -188,7 +182,7 @@ public class MusicService extends MediaBrowserServiceCompat {
                     .setTitle(oldDesc.getTitle())
                     .setSubtitle(oldDesc.getSubtitle())
                     .setExtras(extras)
-                    .build();//currentPlaylistItems.get(windowIndex).getDescription();
+                    .build();
         }
     }
 
