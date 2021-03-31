@@ -1,5 +1,6 @@
 package ru.myitschool.normalplayer.ui.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,6 +21,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import ru.myitschool.normalplayer.R;
 import ru.myitschool.normalplayer.databinding.FragmentMediaitemBinding;
+import ru.myitschool.normalplayer.ui.activity.MainActivity;
 import ru.myitschool.normalplayer.ui.adapter.MediaItemAdapter;
 import ru.myitschool.normalplayer.ui.model.MediaItemData;
 import ru.myitschool.normalplayer.ui.viewmodel.MainActivityViewModel;
@@ -95,7 +97,7 @@ public class MediaItemFragment extends Fragment implements MediaItemAdapter.OnIt
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.menu_vk:
-                        getActivity().recreate();
+                        getActivity().stopService(new Intent(getContext().getApplicationContext(), MainActivity.class));
                         break;
                     case R.id.menu_settings:
                         break;

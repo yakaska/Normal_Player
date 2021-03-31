@@ -1,6 +1,5 @@
 package ru.myitschool.normalplayer.ui.adapter;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -140,7 +139,6 @@ public class MediaItemAdapter extends ListAdapter<MediaItemData, MediaItemAdapte
     public void modifyList(List<MediaItemData> mediaItemDataList) {
         unfilteredList = mediaItemDataList;
         submitList(mediaItemDataList);
-        Log.d("Log", "modifyList: " + getCurrentList().size());
     }
 
     public static class LineViewHolder extends RecyclerView.ViewHolder {

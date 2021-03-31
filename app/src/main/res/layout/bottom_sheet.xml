@@ -21,18 +21,18 @@
         android:background="@color/colorWhite">
 
         <com.google.android.material.progressindicator.LinearProgressIndicator
-            android:id="@+id/progressBarPeek"
+            android:id="@+id/progress_bar_peek"
              android:layout_width="match_parent"
             android:layout_height="2dp"
             android:layout_margin="0dp"
             android:padding="0dp"
-            app:layout_constraintBottom_toTopOf="@id/buttonExpandPeek"
+            app:layout_constraintBottom_toTopOf="@id/button_expand_peek"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/buttonExpandPeek"
+            android:id="@+id/button_expand_peek"
             style="@style/Widget.NormalPlayer.MaterialComponents.Button.TextButton.Icon"
             android:layout_width="46dp"
             android:layout_height="0dp"
@@ -40,10 +40,10 @@
             app:iconSize="32dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/progressBarPeek" />
+            app:layout_constraintTop_toBottomOf="@id/progress_bar_peek" />
 
         <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/textName"
+            android:id="@+id/title_peek"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:ellipsize="marquee"
@@ -56,20 +56,20 @@
             android:text="Current song title"
             android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/buttonPlayPeek"
-            app:layout_constraintStart_toEndOf="@id/buttonExpandPeek"
-            app:layout_constraintTop_toBottomOf="@id/progressBarPeek" />
+            app:layout_constraintEnd_toStartOf="@id/play_peek"
+            app:layout_constraintStart_toEndOf="@id/button_expand_peek"
+            app:layout_constraintTop_toBottomOf="@id/progress_bar_peek" />
 
         <com.google.android.material.button.MaterialButton
             style="@style/Widget.NormalPlayer.MaterialComponents.Button.TextButton.Icon"
-            android:id="@+id/buttonPlayPeek"
+            android:id="@+id/play_peek"
             android:layout_width="46dp"
             android:layout_height="0dp"
             app:icon="@drawable/ic_play_24"
             app:iconSize="32dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/progressBarPeek" />
+            app:layout_constraintTop_toBottomOf="@id/progress_bar_peek" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -80,30 +80,30 @@
         android:background="@color/colorHint">
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/buttonCollapse"
+            android:id="@+id/collapse_content"
             style="@style/Widget.NormalPlayer.MaterialComponents.Button.TextButton.Icon"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_marginStart="20dp"
             app:icon="@drawable/ic_arrow_down_24"
             app:iconSize="32dp"
-            app:layout_constraintBottom_toBottomOf="@id/textNowPlaying"
+            app:layout_constraintBottom_toBottomOf="@id/label_content"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/textNowPlaying" />
+            app:layout_constraintTop_toTopOf="@id/label_content" />
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/buttonMore"
+            android:id="@+id/more_content"
             style="@style/Widget.NormalPlayer.MaterialComponents.Button.TextButton.Icon"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_marginEnd="20dp"
             app:icon="@drawable/ic_more_24"
-            app:layout_constraintBottom_toBottomOf="@id/textNowPlaying"
+            app:layout_constraintBottom_toBottomOf="@id/label_content"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/textNowPlaying" />
+            app:layout_constraintTop_toTopOf="@id/label_content" />
 
         <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/textTitle"
+            android:id="@+id/title_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
@@ -111,19 +111,19 @@
             android:text="Current song title"
             android:textSize="22sp"
             android:textStyle="bold"
-            app:layout_constraintTop_toBottomOf="@id/imageAlbumArtParent" />
+            app:layout_constraintTop_toBottomOf="@id/album_art_parent_content" />
 
         <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/textSubtitle"
+            android:id="@+id/subtitle_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:text="Current artist name"
             android:textSize="18sp"
-            app:layout_constraintTop_toBottomOf="@id/textTitle" />
+            app:layout_constraintTop_toBottomOf="@id/title_content" />
 
         <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/textNowPlaying"
+            android:id="@+id/label_content"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
@@ -137,7 +137,7 @@
 
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/layoutPlayer"
+            android:id="@+id/player_layout_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/colorWhite"
@@ -146,7 +146,7 @@
             app:layout_constraintStart_toStartOf="parent">
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/buttonPlay"
+                android:id="@+id/play_content"
                 style="@style/Widget.NormalPlayer.MaterialComponents.Button.Icon"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
@@ -158,52 +158,52 @@
                 />
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/buttonPrevious"
+                android:id="@+id/previous_content"
                 style="@style/Widget.NormalPlayer.MaterialComponents.Button.OutlinedButton.Icon"
                 android:layout_width="45dp"
                 android:layout_height="45dp"
                 android:layout_marginEnd="15dp"
                 app:icon="@drawable/ic_skip_previous_24"
-                app:layout_constraintBottom_toBottomOf="@id/buttonPlay"
-                app:layout_constraintEnd_toStartOf="@id/buttonPlay"
-                app:layout_constraintTop_toTopOf="@id/buttonPlay"
+                app:layout_constraintBottom_toBottomOf="@id/play_content"
+                app:layout_constraintEnd_toStartOf="@id/play_content"
+                app:layout_constraintTop_toTopOf="@id/play_content"
                 />
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/buttonNext"
+                android:id="@+id/next_content"
                 style="@style/Widget.NormalPlayer.MaterialComponents.Button.OutlinedButton.Icon"
                 android:layout_width="45dp"
                 android:layout_height="45dp"
                 android:layout_marginStart="15dp"
                 app:icon="@drawable/ic_skip_next_24"
-                app:layout_constraintBottom_toBottomOf="@id/buttonPlay"
-                app:layout_constraintStart_toEndOf="@id/buttonPlay"
-                app:layout_constraintTop_toTopOf="@id/buttonPlay" />
+                app:layout_constraintBottom_toBottomOf="@id/play_content"
+                app:layout_constraintStart_toEndOf="@id/play_content"
+                app:layout_constraintTop_toTopOf="@id/play_content" />
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/buttonShuffle"
+                android:id="@+id/shuffle_content"
                 style="@style/Widget.NormalPlayer.MaterialComponents.Button.TextButton.Icon"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_marginStart="20dp"
                 app:icon="@drawable/ic_shuffle_24"
-                app:layout_constraintBottom_toBottomOf="@id/buttonPlay"
+                app:layout_constraintBottom_toBottomOf="@id/play_content"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@id/buttonPlay" />
+                app:layout_constraintTop_toTopOf="@id/play_content" />
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/buttonRepeat"
+                android:id="@+id/repeat_content"
                 style="@style/Widget.NormalPlayer.MaterialComponents.Button.TextButton.Icon"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_marginEnd="20dp"
                 app:icon="@drawable/ic_repeat_24"
-                app:layout_constraintBottom_toBottomOf="@id/buttonPlay"
+                app:layout_constraintBottom_toBottomOf="@id/play_content"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@id/buttonPlay" />
+                app:layout_constraintTop_toTopOf="@id/play_content" />
 
             <com.google.android.material.slider.Slider
-                android:id="@+id/playerSeekBar"
+                android:id="@+id/seekbar_content"
                 style="@style/Widget.AppCompat.SeekBar"
                 android:layout_width="match_parent"
                 android:layout_height="32dp"
@@ -212,10 +212,10 @@
                 app:tickVisible="false"
                 app:labelBehavior="gone"
                 android:clickable="true"
-                app:layout_constraintBottom_toTopOf="@id/buttonPlay" />
+                app:layout_constraintBottom_toTopOf="@id/play_content" />
 
             <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/textCurrentTime"
+                android:id="@+id/current_time_content"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="12dp"
@@ -223,13 +223,13 @@
                 android:layout_marginBottom="4dp"
                 android:text="@string/time_placeholder"
                 android:textSize="16sp"
-                app:layout_constraintBottom_toTopOf="@id/playerSeekBar"
-                app:layout_constraintStart_toStartOf="@id/playerSeekBar"
+                app:layout_constraintBottom_toTopOf="@id/seekbar_content"
+                app:layout_constraintStart_toStartOf="@id/seekbar_content"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="0:00" />
 
             <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/textTotalTime"
+                android:id="@+id/total_time_content"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
@@ -237,25 +237,25 @@
                 android:layout_marginBottom="4dp"
                 android:text="@string/time_placeholder"
                 android:textSize="16sp"
-                app:layout_constraintBottom_toTopOf="@id/playerSeekBar"
-                app:layout_constraintEnd_toEndOf="@id/playerSeekBar"
+                app:layout_constraintBottom_toTopOf="@id/seekbar_content"
+                app:layout_constraintEnd_toEndOf="@id/seekbar_content"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="0:00" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <com.google.android.material.card.MaterialCardView
-            android:id="@+id/imageAlbumArtParent"
+            android:id="@+id/album_art_parent_content"
             android:layout_width="260dp"
             android:layout_height="260dp"
             app:cardCornerRadius="16dp"
-            app:layout_constraintBottom_toBottomOf="@id/viewSupporterForAlbumArt"
+            app:layout_constraintBottom_toBottomOf="@id/album_art_supporter"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/viewSupporterForAlbumArt">
+            app:layout_constraintTop_toTopOf="@id/album_art_supporter">
 
             <ImageView
-                android:id="@+id/imageAlbumArt"
+                android:id="@+id/album_art_content"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:adjustViewBounds="true"
@@ -266,40 +266,22 @@
 
 
         <View
-            android:id="@+id/viewSupporterForBackground"
+            android:id="@+id/background_supporter"
             android:layout_width="1dp"
             android:layout_height="1dp"
             android:layout_marginTop="30dp"
-            app:layout_constraintEnd_toEndOf="@id/layoutPlayer"
-            app:layout_constraintStart_toStartOf="@id/layoutPlayer"
-            app:layout_constraintTop_toTopOf="@id/layoutPlayer" />
+            app:layout_constraintEnd_toEndOf="@id/player_layout_content"
+            app:layout_constraintStart_toStartOf="@id/player_layout_content"
+            app:layout_constraintTop_toTopOf="@id/player_layout_content" />
 
         <View
-            android:id="@+id/viewSupporterForAlbumArt"
+            android:id="@+id/album_art_supporter"
             android:layout_width="1dp"
             android:layout_height="1dp"
-            app:layout_constraintBottom_toTopOf="@id/layoutPlayer"
+            app:layout_constraintBottom_toTopOf="@id/player_layout_content"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-
-        <View
-            android:id="@+id/view1"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            app:layout_constraintBottom_toTopOf="@id/viewSupporterForAlbumArt"
-            app:layout_constraintEnd_toStartOf="@id/viewSupporterForAlbumArt"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <View
-            android:id="@+id/view2"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            app:layout_constraintBottom_toTopOf="@id/viewSupporterForBackground"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/view1"
-            app:layout_constraintTop_toBottomOf="@id/view1" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

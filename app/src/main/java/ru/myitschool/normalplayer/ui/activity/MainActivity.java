@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initUI() {
-        activityMainBinding.bottomSheetInclude.textName.setSelected(true);
+        activityMainBinding.bottomSheetInclude.titlePeek.setSelected(true);
 
         BottomSheetBehavior<LinearLayout> sheetBehavior = BottomSheetBehavior.from(activityMainBinding.bottomSheetInclude.bottomSheet);
         sheetBehavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
@@ -153,8 +153,8 @@ public class MainActivity extends AppCompatActivity {
         nowPlayingViewModel.getPlayButtonRes().observe(this, new Observer<Integer>() {
             @Override
             public void onChanged(Integer integer) {
-                activityMainBinding.bottomSheetInclude.buttonPlay.setIconResource(integer);
-                activityMainBinding.bottomSheetInclude.buttonPlayPeek.setIconResource(integer);
+                activityMainBinding.bottomSheetInclude.playContent.setIconResource(integer);
+                activityMainBinding.bottomSheetInclude.playPeek.setIconResource(integer);
             }
         });
 
@@ -162,8 +162,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onChanged(Long aLong) {
                 long time = aLong;
-                activityMainBinding.bottomSheetInclude.textCurrentTime.setText(NowPlayingMetadata.timestampToMSS(MainActivity.this, time));
-                activityMainBinding.bottomSheetInclude.playerSeekBar.setValue((int) time);
+                activityMainBinding.bottomSheetInclude.currentTimeContent.setText(NowPlayingMetadata.timestampToMSS(MainActivity.this, time));
+                activityMainBinding.bottomSheetInclude.seekbarContent.setValue((int) time);
                 activityMainBinding.bottomSheetInclude.progressBarPeek.setProgress((int) (time));
             }
         });
@@ -171,18 +171,18 @@ public class MainActivity extends AppCompatActivity {
         nowPlayingViewModel.getShuffleButtonRes().observe(this, new Observer<Integer>() {
             @Override
             public void onChanged(Integer integer) {
-                activityMainBinding.bottomSheetInclude.buttonShuffle.setIconResource(integer);
+                activityMainBinding.bottomSheetInclude.shuffleContent.setIconResource(integer);
             }
         });
 
         nowPlayingViewModel.getRepeatButtonRes().observe(this, new Observer<Integer>() {
             @Override
             public void onChanged(Integer integer) {
-                activityMainBinding.bottomSheetInclude.buttonRepeat.setIconResource(integer);
+                activityMainBinding.bottomSheetInclude.repeatContent.setIconResource(integer);
             }
         });
 
-        activityMainBinding.bottomSheetInclude.buttonPlay.setOnClickListener(new View.OnClickListener() {
+        activityMainBinding.bottomSheetInclude.playContent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (nowPlayingViewModel.getMediaMetadata().getValue() != null) {
@@ -191,7 +191,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        activityMainBinding.bottomSheetInclude.buttonPlayPeek.setOnClickListener(new View.OnClickListener() {
+        activityMainBinding.bottomSheetInclude.playPeek.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (nowPlayingViewModel.getMediaMetadata().getValue() != null) {
@@ -200,7 +200,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        activityMainBinding.bottomSheetInclude.buttonNext.setOnClickListener(new View.OnClickListener() {
+        activityMainBinding.bottomSheetInclude.nextContent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 nowPlayingViewModel.skipToNext();
@@ -208,14 +208,14 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        activityMainBinding.bottomSheetInclude.buttonPrevious.setOnClickListener(new View.OnClickListener() {
+        activityMainBinding.bottomSheetInclude.previousContent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 nowPlayingViewModel.skipToPrevious();
             }
         });
 
-        activityMainBinding.bottomSheetInclude.playerSeekBar.addOnChangeListener(new Slider.OnChangeListener() {
+        activityMainBinding.bottomSheetInclude.seekbarContent.addOnChangeListener(new Slider.OnChangeListener() {
             @Override
             public void onValueChange(@NonNull Slider slider, float value, boolean fromUser) {
                 if (fromUser) {
@@ -224,7 +224,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        activityMainBinding.bottomSheetInclude.buttonCollapse.setOnClickListener(new View.OnClickListener() {
+        activityMainBinding.bottomSheetInclude.collapseContent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
@@ -238,23 +238,23 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        activityMainBinding.bottomSheetInclude.buttonShuffle.setOnClickListener(new View.OnClickListener() {
+        activityMainBinding.bottomSheetInclude.shuffleContent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 nowPlayingViewModel.toggleShuffleMode();
             }
         });
 
-        activityMainBinding.bottomSheetInclude.buttonRepeat.setOnClickListener(new View.OnClickListener() {
+        activityMainBinding.bottomSheetInclude.repeatContent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 nowPlayingViewModel.toggleRepeatMode();
             }
         });
 
-        activityMainBinding.bottomSheetInclude.textTotalTime.setText(NowPlayingMetadata.timestampToMSS(MainActivity.this, 0L));
+        activityMainBinding.bottomSheetInclude.totalTimeContent.setText(NowPlayingMetadata.timestampToMSS(MainActivity.this, 0L));
 
-        activityMainBinding.bottomSheetInclude.textCurrentTime.setText(NowPlayingMetadata.timestampToMSS(MainActivity.this, 0L));
+        activityMainBinding.bottomSheetInclude.currentTimeContent.setText(NowPlayingMetadata.timestampToMSS(MainActivity.this, 0L));
 
         activityMainBinding.bottomNavigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -284,17 +284,17 @@ public class MainActivity extends AppCompatActivity {
         String id = nowPlayingMetadata.getMediaId();
         Log.d(TAG, "updateUI: ");
         if (nowPlayingMetadata.getAlbumArtUri() == null) {
-            activityMainBinding.bottomSheetInclude.imageAlbumArt.setImageResource(R.drawable.ic_default_art);
+            activityMainBinding.bottomSheetInclude.albumArtContent.setImageResource(R.drawable.ic_default_art);
         } else {
-            Picasso.get().load(nowPlayingMetadata.getAlbumArtUri()).placeholder(R.drawable.ic_default_art).into(activityMainBinding.bottomSheetInclude.imageAlbumArt);
+            Picasso.get().load(nowPlayingMetadata.getAlbumArtUri()).placeholder(R.drawable.ic_default_art).into(activityMainBinding.bottomSheetInclude.albumArtContent);
         }
-        activityMainBinding.bottomSheetInclude.textTitle.setText(nowPlayingMetadata.getTitle());
-        activityMainBinding.bottomSheetInclude.textName.setText(String.format(getString(R.string.song_format), nowPlayingMetadata.getTitle(), nowPlayingMetadata.getSubtitle()));
-        activityMainBinding.bottomSheetInclude.textSubtitle.setText(nowPlayingMetadata.getSubtitle());
-        activityMainBinding.bottomSheetInclude.textTotalTime.setText(nowPlayingMetadata.getDuration());
-        activityMainBinding.bottomSheetInclude.playerSeekBar.setValue(0);
-        activityMainBinding.bottomSheetInclude.playerSeekBar.setValueFrom(0);
-        activityMainBinding.bottomSheetInclude.playerSeekBar.setValueTo((int) nowPlayingMetadata.getDurationMs() + 1000);
+        activityMainBinding.bottomSheetInclude.titleContent.setText(nowPlayingMetadata.getTitle());
+        activityMainBinding.bottomSheetInclude.titlePeek.setText(String.format(getString(R.string.song_format), nowPlayingMetadata.getTitle(), nowPlayingMetadata.getSubtitle()));
+        activityMainBinding.bottomSheetInclude.subtitleContent.setText(nowPlayingMetadata.getSubtitle());
+        activityMainBinding.bottomSheetInclude.totalTimeContent.setText(nowPlayingMetadata.getDuration());
+        activityMainBinding.bottomSheetInclude.seekbarContent.setValue(0);
+        activityMainBinding.bottomSheetInclude.seekbarContent.setValueFrom(0);
+        activityMainBinding.bottomSheetInclude.seekbarContent.setValueTo((int) nowPlayingMetadata.getDurationMs() + 1000);
         activityMainBinding.bottomSheetInclude.progressBarPeek.setMax((int) nowPlayingMetadata.getDurationMs());
     }
 

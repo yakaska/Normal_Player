@@ -27,4 +27,7 @@
     <string name="goto_album">Перейти к альбому</string>
     <string name="vk_music">ВК музыка</string>
     <string name="genres">Жанры</string>
+    <string name="settings">Настройки</string>
+    <string name="vkontakte">Вконтакте</string>
+    <string name="sort">Сортировка</string>
 </resources>
