@@ -24,6 +24,8 @@ public class VkSource implements MusicProviderSource {
 
     private final Bitmap defaultArt;
 
+
+
     public VkSource(Context context) {
         this.context = context;
         defaultArt = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_notification);
@@ -49,6 +51,77 @@ public class VkSource implements MusicProviderSource {
         String title = item.getTitle();
         String artist = item.getArtist();
         String album = "NO ALBUM";
+        String genre = context.getString(R.string.other);
+        if (item.getGenreId() != null) {
+            switch (item.getGenreId()) {
+                case 1:
+                    genre = context.getString(R.string.rock);
+                    break;
+                case 2:
+                    genre = context.getString(R.string.pop);
+                    break;
+                case 3:
+                    genre = context.getString(R.string.rap);
+                    break;
+                case 4:
+                    genre = context.getString(R.string.easy);
+                    break;
+                case 5:
+                    genre = context.getString(R.string.house);
+                    break;
+                case 6:
+                    genre = context.getString(R.string.instrumental);
+                    break;
+                case 7:
+                    genre = context.getString(R.string.metal);
+                    break;
+                case 21:
+                    genre = context.getString(R.string.alternative);
+                    break;
+                case 8:
+                    genre = context.getString(R.string.dubstep);
+                    break;
+                case 1001:
+                    genre = context.getString(R.string.juzz_blues);
+                    break;
+                case 10:
+                    genre = context.getString(R.string.drum_bass);
+                    break;
+                case 11:
+                    genre = context.getString(R.string.trance);
+                    break;
+                case 12:
+                    genre = context.getString(R.string.chanson);
+                    break;
+                case 13:
+                    genre = context.getString(R.string.ethnic);
+                    break;
+                case 14:
+                    genre = context.getString(R.string.acoustic_vocal);
+                    break;
+                case 15:
+                    genre = context.getString(R.string.reggae);
+                    break;
+                case 16:
+                    genre = context.getString(R.string.classical);
+                    break;
+                case 17:
+                    genre = context.getString(R.string.indie_pop);
+                    break;
+                case 19:
+                    genre = context.getString(R.string.speech);
+                    break;
+                case 22:
+                    genre = context.getString(R.string.electro_pop_disco);
+                    break;
+                case 18:
+                    genre = context.getString(R.string.other);
+                    break;
+                default:
+                    genre = context.getString(R.string.other);
+                    break;
+            }
+        }
         Integer duration = item.getDuration() * 1000;
         Bitmap icon = defaultArt;
         if (item.getAlbum() != null) {
@@ -79,7 +152,7 @@ public class VkSource implements MusicProviderSource {
                 .putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_SUBTITLE, artist)
                 .putString(MediaMetadataCompat.METADATA_KEY_ALBUM, album)
                 .putString(MediaMetadataCompat.METADATA_KEY_ARTIST, artist)
-                .putString(MediaMetadataCompat.METADATA_KEY_GENRE, "Not_implemented_yet")
+                .putString(MediaMetadataCompat.METADATA_KEY_GENRE, genre)
                 .putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, icon)
                 .putLong(MediaMetadataCompat.METADATA_KEY_DURATION, duration)
                 .build();

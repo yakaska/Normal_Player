@@ -69,6 +69,10 @@ public class MediaItemFragmentViewModel extends ViewModel {
         this.connection.getNowPlaying().observeForever(mediaMetadataObserver);
     }
 
+    public void send() {
+        connection.send();
+    }
+
     private final Observer<PlaybackStateCompat> playbackStateObserver = new Observer<PlaybackStateCompat>() {
         @Override
         public void onChanged(PlaybackStateCompat playbackStateCompat) {

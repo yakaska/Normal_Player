@@ -55,6 +55,10 @@ public class MusicServiceConnection {
         mediaBrowser.connect();
     }
 
+    public void send() {
+        mediaBrowser.sendCustomAction("a", null, null);
+    }
+
     public void subscribe(String parentId, MediaBrowserCompat.SubscriptionCallback subscriptionCallback) {
         mediaBrowser.subscribe(parentId, subscriptionCallback);
     }

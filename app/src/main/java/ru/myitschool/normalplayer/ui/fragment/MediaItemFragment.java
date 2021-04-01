@@ -97,7 +97,9 @@ public class MediaItemFragment extends Fragment implements MediaItemAdapter.OnIt
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.menu_vk:
-                        getActivity().stopService(new Intent(getContext().getApplicationContext(), MainActivity.class));
+                        Intent intent = new Intent(getContext().getApplicationContext(), MainActivity.class);
+                        mediaItemFragmentViewModel.send();
+                        startActivity(intent);
                         break;
                     case R.id.menu_settings:
                         break;

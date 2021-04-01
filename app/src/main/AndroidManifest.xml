@@ -30,9 +30,9 @@
             </intent-filter>
         </activity>
         <service android:name=".common.playback.MusicService"
+            android:label="@string/playback_service"
             android:exported="true"
-            android:enabled="true"
-            android:label="@string/playback_service">
+            android:enabled="true">
             <intent-filter>
                 <action android:name="android.media.browse.MediaBrowserService" />
             </intent-filter>

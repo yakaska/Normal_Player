@@ -37,4 +37,25 @@
     <string name="settings">Settings</string>
     <string name="vkontakte">Vkontakte</string>
     <string name="sort">Sort</string>
+    <string name="rock">Rock</string>
+    <string name="pop">Pop</string>
+    <string name="rap"><![CDATA[Rap & Hip-Hop]]></string>
+    <string name="easy">Easy Listening</string>
+    <string name="house"><![CDATA[House & Dance]]></string>
+    <string name="instrumental">Instrumental</string>
+    <string name="metal">Metal</string>
+    <string name="alternative">Alternative</string>
+    <string name="dubstep">Dubstep</string>
+    <string name="juzz_blues"><![CDATA[Juzz & Blues]]></string>
+    <string name="drum_bass"><![CDATA[Drum & Bass]]></string>
+    <string name="trance">Trance</string>
+    <string name="chanson">Chanson</string>
+    <string name="ethnic">Ethnic</string>
+    <string name="acoustic_vocal"><![CDATA[Acoustic & Vocal]]></string>
+    <string name="reggae">Reggae</string>
+    <string name="classical">Classical</string>
+    <string name="indie_pop">Indie Pop</string>
+    <string name="speech">Speech</string>
+    <string name="electro_pop_disco"><![CDATA[Electropop & Disco]]></string>
+    <string name="other">Other</string>
 </resources>

@@ -15,6 +15,7 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.media.MediaBrowserServiceCompat;
 
 import com.google.android.exoplayer2.C;
@@ -37,6 +38,7 @@ import java.util.List;
 
 import ru.myitschool.normalplayer.common.model.InternalSource;
 import ru.myitschool.normalplayer.common.model.MusicProvider;
+import ru.myitschool.normalplayer.common.model.VkSource;
 import ru.myitschool.normalplayer.ui.activity.MainActivity;
 import ru.myitschool.normalplayer.utils.CacheUtil;
 import ru.myitschool.normalplayer.utils.MediaIDUtil;
@@ -102,9 +104,16 @@ public class MusicService extends MediaBrowserServiceCompat {
     }
 
     @Override
+    public void onCustomAction(@NonNull String action, Bundle extras, @NonNull Result<Bundle> result) {
+        result.detach();
+        musicProvider = new MusicProvider(new VkSource(getApplicationContext()));
+    }
+
+    @Override
     public void onTaskRemoved(Intent rootIntent) {
-        super.onTaskRemoved(rootIntent);
+        Log.d(TAG, "onTaskRemoved: ");
         exoPlayer.stop(true);
+        super.onTaskRemoved(rootIntent);
     }
 
     @Override
@@ -249,6 +258,11 @@ public class MusicService extends MediaBrowserServiceCompat {
         public void onNotificationPosted(int notificationId, Notification notification, boolean ongoing) {
             if (ongoing && !isForegroundService) {
                 Log.d(TAG, "onNotificationPosted: ");
+                ContextCompat.startForegroundService(
+                        getApplicationContext(),
+                        new Intent(getApplicationContext(), MusicService.class)
+                );
+
                 startForeground(notificationId, notification);
                 isForegroundService = true;
             }
