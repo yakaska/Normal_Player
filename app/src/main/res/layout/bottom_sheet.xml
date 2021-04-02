@@ -11,13 +11,13 @@
     android:focusable="true"
     android:orientation="vertical"
     app:behavior_hideable="false"
-    app:behavior_peekHeight="48dp"
+    app:behavior_peekHeight="?actionBarSize"
     app:layout_behavior="@string/bottom_sheet_behavior">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/sheet_peek"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
+        android:layout_height="?actionBarSize"
         android:background="@color/colorWhite">
 
         <com.google.android.material.progressindicator.LinearProgressIndicator
