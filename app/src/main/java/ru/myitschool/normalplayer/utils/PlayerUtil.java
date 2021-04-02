@@ -64,13 +64,4 @@ public class PlayerUtil {
         }
     }
 
-    //TODO WARNING: may cause bugs
-    public static boolean isPauseEnabled(PlaybackStateCompat playbackState) {
-        return (((playbackState.getActions() & PlaybackStateCompat.ACTION_PAUSE) != 0L) ||
-        ((playbackState.getActions() & PlaybackStateCompat.ACTION_PLAY_PAUSE) != 0L)) &&
-        (playbackState.getState() == PlaybackStateCompat.STATE_BUFFERING ||
-                playbackState.getState() == PlaybackStateCompat.STATE_PLAYING);
-
-    }
-
 }

@@ -1,5 +1,6 @@
 package ru.myitschool.normalplayer.common.model;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Resources;
 import android.net.Uri;
@@ -12,6 +13,7 @@ import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -209,6 +211,7 @@ public class MusicProvider {
         return currentState == State.INITIALIZED;
     }
 
+    @SuppressLint("StaticFieldLeak")
     public void retrieveMediaAsync(final Callback callback) {
         Log.d(TAG, "retrieveMediaAsync called");
         if (currentState == State.INITIALIZED) {
@@ -356,6 +359,12 @@ public class MusicProvider {
         } else {
             Log.w(TAG, "Skipping unmatched mediaId: " + mediaId);
         }
+        Collections.sort(mediaItems, new Comparator<MediaBrowserCompat.MediaItem>() {
+            @Override
+            public int compare(MediaBrowserCompat.MediaItem o1, MediaBrowserCompat.MediaItem o2) {
+                return o1.getDescription().getTitle().toString().compareTo(o2.getDescription().getTitle().toString());
+            }
+        });
         return mediaItems;
     }
 

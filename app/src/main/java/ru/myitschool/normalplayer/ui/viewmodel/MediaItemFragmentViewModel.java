@@ -20,6 +20,8 @@ import ru.myitschool.normalplayer.common.model.MusicProvider;
 import ru.myitschool.normalplayer.ui.model.MediaItemData;
 import ru.myitschool.normalplayer.utils.PlayerUtil;
 
+/*TODO enable sort!*/
+
 public class MediaItemFragmentViewModel extends ViewModel {
 
     private static final String TAG = MediaItemFragmentViewModel.class.getSimpleName();
