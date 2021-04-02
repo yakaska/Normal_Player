@@ -35,8 +35,8 @@
                     android:gravity="center"
                     android:scrollbarThumbHorizontal="@color/colorPrimary"
                     app:layout_scrollFlags="scroll|enterAlways"
-                    app:logo="@drawable/ic_launcher"
                     app:menu="@menu/navigation_app_bar"
+                    app:titleMargin="0dp"
                     app:navigationIcon="@drawable/ic_menu_24"
                     app:title="@string/app_name"
                     app:titleTextAppearance="@style/TextAppearance.MaterialComponents.Headline6">

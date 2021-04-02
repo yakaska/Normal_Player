@@ -172,10 +172,10 @@ public class NowPlayingViewModel extends AndroidViewModel {
         if (mediaMetadata.getValue() != null) {
             if (connection.getShuffleMode() == PlaybackStateCompat.SHUFFLE_MODE_NONE) {
                 connection.getTransportControls().setShuffleMode(PlaybackStateCompat.SHUFFLE_MODE_ALL);
-                shuffleButtonRes.postValue(R.drawable.ic_shuffle_on_24);
+                shuffleButtonRes.postValue(R.drawable.exo_controls_shuffle_on);
             } else {
                 connection.getTransportControls().setShuffleMode(PlaybackStateCompat.SHUFFLE_MODE_NONE);
-                shuffleButtonRes.postValue(R.drawable.ic_shuffle_24);
+                shuffleButtonRes.postValue(R.drawable.exo_controls_shuffle_off);
             }
         }
     }
@@ -184,13 +184,13 @@ public class NowPlayingViewModel extends AndroidViewModel {
         if (mediaMetadata.getValue() != null) {
             if (connection.getRepeatMode() == PlaybackStateCompat.REPEAT_MODE_NONE) {
                 connection.getTransportControls().setRepeatMode(PlaybackStateCompat.REPEAT_MODE_ONE);
-                repeatButtonRes.postValue(R.drawable.ic_repeat_one_on_24);
+                repeatButtonRes.postValue(R.drawable.exo_controls_repeat_one);
             } else if (connection.getRepeatMode() == PlaybackStateCompat.REPEAT_MODE_ONE) {
                 connection.getTransportControls().setRepeatMode(PlaybackStateCompat.REPEAT_MODE_ALL);
-                repeatButtonRes.postValue(R.drawable.ic_repeat_on_24);
+                repeatButtonRes.postValue(R.drawable.exo_controls_repeat_all);
             } else if (connection.getRepeatMode() == PlaybackStateCompat.REPEAT_MODE_ALL) {
                 connection.getTransportControls().setRepeatMode(PlaybackStateCompat.REPEAT_MODE_NONE);
-                repeatButtonRes.postValue(R.drawable.ic_repeat_24);
+                repeatButtonRes.postValue(R.drawable.exo_controls_repeat_off);
             }
         }
     }
