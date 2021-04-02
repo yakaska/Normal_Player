@@ -49,8 +49,12 @@ import static ru.myitschool.normalplayer.utils.MediaIDUtil.MEDIA_ID_EMPTY_ROOT;
 import static ru.myitschool.normalplayer.utils.MediaIDUtil.MEDIA_ID_ROOT;
 
 public class MusicService extends MediaBrowserServiceCompat {
-    public static final String MEDIA_DESCRIPTION_EXTRAS_START_PLAYBACK_POSITION_MS = "playback_start_position_ms";
     private static final String TAG = MusicService.class.getSimpleName();
+
+    public static final String SOURCE_PHONE = "source_phone";
+    public static final String SOURCE_VK = "source_vk";
+
+    public static final String MEDIA_DESCRIPTION_EXTRAS_START_PLAYBACK_POSITION_MS = "playback_start_position_ms";
     private static final String NP_USER_AGENT = "NP_USER_AGENT";
     private final AudioAttributes audioAttributes = new AudioAttributes.Builder().setContentType(C.CONTENT_TYPE_MUSIC).setUsage(C.USAGE_MEDIA).build();
     private final PlayerEventListener playerListener = new PlayerEventListener();
@@ -103,10 +107,12 @@ public class MusicService extends MediaBrowserServiceCompat {
         exoPlayer.release();
     }
 
+    //PLEASE NOTICE THAT IT USED ONLY FOR CHANGING MEDIA SOURCE!
     @Override
     public void onCustomAction(@NonNull String action, Bundle extras, @NonNull Result<Bundle> result) {
         result.detach();
-        musicProvider = new MusicProvider(new VkSource(getApplicationContext()));
+        if (action.equals(SOURCE_VK)) musicProvider = new MusicProvider(new VkSource(getApplicationContext()));
+        else musicProvider = new MusicProvider(new InternalSource(getApplicationContext()));
     }
 
     @Override

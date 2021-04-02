@@ -9,13 +9,7 @@
         android:title="@string/search"
         app:actionViewClass="android.widget.SearchView" />
 
-    <group
-        android:id="@+id/group1">
-        <item
-            android:id="@+id/menu_vk"
-            android:orderInCategory="1"
-            android:title="@string/vkontakte">
-        </item>
+    <group android:id="@+id/group1">
         <item
             android:id="@+id/menu_settings"
             android:orderInCategory="2"

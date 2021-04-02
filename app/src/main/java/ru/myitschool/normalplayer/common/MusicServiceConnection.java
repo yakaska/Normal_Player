@@ -2,7 +2,6 @@ package ru.myitschool.normalplayer.common;
 
 import android.content.ComponentName;
 import android.content.Context;
-import android.os.Bundle;
 import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaControllerCompat;
@@ -55,8 +54,8 @@ public class MusicServiceConnection {
         mediaBrowser.connect();
     }
 
-    public void send() {
-        mediaBrowser.sendCustomAction("a", null, null);
+    public void changeMediaSource(String source) {
+        mediaBrowser.sendCustomAction(source, null, null);
     }
 
     public void subscribe(String parentId, MediaBrowserCompat.SubscriptionCallback subscriptionCallback) {
@@ -65,10 +64,6 @@ public class MusicServiceConnection {
 
     public void unsubscribe(String parentId, MediaBrowserCompat.SubscriptionCallback subscriptionCallback) {
         mediaBrowser.unsubscribe(parentId, subscriptionCallback);
-    }
-
-    public void search(String query, Bundle extras, MediaBrowserCompat.SearchCallback searchCallback) {
-        mediaBrowser.search(query, extras, searchCallback);
     }
 
     public MutableLiveData<Boolean> isConnected() {

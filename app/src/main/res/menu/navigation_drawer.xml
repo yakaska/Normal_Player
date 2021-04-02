@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/nav_phone"
+        android:icon="@drawable/ic_phone_24"
+        android:title="@string/phone" />
+
+    <item
+        android:id="@+id/nav_vk"
+        android:icon="@drawable/ic_vk_24"
+        android:title="@string/vkontakte" />
+
+    <item
+        android:id="@+id/nav_settings"
+        android:icon="@drawable/ic_settings_24"
+        android:title="@string/settings" />
+
+</menu>

@@ -106,31 +106,8 @@ public class MainActivityViewModel extends ViewModel {
         }
     }
 
-    //TODO
-    public void playMedia(MediaItemData clickedItem, boolean pauseAllowed) {
-        MediaMetadataCompat metadata = connection.getNowPlaying().getValue();
-        MediaControllerCompat.TransportControls transportControls = connection.getTransportControls();
-
-        boolean isPrepared;
-        if (connection.getPlaybackState().getValue() != null) {
-            isPrepared = PlayerUtil.isPrepared(connection.getPlaybackState().getValue());
-        } else {
-            isPrepared = false;
-        }
-        if (isPrepared && clickedItem.getMediaId().equals(metadata.getString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID))) {
-            if (connection.getPlaybackState().getValue() != null) {
-                if (PlayerUtil.isPlaying(connection.getPlaybackState().getValue())) {
-                    if (pauseAllowed) transportControls.pause();
-                } else if (PlayerUtil.isPlayEnabled(connection.getPlaybackState().getValue())) {
-                    transportControls.play();
-                } else {
-                    Log.d(TAG, "playMedia: ПОШЕЛ НАХУЙ ПИДОРАС");
-                }
-            }
-        } else {
-            transportControls.playFromMediaId(clickedItem.getMediaId(), null);
-        }
-
+    public void setMediaSource(String source) {
+        connection.changeMediaSource(source);
     }
 
     private void browseToItem(MediaItemData clickedItem) {

@@ -108,9 +108,6 @@ public class MediaItemFragment extends Fragment implements MediaItemAdapter.OnIt
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.menu_vk:
-                Log.d(TAG, "onOptionsItemSelected: " + "VK");
-                break;
             case R.id.menu_settings:
                 Log.d(TAG, "onOptionsItemSelected: " + "SETTINGS");
                 break;

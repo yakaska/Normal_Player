@@ -1,6 +1,7 @@
 package ru.myitschool.normalplayer.ui.activity;
 
 import android.Manifest;
+import android.content.Intent;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.util.Log;
@@ -18,6 +19,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.slider.Slider;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.PermissionToken;
@@ -37,6 +39,9 @@ import ru.myitschool.normalplayer.utils.Event;
 import ru.myitschool.normalplayer.utils.MediaIDUtil;
 import ru.myitschool.normalplayer.utils.ProviderUtil;
 
+import static ru.myitschool.normalplayer.common.playback.MusicService.SOURCE_PHONE;
+import static ru.myitschool.normalplayer.common.playback.MusicService.SOURCE_VK;
+
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -45,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
 
     private NowPlayingViewModel nowPlayingViewModel;
 
-    private ActivityMainBinding activityMainBinding;
+    private ActivityMainBinding binding;
 
 
     @Override
@@ -55,9 +60,9 @@ public class MainActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
 
-        activityMainBinding = ActivityMainBinding.inflate(getLayoutInflater());
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
 
-        setContentView(activityMainBinding.getRoot());
+        setContentView(binding.getRoot());
 
         checkPermissions();
 
@@ -88,9 +93,9 @@ public class MainActivity extends AppCompatActivity {
     private void initUI() {
         initMenu();
 
-        activityMainBinding.bottomSheetInclude.titlePeek.setSelected(true);
+        binding.bottomSheetInclude.titlePeek.setSelected(true);
 
-        BottomSheetBehavior<LinearLayout> sheetBehavior = BottomSheetBehavior.from(activityMainBinding.bottomSheetInclude.bottomSheet);
+        BottomSheetBehavior<LinearLayout> sheetBehavior = BottomSheetBehavior.from(binding.bottomSheetInclude.bottomSheet);
         sheetBehavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
             public void onStateChanged(@NonNull View bottomSheet, int newState) {
@@ -98,13 +103,13 @@ public class MainActivity extends AppCompatActivity {
                 switch (newState) {
                     case BottomSheetBehavior.STATE_COLLAPSED:
                         v.setVisibility(View.VISIBLE);
-                        activityMainBinding.bottomNavigation.setVisibility(View.VISIBLE);
+                        binding.bottomNavigation.setVisibility(View.VISIBLE);
                         break;
                     case BottomSheetBehavior.STATE_DRAGGING:
                         break;
                     case BottomSheetBehavior.STATE_EXPANDED:
                         v.setVisibility(View.GONE);
-                        activityMainBinding.bottomNavigation.setVisibility(View.GONE);
+                        binding.bottomNavigation.setVisibility(View.GONE);
                         break;
                     case BottomSheetBehavior.STATE_HALF_EXPANDED:
                         break;
@@ -156,8 +161,8 @@ public class MainActivity extends AppCompatActivity {
         nowPlayingViewModel.getPlayButtonRes().observe(this, new Observer<Integer>() {
             @Override
             public void onChanged(Integer integer) {
-                activityMainBinding.bottomSheetInclude.playContent.setIconResource(integer);
-                activityMainBinding.bottomSheetInclude.playPeek.setIconResource(integer);
+                binding.bottomSheetInclude.playContent.setIconResource(integer);
+                binding.bottomSheetInclude.playPeek.setIconResource(integer);
             }
         });
 
@@ -165,27 +170,27 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onChanged(Long aLong) {
                 long time = aLong;
-                activityMainBinding.bottomSheetInclude.currentTimeContent.setText(NowPlayingMetadata.timestampToMSS(MainActivity.this, time));
-                activityMainBinding.bottomSheetInclude.seekbarContent.setValue((int) time);
-                activityMainBinding.bottomSheetInclude.progressBarPeek.setProgress((int) (time));
+                binding.bottomSheetInclude.currentTimeContent.setText(NowPlayingMetadata.timestampToMSS(MainActivity.this, time));
+                binding.bottomSheetInclude.seekbarContent.setValue((int) time);
+                binding.bottomSheetInclude.progressBarPeek.setProgress((int) (time));
             }
         });
 
         nowPlayingViewModel.getShuffleButtonRes().observe(this, new Observer<Integer>() {
             @Override
             public void onChanged(Integer integer) {
-                activityMainBinding.bottomSheetInclude.shuffleContent.setIconResource(integer);
+                binding.bottomSheetInclude.shuffleContent.setIconResource(integer);
             }
         });
 
         nowPlayingViewModel.getRepeatButtonRes().observe(this, new Observer<Integer>() {
             @Override
             public void onChanged(Integer integer) {
-                activityMainBinding.bottomSheetInclude.repeatContent.setIconResource(integer);
+                binding.bottomSheetInclude.repeatContent.setIconResource(integer);
             }
         });
 
-        activityMainBinding.bottomSheetInclude.playContent.setOnClickListener(new View.OnClickListener() {
+        binding.bottomSheetInclude.playContent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (nowPlayingViewModel.getMediaMetadata().getValue() != null) {
@@ -194,7 +199,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        activityMainBinding.bottomSheetInclude.playPeek.setOnClickListener(new View.OnClickListener() {
+        binding.bottomSheetInclude.playPeek.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (nowPlayingViewModel.getMediaMetadata().getValue() != null) {
@@ -203,7 +208,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        activityMainBinding.bottomSheetInclude.nextContent.setOnClickListener(new View.OnClickListener() {
+        binding.bottomSheetInclude.nextContent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 nowPlayingViewModel.skipToNext();
@@ -211,14 +216,14 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        activityMainBinding.bottomSheetInclude.previousContent.setOnClickListener(new View.OnClickListener() {
+        binding.bottomSheetInclude.previousContent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 nowPlayingViewModel.skipToPrevious();
             }
         });
 
-        activityMainBinding.bottomSheetInclude.seekbarContent.addOnChangeListener(new Slider.OnChangeListener() {
+        binding.bottomSheetInclude.seekbarContent.addOnChangeListener(new Slider.OnChangeListener() {
             @Override
             public void onValueChange(@NonNull Slider slider, float value, boolean fromUser) {
                 if (fromUser) {
@@ -227,39 +232,39 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        activityMainBinding.bottomSheetInclude.collapseContent.setOnClickListener(new View.OnClickListener() {
+        binding.bottomSheetInclude.collapseContent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
             }
         });
 
-        activityMainBinding.bottomSheetInclude.buttonExpandPeek.setOnClickListener(new View.OnClickListener() {
+        binding.bottomSheetInclude.buttonExpandPeek.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 sheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
             }
         });
 
-        activityMainBinding.bottomSheetInclude.shuffleContent.setOnClickListener(new View.OnClickListener() {
+        binding.bottomSheetInclude.shuffleContent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 nowPlayingViewModel.toggleShuffleMode();
             }
         });
 
-        activityMainBinding.bottomSheetInclude.repeatContent.setOnClickListener(new View.OnClickListener() {
+        binding.bottomSheetInclude.repeatContent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 nowPlayingViewModel.toggleRepeatMode();
             }
         });
 
-        activityMainBinding.bottomSheetInclude.totalTimeContent.setText(NowPlayingMetadata.timestampToMSS(MainActivity.this, 0L));
+        binding.bottomSheetInclude.totalTimeContent.setText(NowPlayingMetadata.timestampToMSS(MainActivity.this, 0L));
 
-        activityMainBinding.bottomSheetInclude.currentTimeContent.setText(NowPlayingMetadata.timestampToMSS(MainActivity.this, 0L));
+        binding.bottomSheetInclude.currentTimeContent.setText(NowPlayingMetadata.timestampToMSS(MainActivity.this, 0L));
 
-        activityMainBinding.bottomNavigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+        binding.bottomNavigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
@@ -280,11 +285,32 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        activityMainBinding.bottomNavigation.setSelectedItemId(R.id.nav_music);
+        binding.bottomNavigation.setSelectedItemId(R.id.nav_music);
+
+        binding.toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                binding.drawerLayout.openDrawer(binding.drawer);
+            }
+        });
     }
 
     private void initMenu() {
-        MenuItem searchMenuItem = activityMainBinding.toolbar.getMenu().findItem(R.id.menu_search);
+        binding.drawer.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.nav_phone:
+                        setMediaSource(SOURCE_PHONE);
+                        break;
+                    case R.id.nav_vk:
+                        setMediaSource(SOURCE_VK);
+                        break;
+                }
+                return false;
+            }
+        });
+        MenuItem searchMenuItem = binding.toolbar.getMenu().findItem(R.id.menu_search);
         SearchView searchView = (SearchView) searchMenuItem.getActionView();
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -300,22 +326,28 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    private void setMediaSource(String source) {
+        mainActivityViewModel.setMediaSource(source);
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+    }
+
     private void updateUI(NowPlayingMetadata nowPlayingMetadata) {
         String id = nowPlayingMetadata.getMediaId();
         Log.d(TAG, "updateUI: ");
         if (nowPlayingMetadata.getAlbumArtUri() == null) {
-            activityMainBinding.bottomSheetInclude.albumArtContent.setImageResource(R.drawable.ic_default_art);
+            binding.bottomSheetInclude.albumArtContent.setImageResource(R.drawable.ic_default_art);
         } else {
-            Picasso.get().load(nowPlayingMetadata.getAlbumArtUri()).placeholder(R.drawable.ic_default_art).into(activityMainBinding.bottomSheetInclude.albumArtContent);
+            Picasso.get().load(nowPlayingMetadata.getAlbumArtUri()).placeholder(R.drawable.ic_default_art).into(binding.bottomSheetInclude.albumArtContent);
         }
-        activityMainBinding.bottomSheetInclude.titleContent.setText(nowPlayingMetadata.getTitle());
-        activityMainBinding.bottomSheetInclude.titlePeek.setText(String.format(getString(R.string.song_format), nowPlayingMetadata.getTitle(), nowPlayingMetadata.getSubtitle()));
-        activityMainBinding.bottomSheetInclude.subtitleContent.setText(nowPlayingMetadata.getSubtitle());
-        activityMainBinding.bottomSheetInclude.totalTimeContent.setText(nowPlayingMetadata.getDuration());
-        activityMainBinding.bottomSheetInclude.seekbarContent.setValue(0);
-        activityMainBinding.bottomSheetInclude.seekbarContent.setValueFrom(0);
-        activityMainBinding.bottomSheetInclude.seekbarContent.setValueTo((int) nowPlayingMetadata.getDurationMs() + 1000);
-        activityMainBinding.bottomSheetInclude.progressBarPeek.setMax((int) nowPlayingMetadata.getDurationMs());
+        binding.bottomSheetInclude.titleContent.setText(nowPlayingMetadata.getTitle());
+        binding.bottomSheetInclude.titlePeek.setText(String.format(getString(R.string.song_format), nowPlayingMetadata.getTitle(), nowPlayingMetadata.getSubtitle()));
+        binding.bottomSheetInclude.subtitleContent.setText(nowPlayingMetadata.getSubtitle());
+        binding.bottomSheetInclude.totalTimeContent.setText(nowPlayingMetadata.getDuration());
+        binding.bottomSheetInclude.seekbarContent.setValue(0);
+        binding.bottomSheetInclude.seekbarContent.setValueFrom(0);
+        binding.bottomSheetInclude.seekbarContent.setValueTo((int) nowPlayingMetadata.getDurationMs() + 1000);
+        binding.bottomSheetInclude.progressBarPeek.setMax((int) nowPlayingMetadata.getDurationMs());
     }
 
     private void navigateToMediaItem(String mediaId) {
@@ -325,11 +357,7 @@ public class MainActivity extends AppCompatActivity {
         }
         mainActivityViewModel.showFragment(fragment, !isRootId(mediaId), mediaId);
     }
-
-    private void navigateToSource(String source) {
-
-    }
-
+    
     private boolean isRootId(String mediaId) {
         return mediaId.equals(mainActivityViewModel.getRootMediaId().getValue());
     }
@@ -338,4 +366,10 @@ public class MainActivity extends AppCompatActivity {
         return getSupportFragmentManager().findFragmentByTag(mediaId);
     }
 
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG, "onDestroy: ");
+    }
 }
