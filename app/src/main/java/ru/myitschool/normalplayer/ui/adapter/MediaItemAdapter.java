@@ -1,20 +1,14 @@
 package ru.myitschool.normalplayer.ui.adapter;
 
+import android.content.Context;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.PopupMenu;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.button.MaterialButton;
-import com.google.android.material.card.MaterialCardView;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -22,18 +16,17 @@ import java.util.Collections;
 import java.util.List;
 
 import ru.myitschool.normalplayer.R;
+import ru.myitschool.normalplayer.databinding.ItemGridBinding;
+import ru.myitschool.normalplayer.databinding.ItemLineBinding;
 import ru.myitschool.normalplayer.ui.model.MediaItemData;
 import ru.myitschool.normalplayer.utils.PlayerUtil;
 
-public class MediaItemAdapter extends ListAdapter<MediaItemData, MediaItemAdapter.LineViewHolder>  {
+public class MediaItemAdapter extends ListAdapter<MediaItemData, RecyclerView.ViewHolder> {
 
-    private List<MediaItemData> unfilteredList = new ArrayList<>();
-
-    public interface OnItemClickListener {
-        void onItemClick(MediaItemData clickedItem);
-    }
-
+    private static final int VIEW_TYPE_LINE = 1;
+    private static final int VIEW_TYPE_GRID = 2;
     private final OnItemClickListener itemClickListener;
+    private List<MediaItemData> unfilteredList = new ArrayList<>();
 
     public MediaItemAdapter(OnItemClickListener itemClickListener) {
         super(MediaItemData.DIFF_CALLBACK);
@@ -42,92 +35,82 @@ public class MediaItemAdapter extends ListAdapter<MediaItemData, MediaItemAdapte
 
     @NonNull
     @Override
-    public LineViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new LineViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_line, parent, false), itemClickListener);
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        LayoutInflater inflater = (LayoutInflater) parent.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        switch (viewType) {
+            case VIEW_TYPE_LINE:
+                return new LineViewHolder(ItemLineBinding.inflate(inflater, parent, false), itemClickListener);
+            case VIEW_TYPE_GRID:
+                return new GridViewHolder(ItemGridBinding.inflate(inflater, parent, false), itemClickListener);
+            default:
+                return null;
+        }
     }
 
     @Override
-    public void onBindViewHolder(@NonNull LineViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         onBindViewHolder(holder, position, Collections.emptyList());
     }
 
     @Override
-    public void onBindViewHolder(@NonNull LineViewHolder lineViewHolder, int position, @NonNull List<Object> payloads) {
+    public int getItemViewType(int position) {
+        return getItem(position).isBrowsable() ? VIEW_TYPE_GRID : VIEW_TYPE_LINE;
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int position, @NonNull List<Object> payloads) {
         MediaItemData item = getItem(position);
         boolean fullRefresh = payloads.isEmpty();
-        if (!payloads.isEmpty()) {
-            for (int i = 0; i < payloads.size(); i++) {
-                if (payloads.get(i) instanceof Integer) {
-                    if (item.getPlaybackRes() == R.drawable.ic_pause_24 || item.getPlaybackRes() == R.drawable.ic_play_24) {
-                        lineViewHolder.rootView.setBackgroundResource(R.color.colorBackgroundSelected);
-                    } else {
-                        lineViewHolder.rootView.setBackgroundResource(R.color.colorBackground);
+
+        switch (viewHolder.getItemViewType()) {
+            case VIEW_TYPE_LINE:
+                LineViewHolder lineViewHolder = (LineViewHolder) viewHolder;
+                if (!payloads.isEmpty()) {
+                    for (int i = 0; i < payloads.size(); i++) {
+                        if (payloads.get(i) instanceof Integer) {
+                            if (item.getPlaybackRes() == R.drawable.ic_pause_24 || item.getPlaybackRes() == R.drawable.ic_play_24) {
+                                lineViewHolder.binding.itemLineRoot.setBackgroundResource(R.color.colorBackgroundSelected);
+                            } else {
+                                lineViewHolder.binding.itemLineRoot.setBackgroundResource(R.color.colorBackground);
+                            }
+                        } else {
+                            fullRefresh = true;
+                        }
                     }
-                } else {
-                    fullRefresh = true;
                 }
-            }
+
+                if (fullRefresh) {
+                    lineViewHolder.item = item;
+                    lineViewHolder.binding.itemLineTitle.setText(item.getTitle());
+                    lineViewHolder.binding.itemLineSubtitle.setText(item.getSubtitle());
+                    lineViewHolder.binding.itemLineDuration.setText(PlayerUtil.convertMs(item.getDuration()));
+                    if (item.getPlaybackRes() == R.drawable.ic_pause_24 || item.getPlaybackRes() == R.drawable.ic_play_24) {
+                        lineViewHolder.binding.itemLineRoot.setBackgroundResource(R.color.colorBackgroundSelected);
+                    } else {
+                        lineViewHolder.binding.itemLineRoot.setBackgroundResource(R.color.colorBackground);
+                    }
+                    Picasso.get().load(item.getAlbumArtUri()).placeholder(R.drawable.ic_default_art).into(lineViewHolder.binding.itemLineArt);
+                }
+                break;
+            case VIEW_TYPE_GRID:
+                GridViewHolder gridViewHolder = (GridViewHolder) viewHolder;
+                gridViewHolder.item = item;
+                gridViewHolder.binding.itemGridTitle.setText(item.getTitle());
+                Picasso.get().load(item.getAlbumArtUri()).placeholder(R.drawable.ic_default_art).into(gridViewHolder.binding.itemGridArt);
+                break;
+            default:
+                throw new IllegalStateException("No view type");
         }
 
-        if (fullRefresh) {
-            lineViewHolder.item = item;
-            lineViewHolder.titleTv.setText(item.getTitle());
-            lineViewHolder.artistTv.setText(item.getSubtitle());
-            if (item.isBrowsable()) {
-                lineViewHolder.durationTv.setVisibility(View.INVISIBLE);
-            } else {
-                lineViewHolder.durationTv.setText(PlayerUtil.convertMs(item.getDuration()));
-            }
-            if (item.getPlaybackRes() == R.drawable.ic_pause_24 || item.getPlaybackRes() == R.drawable.ic_play_24) {
-                lineViewHolder.rootView.setBackgroundResource(R.color.colorBackgroundSelected);
-            } else {
-                lineViewHolder.rootView.setBackgroundResource(R.color.colorBackground);
-            }
-            Picasso.get().load(item.getAlbumArtUri()).placeholder(R.drawable.ic_default_art).into(lineViewHolder.artIv);
-            lineViewHolder.moreBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    PopupMenu popupMenu = new PopupMenu(lineViewHolder.rootView.getContext(), lineViewHolder.moreBtn);
-                    popupMenu.inflate(R.menu.media_item);
-                    popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                        @Override
-                        public boolean onMenuItemClick(MenuItem menuItem) {
-                            switch (menuItem.getItemId()) {
-                                case R.id.nav_goto_album:
-                                    Toast.makeText(lineViewHolder.moreBtn.getContext(), "Go to album", Toast.LENGTH_SHORT).show();
-                                    return true;
-                                case R.id.nav_goto_artist:
-                                    Toast.makeText(lineViewHolder.moreBtn.getContext(), "Go to artist", Toast.LENGTH_SHORT).show();
-                                    return true;
-                                case R.id.nav_share:
-                                    Toast.makeText(lineViewHolder.moreBtn.getContext(), "Share", Toast.LENGTH_SHORT).show();
-                                    return true;
-                                case R.id.nav_edit_tags:
-                                    Toast.makeText(lineViewHolder.moreBtn.getContext(), "Edit tags", Toast.LENGTH_SHORT).show();
-                                    return true;
-                                case R.id.nav_details:
-                                    Toast.makeText(lineViewHolder.moreBtn.getContext(), "Details", Toast.LENGTH_SHORT).show();
-                                    return true;
-                                case R.id.nav_delete:
-                                    Toast.makeText(lineViewHolder.moreBtn.getContext(), "Delete", Toast.LENGTH_SHORT).show();
-                                    return true;
-                            }
-                            return false;
-                        }
-                    });
-                    popupMenu.show();
-                }
-            });
-        }
     }
 
     public void filter(String query) {
         ArrayList<MediaItemData> filteredList = new ArrayList<>();
-        if (query ==  null || query.length() == 0) {
+        if (query == null || query.length() == 0) {
             filteredList.addAll(unfilteredList);
         } else {
             String filterPattern = query.toLowerCase().trim();
-            for (MediaItemData mediaItemData: getCurrentList()) {
+            for (MediaItemData mediaItemData : getCurrentList()) {
                 if (mediaItemData.getTitle().toLowerCase().trim().contains(filterPattern)) {
                     filteredList.add(mediaItemData);
                 }
@@ -141,24 +124,36 @@ public class MediaItemAdapter extends ListAdapter<MediaItemData, MediaItemAdapte
         submitList(mediaItemDataList);
     }
 
+    public interface OnItemClickListener {
+        void onItemClick(MediaItemData clickedItem);
+    }
+
     public static class LineViewHolder extends RecyclerView.ViewHolder {
         private MediaItemData item = null;
-        private final MaterialCardView rootView;
-        private final ImageView artIv;
-        private final TextView titleTv;
-        private final TextView artistTv;
-        private final TextView durationTv;
-        private final MaterialButton moreBtn;
+        private ItemLineBinding binding;
 
-        public LineViewHolder(@NonNull View itemView, OnItemClickListener itemClickListener) {
-            super(itemView);
-            rootView = itemView.findViewById(R.id.item_line_root);
-            artIv = itemView.findViewById(R.id.item_line_art);
-            titleTv = itemView.findViewById(R.id.item_line_title);
-            artistTv = itemView.findViewById(R.id.item_line_subtitle);
-            durationTv = itemView.findViewById(R.id.item_line_duration);
-            moreBtn = itemView.findViewById(R.id.item_line_more);
-            itemView.setOnClickListener(new View.OnClickListener() {
+        public LineViewHolder(ItemLineBinding binding, OnItemClickListener itemClickListener) {
+            super(binding.getRoot());
+            this.binding = binding;
+            binding.getRoot().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (item != null) {
+                        itemClickListener.onItemClick(item);
+                    }
+                }
+            });
+        }
+    }
+
+    public static class GridViewHolder extends RecyclerView.ViewHolder {
+        private MediaItemData item = null;
+        private ItemGridBinding binding;
+
+        public GridViewHolder(ItemGridBinding binding, OnItemClickListener itemClickListener) {
+            super(binding.getRoot());
+            this.binding = binding;
+            binding.getRoot().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     if (item != null) {

@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/item_grid_root"
     android:layout_width="match_parent"
-    android:layout_height="250dp"
-    android:elevation="4dp"
-    android:padding="8dp"
-    app:shapeAppearance="@style/ShapeAppearance.MaterialComponents.MediumComponent"
+    android:layout_height="200dp"
+    android:layout_margin="4dp"
     app:cardCornerRadius="8dp">
 
     <LinearLayout
@@ -15,38 +12,25 @@
         android:orientation="vertical"
         android:weightSum="10">
 
-        <!--TODO -->
         <ImageView
             android:id="@+id/item_grid_art"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="7"
+            android:layout_weight="8"
             android:scaleType="centerCrop"
             android:src="@drawable/ic_default_art" />
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/item_grid_title"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1.5"
-            android:fontFamily="sans-serif-condensed-medium"
+            android:layout_weight="2"
             android:gravity="center"
-            android:text="Title"
-            android:textColor="@color/colorPrimaryText"
-            android:textSize="16sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/item_grid_subtitle"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1.5"
-            android:fontFamily="sans-serif-condensed-medium"
-            android:gravity="center"
-            android:text="Subtitle"
-            android:textColor="@color/colorSecondaryText"
-            android:textSize="14sp" />
+            android:lines="2"
+            android:textStyle="bold"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
+            android:ellipsize="end"
+            android:text="@string/settings" />
 
     </LinearLayout>
-
 </com.google.android.material.card.MaterialCardView>

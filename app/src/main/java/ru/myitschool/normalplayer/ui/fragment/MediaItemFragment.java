@@ -15,7 +15,8 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import ru.myitschool.normalplayer.R;
 import ru.myitschool.normalplayer.databinding.FragmentMediaitemBinding;
@@ -66,6 +67,8 @@ public class MediaItemFragment extends Fragment implements MediaItemAdapter.OnIt
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 1);
+        gridLayoutManager.setOrientation(RecyclerView.VERTICAL);
         mediaId = getArguments().getString(MEDIA_ID_ARG);
         Log.d(TAG, "onActivityCreated: ");
         if (mediaId == null) {
@@ -76,9 +79,14 @@ public class MediaItemFragment extends Fragment implements MediaItemAdapter.OnIt
         mediaItemFragmentViewModel.mediaItems.observe(getViewLifecycleOwner(), mediaItems -> {
             if (mediaItems != null && !mediaItems.isEmpty()) {
                 binding.spinner.setVisibility(View.GONE);
+                if (mediaItems.get(0).isBrowsable()) {
+                    gridLayoutManager.setSpanCount(2);
+                }
+
             } else {
                 binding.spinner.setVisibility(View.VISIBLE);
             }
+            Log.d(TAG, "onActivityCreated: " +  gridLayoutManager.getSpanCount());
             adapter.modifyList(mediaItems);
         });
         mainActivityViewModel.getSearch().observe(getViewLifecycleOwner(), new Observer<String>() {
@@ -90,7 +98,7 @@ public class MediaItemFragment extends Fragment implements MediaItemAdapter.OnIt
         });
         binding.recycler.setNestedScrollingEnabled(true);
         binding.recycler.setItemAnimator(new DefaultItemAnimator());
-        binding.recycler.setLayoutManager(new LinearLayoutManager(getContext()));
+        binding.recycler.setLayoutManager(gridLayoutManager);
         binding.recycler.setAdapter(adapter);
     }
 
