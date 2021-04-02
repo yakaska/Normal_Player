@@ -1,5 +1,6 @@
 package ru.myitschool.normalplayer.utils;
 
+import android.annotation.SuppressLint;
 import android.net.Uri;
 import android.os.SystemClock;
 import android.support.v4.media.MediaMetadataCompat;
@@ -15,6 +16,7 @@ import java.util.concurrent.TimeUnit;
 
 public class PlayerUtil {
 
+    @SuppressLint("DefaultLocale")
     public static String convertMs(long milliSeconds) {
         return String.format("%02d:%02d",
                 TimeUnit.MILLISECONDS.toMinutes(milliSeconds),
@@ -25,6 +27,7 @@ public class PlayerUtil {
     public static ConcatenatingMediaSource metadataListToMediaSource(ArrayList<MediaMetadataCompat> metadataList, CacheDataSourceFactory dataSourceFactory) {
         ConcatenatingMediaSource mediaSource = new ConcatenatingMediaSource();
         for (MediaMetadataCompat metadata : metadataList) {
+        
             mediaSource.addMediaSource(toMediaSource(metadata, dataSourceFactory));
         }
         return mediaSource;

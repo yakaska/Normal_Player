@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.SearchView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -85,6 +86,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initUI() {
+        initMenu();
+
         activityMainBinding.bottomSheetInclude.titlePeek.setSelected(true);
 
         BottomSheetBehavior<LinearLayout> sheetBehavior = BottomSheetBehavior.from(activityMainBinding.bottomSheetInclude.bottomSheet);
@@ -280,6 +283,23 @@ public class MainActivity extends AppCompatActivity {
         activityMainBinding.bottomNavigation.setSelectedItemId(R.id.nav_music);
     }
 
+    private void initMenu() {
+        MenuItem searchMenuItem = activityMainBinding.toolbar.getMenu().findItem(R.id.menu_search);
+        SearchView searchView = (SearchView) searchMenuItem.getActionView();
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String query) {
+                mainActivityViewModel.search(query);
+                return false;
+            }
+        });
+    }
+
     private void updateUI(NowPlayingMetadata nowPlayingMetadata) {
         String id = nowPlayingMetadata.getMediaId();
         Log.d(TAG, "updateUI: ");
@@ -304,6 +324,10 @@ public class MainActivity extends AppCompatActivity {
             fragment = MediaItemFragment.newInstance(mediaId);
         }
         mainActivityViewModel.showFragment(fragment, !isRootId(mediaId), mediaId);
+    }
+
+    private void navigateToSource(String source) {
+
     }
 
     private boolean isRootId(String mediaId) {

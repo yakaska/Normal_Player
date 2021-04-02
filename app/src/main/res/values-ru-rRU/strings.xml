@@ -30,4 +30,25 @@
     <string name="settings">Настройки</string>
     <string name="vkontakte">Вконтакте</string>
     <string name="sort">Сортировка</string>
+    <string name="rock">Рок</string>
+    <string name="pop">Поп</string>
+    <string name="rap">Рэп и Хип-Хоп</string>
+    <string name="easy">Лёгкая музыка</string>
+    <string name="house">Хаус и танцевальная</string>
+    <string name="instrumental">Инструментал</string>
+    <string name="metal">Метал</string>
+    <string name="alternative">Альтернатива</string>
+    <string name="dubstep">Дабстеп</string>
+    <string name="juzz_blues">Джаз и Блюз</string>
+    <string name="drum_bass">Барабаны</string>
+    <string name="trance">Транс</string>
+    <string name="chanson">Шансон</string>
+    <string name="ethnic">Этническая</string>
+    <string name="acoustic_vocal">Акустика и Вокал</string>
+    <string name="reggae">Рэгги</string>
+    <string name="classical">Классическая</string>
+    <string name="indie_pop">Инди поп</string>
+    <string name="speech">Хуйня какая-то..</string>
+    <string name="electro_pop_disco">Электропоп и Диско</string>
+    <string name="other">Другое</string>
 </resources>

@@ -1,6 +1,5 @@
 package ru.myitschool.normalplayer.ui.fragment;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -9,19 +8,17 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.SearchView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import ru.myitschool.normalplayer.R;
 import ru.myitschool.normalplayer.databinding.FragmentMediaitemBinding;
-import ru.myitschool.normalplayer.ui.activity.MainActivity;
 import ru.myitschool.normalplayer.ui.adapter.MediaItemAdapter;
 import ru.myitschool.normalplayer.ui.model.MediaItemData;
 import ru.myitschool.normalplayer.ui.viewmodel.MainActivityViewModel;
@@ -84,45 +81,17 @@ public class MediaItemFragment extends Fragment implements MediaItemAdapter.OnIt
             }
             adapter.modifyList(mediaItems);
         });
+        mainActivityViewModel.getSearch().observe(getViewLifecycleOwner(), new Observer<String>() {
+            @Override
+            public void onChanged(String query) {
+                Log.d(TAG, "QUERY" + query);
+                adapter.filter(query);
+            }
+        });
         binding.recycler.setNestedScrollingEnabled(true);
         binding.recycler.setItemAnimator(new DefaultItemAnimator());
         binding.recycler.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.recycler.setAdapter(adapter);
-        initMenu();
-    }
-
-    private void initMenu() {
-        binding.toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.menu_vk:
-                        Intent intent = new Intent(getContext().getApplicationContext(), MainActivity.class);
-                        mediaItemFragmentViewModel.send();
-                        startActivity(intent);
-                        break;
-                    case R.id.menu_settings:
-                        break;
-                    case R.id.menu_sort:
-                        break;
-                }
-                return true;
-            }
-        });
-        MenuItem searchMenuItem = binding.toolbar.getMenu().findItem(R.id.menu_search);
-        SearchView searchView = (SearchView) searchMenuItem.getActionView();
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                adapter.filter(newText);
-                return false;
-            }
-        });
     }
 
     @Override

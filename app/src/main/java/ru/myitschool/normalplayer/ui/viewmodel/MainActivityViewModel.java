@@ -29,10 +29,13 @@ public class MainActivityViewModel extends ViewModel {
 
     private final MutableLiveData<Event<FragmentNavigationRequest>> navigateToFragment;
 
+    private final MutableLiveData<String> search;
+
     public MainActivityViewModel(MusicServiceConnection connection) {
         this.connection = connection;
         navigateToMediaItem = new MutableLiveData<>();
         navigateToFragment = new MutableLiveData<>();
+        search = new MutableLiveData<>();
         rootMediaId = Transformations.map(connection.isConnected(), isConnected ->{
             if (isConnected) {
                 Log.d(TAG, "MainActivityViewModel: connected");
@@ -63,6 +66,13 @@ public class MainActivityViewModel extends ViewModel {
         return rootMediaId;
     }
 
+    public void search(String query) {
+        search.postValue(query);
+    }
+
+    public LiveData<String> getSearch() {
+        return search;
+    }
 
     public MutableLiveData<Event<FragmentNavigationRequest>> getNavigateToFragment() {
         return navigateToFragment;
