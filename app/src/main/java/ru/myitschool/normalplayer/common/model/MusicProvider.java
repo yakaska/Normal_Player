@@ -43,6 +43,40 @@ public class MusicProvider {
     private ConcurrentMap<String, List<MediaMetadataCompat>> musicListByGenre;
     private volatile State currentState = State.NON_INITIALIZED;
 
+    private static final Comparator<MediaBrowserCompat.MediaItem> mediaItemTitleComparator = new Comparator<MediaBrowserCompat.MediaItem>() {
+        @Override
+        public int compare(MediaBrowserCompat.MediaItem o1, MediaBrowserCompat.MediaItem o2) {
+            return o1.getDescription().getTitle().toString().compareTo(o2.getDescription().getTitle().toString());
+        }
+
+        @Override
+        public Comparator<MediaBrowserCompat.MediaItem> reversed() {
+            return new Comparator<MediaBrowserCompat.MediaItem>() {
+                @Override
+                public int compare(MediaBrowserCompat.MediaItem o1, MediaBrowserCompat.MediaItem o2) {
+                    return o1.getDescription().getTitle().toString().compareTo(o2.getDescription().getTitle().toString()) * -1;
+                }
+            };
+        }
+    };
+
+    private static final Comparator<MediaMetadataCompat> mediaMetadataTitleComparator = new Comparator<MediaMetadataCompat>() {
+        @Override
+        public int compare(MediaMetadataCompat o1, MediaMetadataCompat o2) {
+            return o1.getString(MediaMetadataCompat.METADATA_KEY_TITLE).compareTo(o2.getString(MediaMetadataCompat.METADATA_KEY_TITLE));
+        }
+
+        @Override
+        public Comparator<MediaMetadataCompat> reversed() {
+            return new Comparator<MediaMetadataCompat>() {
+                @Override
+                public int compare(MediaMetadataCompat o1, MediaMetadataCompat o2) {
+                    return o1.getString(MediaMetadataCompat.METADATA_KEY_TITLE).compareTo(o2.getString(MediaMetadataCompat.METADATA_KEY_TITLE)) * -1;
+                }
+            };
+        }
+    };
+
     public MusicProvider(Context context) {
         this(new InternalSource(context));
     }
@@ -126,6 +160,7 @@ public class MusicProvider {
         for (MutableMediaMetadata mutableMetadata : musicListById.values()) {
             result.add(mutableMetadata.metadata);
         }
+        Collections.sort(result, mediaMetadataTitleComparator);
         return result;
     }
 
@@ -136,7 +171,9 @@ public class MusicProvider {
         if (currentState != State.INITIALIZED || !musicListByArtist.containsKey(artist)) {
             return Collections.emptyList();
         }
-        return musicListByArtist.get(artist);
+        List<MediaMetadataCompat> result = musicListByArtist.get(artist);
+        Collections.sort(result, mediaMetadataTitleComparator);
+        return result;
     }
 
     /**
@@ -146,7 +183,9 @@ public class MusicProvider {
         if (currentState != State.INITIALIZED || !musicListByGenre.containsKey(genre)) {
             return Collections.emptyList();
         }
-        return musicListByGenre.get(genre);
+        List<MediaMetadataCompat> result = musicListByGenre.get(genre);
+        Collections.sort(result, mediaMetadataTitleComparator);
+        return result;
     }
 
     /**
@@ -156,7 +195,9 @@ public class MusicProvider {
         if (currentState != State.INITIALIZED || !musicListByAlbum.containsKey(album)) {
             return Collections.emptyList();
         }
-        return musicListByAlbum.get(album);
+        List<MediaMetadataCompat> result = musicListByAlbum.get(album);
+        Collections.sort(result, mediaMetadataTitleComparator);
+        return result;
     }
 
     /**
@@ -359,12 +400,7 @@ public class MusicProvider {
         } else {
             Log.w(TAG, "Skipping unmatched mediaId: " + mediaId);
         }
-        Collections.sort(mediaItems, new Comparator<MediaBrowserCompat.MediaItem>() {
-            @Override
-            public int compare(MediaBrowserCompat.MediaItem o1, MediaBrowserCompat.MediaItem o2) {
-                return o1.getDescription().getTitle().toString().compareTo(o2.getDescription().getTitle().toString());
-            }
-        });
+        Collections.sort(mediaItems, mediaItemTitleComparator);
         return mediaItems;
     }
 

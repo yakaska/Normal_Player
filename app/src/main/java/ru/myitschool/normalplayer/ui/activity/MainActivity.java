@@ -32,6 +32,7 @@ import com.squareup.picasso.Picasso;
 import ru.myitschool.normalplayer.R;
 import ru.myitschool.normalplayer.databinding.ActivityMainBinding;
 import ru.myitschool.normalplayer.ui.fragment.MediaItemFragment;
+import ru.myitschool.normalplayer.ui.fragment.VkAuthFragment;
 import ru.myitschool.normalplayer.ui.model.NowPlayingMetadata;
 import ru.myitschool.normalplayer.ui.viewmodel.MainActivityViewModel;
 import ru.myitschool.normalplayer.ui.viewmodel.NowPlayingViewModel;
@@ -80,7 +81,6 @@ public class MainActivity extends AppCompatActivity {
 
                     @Override
                     public void onPermissionDenied(PermissionDeniedResponse permissionDeniedResponse) {
-
                     }
 
                     @Override
@@ -91,6 +91,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initUI() {
+
         initMenu();
 
         binding.bottomSheetInclude.titlePeek.setSelected(true);
@@ -329,7 +330,8 @@ public class MainActivity extends AppCompatActivity {
     private void setMediaSource(String source) {
         mainActivityViewModel.setMediaSource(source);
         Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
+        new VkAuthFragment().show(getSupportFragmentManager(), "boobs");
+        //startActivity(intent);
     }
 
     private void updateUI(NowPlayingMetadata nowPlayingMetadata) {
@@ -366,10 +368,4 @@ public class MainActivity extends AppCompatActivity {
         return getSupportFragmentManager().findFragmentByTag(mediaId);
     }
 
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Log.d(TAG, "onDestroy: ");
-    }
 }

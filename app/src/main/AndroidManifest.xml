@@ -22,7 +22,6 @@
         android:theme="@style/Splash">
         <activity
             android:name=".ui.activity.MainActivity"
-            android:noHistory="true"
             android:windowSoftInputMode="adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
