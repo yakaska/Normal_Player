@@ -39,6 +39,7 @@ import ru.myitschool.normalplayer.ui.viewmodel.NowPlayingViewModel;
 import ru.myitschool.normalplayer.utils.Event;
 import ru.myitschool.normalplayer.utils.MediaIDUtil;
 import ru.myitschool.normalplayer.utils.ProviderUtil;
+import ru.myitschool.normalplayer.utils.VkUtils;
 
 import static ru.myitschool.normalplayer.common.playback.MusicService.SOURCE_PHONE;
 import static ru.myitschool.normalplayer.common.playback.MusicService.SOURCE_VK;
@@ -125,7 +126,7 @@ public class MainActivity extends AppCompatActivity {
             public void onSlide(@NonNull View bottomSheet, float slideOffset) {
             }
         });
-        
+
         mainActivityViewModel = new ViewModelProvider(this, ProviderUtil.provideMainActivityViewModel(this)).get(MainActivityViewModel.class);
 
         nowPlayingViewModel = new ViewModelProvider(this, ProviderUtil.provideNowPlayingViewModel(this)).get(NowPlayingViewModel.class);
@@ -328,15 +329,23 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setMediaSource(String source) {
-        mainActivityViewModel.setMediaSource(source);
-        Intent intent = new Intent(this, MainActivity.class);
-        new VkAuthFragment().show(getSupportFragmentManager(), "boobs");
-        //startActivity(intent);
+        if (source.equals(SOURCE_VK)) {
+            if (VkUtils.getToken(this) == null) {
+                new VkAuthFragment().show(getSupportFragmentManager(), "boobs");
+            } else {
+                mainActivityViewModel.setMediaSource(source);
+                Intent intent = new Intent(this, MainActivity.class);
+                startActivity(intent);
+            }
+        } else {
+            mainActivityViewModel.setMediaSource(source);
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+        }
     }
 
     private void updateUI(NowPlayingMetadata nowPlayingMetadata) {
         String id = nowPlayingMetadata.getMediaId();
-        Log.d(TAG, "updateUI: ");
         if (nowPlayingMetadata.getAlbumArtUri() == null) {
             binding.bottomSheetInclude.albumArtContent.setImageResource(R.drawable.ic_default_art);
         } else {
@@ -359,7 +368,7 @@ public class MainActivity extends AppCompatActivity {
         }
         mainActivityViewModel.showFragment(fragment, !isRootId(mediaId), mediaId);
     }
-    
+
     private boolean isRootId(String mediaId) {
         return mediaId.equals(mainActivityViewModel.getRootMediaId().getValue());
     }

@@ -18,6 +18,7 @@ import ru.myitschool.normalplayer.api.vk.VkService;
 import ru.myitschool.normalplayer.api.vk.model.Item;
 import ru.myitschool.normalplayer.api.vk.model.Response;
 import ru.myitschool.normalplayer.api.vk.model.response.VkMusicResponse;
+import ru.myitschool.normalplayer.utils.VkUtils;
 
 public class VkSource implements MusicProviderSource {
     private final Context context;
@@ -34,6 +35,7 @@ public class VkSource implements MusicProviderSource {
     @Override
     public Iterator<MediaMetadataCompat> iterator() {
         VkMusicResponse response = fetchVkTracks();
+        Log.d("TAG", "iterator: " + response.getResponse());
         List<Item> itemList = response.getResponse().getItems();
         ArrayList<MediaMetadataCompat> metadata = new ArrayList<>();
         for (Item track : itemList) {
@@ -160,7 +162,7 @@ public class VkSource implements MusicProviderSource {
 
     private VkMusicResponse fetchVkTracks() {
         try {
-            return VkService.getInstance().getVkApi().getAllAudio(500, "5e71d7130d3098608375813d40c468eee7a17eb95d2a55f85caff75d638906b3a43f9ec2439ab928326e5").execute().body();
+            return VkService.getInstance().getVkApi().getAllAudio(500, VkUtils.getToken(context), "5.95").execute().body();
         } catch (IOException e) {
             Log.e("VK", "fetchVkTracks: " + e.getMessage());
             return new VkMusicResponse(new Response());
