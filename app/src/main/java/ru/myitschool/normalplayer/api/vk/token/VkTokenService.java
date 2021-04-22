@@ -1,5 +1,7 @@
 package ru.myitschool.normalplayer.api.vk.token;
 
+import java.util.concurrent.TimeUnit;
+
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
@@ -24,6 +26,8 @@ public class VkTokenService {
         interceptor.level(HttpLoggingInterceptor.Level.BASIC);
         OkHttpClient client = new OkHttpClient.Builder()
                 .addNetworkInterceptor(interceptor)
+                .connectTimeout(10, TimeUnit.SECONDS)
+                .callTimeout(10, TimeUnit.SECONDS)
                 .build();
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)

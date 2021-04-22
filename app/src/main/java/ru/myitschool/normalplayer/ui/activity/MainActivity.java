@@ -32,14 +32,14 @@ import com.squareup.picasso.Picasso;
 import ru.myitschool.normalplayer.R;
 import ru.myitschool.normalplayer.databinding.ActivityMainBinding;
 import ru.myitschool.normalplayer.ui.fragment.MediaItemFragment;
-import ru.myitschool.normalplayer.ui.fragment.VkAuthFragment;
+import ru.myitschool.normalplayer.ui.fragment.data.model.VkSessionManager;
+import ru.myitschool.normalplayer.ui.fragment.ui.login.LoginFragment;
 import ru.myitschool.normalplayer.ui.model.NowPlayingMetadata;
 import ru.myitschool.normalplayer.ui.viewmodel.MainActivityViewModel;
 import ru.myitschool.normalplayer.ui.viewmodel.NowPlayingViewModel;
 import ru.myitschool.normalplayer.utils.Event;
 import ru.myitschool.normalplayer.utils.MediaIDUtil;
 import ru.myitschool.normalplayer.utils.ProviderUtil;
-import ru.myitschool.normalplayer.utils.VkUtils;
 
 import static ru.myitschool.normalplayer.common.playback.MusicService.SOURCE_PHONE;
 import static ru.myitschool.normalplayer.common.playback.MusicService.SOURCE_VK;
@@ -330,22 +330,20 @@ public class MainActivity extends AppCompatActivity {
 
     private void setMediaSource(String source) {
         if (source.equals(SOURCE_VK)) {
-            if (VkUtils.getToken(this) == null) {
-                new VkAuthFragment().show(getSupportFragmentManager(), "boobs");
+            VkSessionManager vkSessionManager = new VkSessionManager(this);
+            if (vkSessionManager.getToken() == null) {
+                new LoginFragment().show(getSupportFragmentManager(), "TUBORG");
             } else {
                 mainActivityViewModel.setMediaSource(source);
-                Intent intent = new Intent(this, MainActivity.class);
-                startActivity(intent);
+                startActivity(new Intent(this, MainActivity.class));
             }
         } else {
             mainActivityViewModel.setMediaSource(source);
-            Intent intent = new Intent(this, MainActivity.class);
-            startActivity(intent);
+            startActivity(new Intent(this, MainActivity.class));
         }
     }
 
     private void updateUI(NowPlayingMetadata nowPlayingMetadata) {
-        String id = nowPlayingMetadata.getMediaId();
         if (nowPlayingMetadata.getAlbumArtUri() == null) {
             binding.bottomSheetInclude.albumArtContent.setImageResource(R.drawable.ic_default_art);
         } else {

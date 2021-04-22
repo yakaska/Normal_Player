@@ -1,6 +1,9 @@
 package ru.myitschool.normalplayer.ui.fragment.data;
 
+import android.content.Context;
+
 import ru.myitschool.normalplayer.ui.fragment.data.model.LoggedInUser;
+import ru.myitschool.normalplayer.ui.fragment.data.model.VkSessionManager;
 
 /**
  * Class that requests authentication and user information from the remote data source and
@@ -12,18 +15,21 @@ public class LoginRepository {
 
     private LoginDataSource dataSource;
 
+    private VkSessionManager vkSessionManager;
+
     // If user credentials will be cached in local storage, it is recommended it be encrypted
     // @see https://developer.android.com/training/articles/keystore
     private LoggedInUser user = null;
 
     // private constructor : singleton access
-    private LoginRepository(LoginDataSource dataSource) {
+    private LoginRepository(Context context, LoginDataSource dataSource) {
         this.dataSource = dataSource;
+        this.vkSessionManager = new VkSessionManager(context);
     }
 
-    public static LoginRepository getInstance(LoginDataSource dataSource) {
+    public static LoginRepository getInstance(Context context, LoginDataSource dataSource) {
         if (instance == null) {
-            instance = new LoginRepository(dataSource);
+            instance = new LoginRepository(context, dataSource);
         }
         return instance;
     }

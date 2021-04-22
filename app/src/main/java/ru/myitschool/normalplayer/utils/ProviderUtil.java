@@ -6,9 +6,12 @@ import android.content.Context;
 
 import ru.myitschool.normalplayer.common.MusicServiceConnection;
 import ru.myitschool.normalplayer.common.playback.MusicService;
+import ru.myitschool.normalplayer.ui.fragment.data.LoginDataSource;
+import ru.myitschool.normalplayer.ui.fragment.data.LoginRepository;
+import ru.myitschool.normalplayer.ui.fragment.ui.login.LoginViewModel;
 import ru.myitschool.normalplayer.ui.viewmodel.MainActivityViewModel;
-import ru.myitschool.normalplayer.ui.viewmodel.NowPlayingViewModel;
 import ru.myitschool.normalplayer.ui.viewmodel.MediaItemFragmentViewModel;
+import ru.myitschool.normalplayer.ui.viewmodel.NowPlayingViewModel;
 
 public class ProviderUtil {
 
@@ -32,6 +35,12 @@ public class ProviderUtil {
         Context appContext = context.getApplicationContext();
         MusicServiceConnection connection = provideMusicServiceConnection(appContext);
         return new NowPlayingViewModel.Factory((Application) appContext, connection);
+    }
+
+    public static LoginViewModel.Factory provideLoginViewModel(Context context) {
+        Context appContext = context.getApplicationContext();
+        LoginRepository loginRepository = LoginRepository.getInstance(appContext, new LoginDataSource());
+        return new LoginViewModel.Factory(loginRepository);
     }
 
 }

@@ -15,14 +15,18 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
-import androidx.fragment.app.Fragment;
+import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import ru.myitschool.normalplayer.databinding.FragmentLoginBinding;
 import ru.myitschool.normalplayer.ui.activity.MainActivity;
+import ru.myitschool.normalplayer.ui.viewmodel.MainActivityViewModel;
+import ru.myitschool.normalplayer.utils.ProviderUtil;
 
-public class LoginFragment extends Fragment {
+import static ru.myitschool.normalplayer.common.playback.MusicService.SOURCE_VK;
+
+public class LoginFragment extends DialogFragment {
 
     private LoginViewModel loginViewModel;
 
@@ -39,8 +43,8 @@ public class LoginFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        loginViewModel = new ViewModelProvider(this, new LoginViewModelFactory()).get(LoginViewModel.class);
 
+        loginViewModel = new ViewModelProvider(this, ProviderUtil.provideLoginViewModel(requireContext())).get(LoginViewModel.class);
 
         loginViewModel.getLoginFormState().observe(getViewLifecycleOwner(), new Observer<LoginFormState>() {
             @Override
@@ -98,6 +102,7 @@ public class LoginFragment extends Fragment {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
+
                     loginViewModel.login(binding.username.getText().toString(), binding.password.getText().toString());
                 }
                 return false;
@@ -113,9 +118,13 @@ public class LoginFragment extends Fragment {
         });
     }
 
+
+
     private void updateUiWithUser(LoggedInUserView model) {
         // TODO : initiate successful logged in experience
+        MainActivityViewModel mainActivityViewModel = new ViewModelProvider(getActivity(), ProviderUtil.provideMainActivityViewModel(requireActivity())).get(MainActivityViewModel.class);
         if (getContext() != null && getContext().getApplicationContext() != null) {
+            mainActivityViewModel.setMediaSource(SOURCE_VK);
             getContext().startActivity(new Intent(getActivity(), MainActivity.class));
         }
     }

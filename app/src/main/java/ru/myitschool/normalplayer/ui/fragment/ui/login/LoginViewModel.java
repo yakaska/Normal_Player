@@ -1,15 +1,19 @@
 package ru.myitschool.normalplayer.ui.fragment.ui.login;
 
+import android.os.AsyncTask;
+import android.util.Log;
+import android.util.Patterns;
+
+import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModelProvider;
 
-import android.util.Patterns;
-
+import ru.myitschool.normalplayer.R;
 import ru.myitschool.normalplayer.ui.fragment.data.LoginRepository;
 import ru.myitschool.normalplayer.ui.fragment.data.Result;
 import ru.myitschool.normalplayer.ui.fragment.data.model.LoggedInUser;
-import ru.myitschool.normalplayer.ui.fragment.R;
 
 public class LoginViewModel extends ViewModel {
 
@@ -19,6 +23,7 @@ public class LoginViewModel extends ViewModel {
 
     LoginViewModel(LoginRepository loginRepository) {
         this.loginRepository = loginRepository;
+        Log.d("A", "LoginViewModel: ");
     }
 
     LiveData<LoginFormState> getLoginFormState() {
@@ -31,14 +36,28 @@ public class LoginViewModel extends ViewModel {
 
     public void login(String username, String password) {
         // can be launched in a separate asynchronous job
-        Result<LoggedInUser> result = loginRepository.login(username, password);
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... voids) {
+                Result<LoggedInUser> result = loginRepository.login(username, password);
 
-        if (result instanceof Result.Success) {
-            LoggedInUser data = ((Result.Success<LoggedInUser>) result).getData();
-            loginResult.setValue(new LoginResult(new LoggedInUserView(data.getDisplayName())));
-        } else {
-            loginResult.setValue(new LoginResult(R.string.login_failed));
-        }
+                if (result instanceof Result.Success) {
+                    LoggedInUser data = ((Result.Success<LoggedInUser>) result).getData();
+                    loginResult.postValue(new LoginResult(new LoggedInUserView(data.getDisplayName())));
+                } else {
+                    loginResult.postValue(new LoginResult(R.string.login_failed));
+                }
+                return null;
+            }
+        }.execute();
+        //Result<LoggedInUser> result = loginRepository.login(username, password);
+//
+        //if (result instanceof Result.Success) {
+        //    LoggedInUser data = ((Result.Success<LoggedInUser>) result).getData();
+        //    loginResult.setValue(new LoginResult(new LoggedInUserView(data.getDisplayName())));
+        //} else {
+        //    loginResult.setValue(new LoginResult(R.string.login_failed));
+        //}
     }
 
     public void loginDataChanged(String username, String password) {
@@ -67,4 +86,20 @@ public class LoginViewModel extends ViewModel {
     private boolean isPasswordValid(String password) {
         return password != null && password.trim().length() > 5;
     }
+
+    public static class Factory extends ViewModelProvider.NewInstanceFactory {
+
+        private final LoginRepository loginRepository;
+
+        public Factory(LoginRepository loginRepository) {
+            this.loginRepository = loginRepository;
+        }
+
+        @NonNull
+        @Override
+        public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
+            return (T) new LoginViewModel(loginRepository);
+        }
+    }
+
 }
