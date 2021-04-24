@@ -18,14 +18,12 @@ import ru.myitschool.normalplayer.api.vk.VkService;
 import ru.myitschool.normalplayer.api.vk.model.Item;
 import ru.myitschool.normalplayer.api.vk.model.Response;
 import ru.myitschool.normalplayer.api.vk.model.response.VkMusicResponse;
-import ru.myitschool.normalplayer.utils.VkUtils;
+import ru.myitschool.normalplayer.ui.fragment.data.model.VkSessionManager;
 
 public class VkSource implements MusicProviderSource {
     private final Context context;
 
     private final Bitmap defaultArt;
-
-
 
     public VkSource(Context context) {
         this.context = context;
@@ -124,7 +122,7 @@ public class VkSource implements MusicProviderSource {
                     break;
             }
         }
-        Integer duration = item.getDuration() * 1000;
+        int duration = item.getDuration() * 1000;
         Bitmap icon = defaultArt;
         if (item.getAlbum() != null) {
 
@@ -162,7 +160,7 @@ public class VkSource implements MusicProviderSource {
 
     private VkMusicResponse fetchVkTracks() {
         try {
-            return VkService.getInstance().getVkApi().getAllAudio(500, VkUtils.getToken(context), "5.95").execute().body();
+            return VkService.getInstance().getVkApi().getAllAudio(500, new VkSessionManager(context).getToken(), "5.95").execute().body();
         } catch (IOException e) {
             Log.e("VK", "fetchVkTracks: " + e.getMessage());
             return new VkMusicResponse(new Response());

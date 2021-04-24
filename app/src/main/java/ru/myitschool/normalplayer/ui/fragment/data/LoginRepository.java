@@ -2,7 +2,6 @@ package ru.myitschool.normalplayer.ui.fragment.data;
 
 import android.content.Context;
 
-import ru.myitschool.normalplayer.ui.fragment.data.model.LoggedInUser;
 import ru.myitschool.normalplayer.ui.fragment.data.model.VkSessionManager;
 
 /**
@@ -19,12 +18,13 @@ public class LoginRepository {
 
     // If user credentials will be cached in local storage, it is recommended it be encrypted
     // @see https://developer.android.com/training/articles/keystore
-    private LoggedInUser user = null;
+    private String token = null;
 
     // private constructor : singleton access
     private LoginRepository(Context context, LoginDataSource dataSource) {
         this.dataSource = dataSource;
         this.vkSessionManager = new VkSessionManager(context);
+        this.token = this.vkSessionManager.getToken();
     }
 
     public static LoginRepository getInstance(Context context, LoginDataSource dataSource) {
@@ -35,25 +35,26 @@ public class LoginRepository {
     }
 
     public boolean isLoggedIn() {
-        return user != null;
+        return token != null;
     }
 
     public void logout() {
-        user = null;
+        token = null;
         dataSource.logout();
     }
 
-    private void setLoggedInUser(LoggedInUser user) {
-        this.user = user;
+    private void setLoggedInUser(String token) {
+        this.token = token;
+        vkSessionManager.saveToken(token);
         // If user credentials will be cached in local storage, it is recommended it be encrypted
         // @see https://developer.android.com/training/articles/keystore
     }
 
-    public Result<LoggedInUser> login(String username, String password) {
+    public Result<String> login(String username, String password) {
         // handle login
-        Result<LoggedInUser> result = dataSource.login(username, password);
+        Result<String> result = dataSource.login(username, password);
         if (result instanceof Result.Success) {
-            setLoggedInUser(((Result.Success<LoggedInUser>) result).getData());
+            setLoggedInUser(((Result.Success<String>) result).getData());
         }
         return result;
     }

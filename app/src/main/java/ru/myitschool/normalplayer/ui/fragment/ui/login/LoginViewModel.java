@@ -13,7 +13,6 @@ import androidx.lifecycle.ViewModelProvider;
 import ru.myitschool.normalplayer.R;
 import ru.myitschool.normalplayer.ui.fragment.data.LoginRepository;
 import ru.myitschool.normalplayer.ui.fragment.data.Result;
-import ru.myitschool.normalplayer.ui.fragment.data.model.LoggedInUser;
 
 public class LoginViewModel extends ViewModel {
 
@@ -39,11 +38,11 @@ public class LoginViewModel extends ViewModel {
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... voids) {
-                Result<LoggedInUser> result = loginRepository.login(username, password);
+                Result<String> result = loginRepository.login(username, password);
 
                 if (result instanceof Result.Success) {
-                    LoggedInUser data = ((Result.Success<LoggedInUser>) result).getData();
-                    loginResult.postValue(new LoginResult(new LoggedInUserView(data.getDisplayName())));
+                    String data = ((Result.Success<String>) result).getData();
+                    loginResult.postValue(new LoginResult(new LoggedInUserView(data)));
                 } else {
                     loginResult.postValue(new LoginResult(R.string.login_failed));
                 }

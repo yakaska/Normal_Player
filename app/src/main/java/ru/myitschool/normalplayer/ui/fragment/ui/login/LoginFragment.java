@@ -91,19 +91,19 @@ public class LoginFragment extends DialogFragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-                loginViewModel.loginDataChanged(binding.username.getText().toString(),
-                        binding.password.getText().toString());
+                loginViewModel.loginDataChanged(binding.username.getEditText().getText().toString(),
+                        binding.password.getEditText().getText().toString());
             }
         };
-        binding.username.addTextChangedListener(afterTextChangedListener);
-        binding.password.addTextChangedListener(afterTextChangedListener);
-        binding.password.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        binding.username.getEditText().addTextChangedListener(afterTextChangedListener);
+        binding.password.getEditText().addTextChangedListener(afterTextChangedListener);
+        binding.password.getEditText().setOnEditorActionListener(new TextView.OnEditorActionListener() {
 
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
 
-                    loginViewModel.login(binding.username.getText().toString(), binding.password.getText().toString());
+                    loginViewModel.login(binding.username.getEditText().getText().toString(), binding.password.getEditText().getText().toString());
                 }
                 return false;
             }
@@ -113,7 +113,7 @@ public class LoginFragment extends DialogFragment {
             @Override
             public void onClick(View v) {
                 binding.loading.setVisibility(View.VISIBLE);
-                loginViewModel.login(binding.username.getText().toString(), binding.password.getText().toString());
+                loginViewModel.login(binding.username.getEditText().getText().toString(), binding.password.getEditText().getText().toString());
             }
         });
     }

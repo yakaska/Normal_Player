@@ -7,4 +7,5 @@ import java.util.Iterator;
 public interface MusicProviderSource {
 
     Iterator<MediaMetadataCompat> iterator();
+
 }
