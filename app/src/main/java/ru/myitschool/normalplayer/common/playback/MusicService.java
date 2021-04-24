@@ -53,20 +53,22 @@ public class MusicService extends MediaBrowserServiceCompat {
 
     public static final String SOURCE_PHONE = "source_phone";
     public static final String SOURCE_VK = "source_vk";
-
     public static final String MEDIA_DESCRIPTION_EXTRAS_START_PLAYBACK_POSITION_MS = "playback_start_position_ms";
+
     private static final String NP_USER_AGENT = "NP_USER_AGENT";
+
     private final AudioAttributes audioAttributes = new AudioAttributes.Builder().setContentType(C.CONTENT_TYPE_MUSIC).setUsage(C.USAGE_MEDIA).build();
     private final PlayerEventListener playerListener = new PlayerEventListener();
-    protected MediaSessionCompat mediaSession;
 
-    protected MediaSessionConnector mediaSessionConnector;
     private NPNotificationManager notificationManager;
     private MusicProvider musicProvider;
     private ArrayList<MediaMetadataCompat> currentPlaylistItems = new ArrayList<>();
     private CacheDataSourceFactory cacheDataSourceFactory;
     private boolean isForegroundService;
     private SimpleExoPlayer exoPlayer;
+
+    protected MediaSessionCompat mediaSession;
+    protected MediaSessionConnector mediaSessionConnector;
 
     @Override
     public void onCreate() {
