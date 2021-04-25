@@ -18,7 +18,7 @@ import ru.myitschool.normalplayer.api.vk.VkService;
 import ru.myitschool.normalplayer.api.vk.model.Item;
 import ru.myitschool.normalplayer.api.vk.model.Response;
 import ru.myitschool.normalplayer.api.vk.model.response.VkMusicResponse;
-import ru.myitschool.normalplayer.ui.fragment.data.model.VkSessionManager;
+import ru.myitschool.normalplayer.ui.fragment.login.data.model.VkSessionManager;
 
 public class VkSource implements MusicProviderSource {
     private final Context context;
@@ -126,7 +126,7 @@ public class VkSource implements MusicProviderSource {
         Bitmap icon = defaultArt;
         if (item.getAlbum() != null) {
 
-            if(item.getAlbum().getTitle() != null) {
+            if (item.getAlbum().getTitle() != null) {
                 album = item.getAlbum().getTitle();
             }
 
@@ -168,7 +168,8 @@ public class VkSource implements MusicProviderSource {
     }
 
     private String toMp3(String url) {
-        url = url.replaceAll("/[0-9a-z]+(/audios)?/([0-9a-f]+)/index.m3u8", "$1/$2.mp3");
+        url = url.replaceAll("/[0-9a-z]+(/audios)?/([0-9a-z]+)/index.m3u8", "$1/$2.mp3").replace("null", "");
+
         return url;
     }
 

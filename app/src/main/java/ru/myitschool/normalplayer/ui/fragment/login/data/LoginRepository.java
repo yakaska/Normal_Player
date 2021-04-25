@@ -1,8 +1,8 @@
-package ru.myitschool.normalplayer.ui.fragment.data;
+package ru.myitschool.normalplayer.ui.fragment.login.data;
 
 import android.content.Context;
 
-import ru.myitschool.normalplayer.ui.fragment.data.model.VkSessionManager;
+import ru.myitschool.normalplayer.ui.fragment.login.data.model.VkSessionManager;
 
 /**
  * Class that requests authentication and user information from the remote data source and

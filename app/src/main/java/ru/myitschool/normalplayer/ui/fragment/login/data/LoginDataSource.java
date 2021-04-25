@@ -1,4 +1,4 @@
-package ru.myitschool.normalplayer.ui.fragment.data;
+package ru.myitschool.normalplayer.ui.fragment.login.data;
 
 import android.util.Log;
 

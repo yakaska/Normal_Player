@@ -1,4 +1,4 @@
-package ru.myitschool.normalplayer.ui.fragment.data.model;
+package ru.myitschool.normalplayer.ui.fragment.login.data.model;
 
 /**
  * Data class that captures user information for logged in users retrieved from LoginRepository

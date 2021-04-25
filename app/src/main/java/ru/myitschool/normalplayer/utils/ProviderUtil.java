@@ -6,9 +6,9 @@ import android.content.Context;
 
 import ru.myitschool.normalplayer.common.MusicServiceConnection;
 import ru.myitschool.normalplayer.common.playback.MusicService;
-import ru.myitschool.normalplayer.ui.fragment.data.LoginDataSource;
-import ru.myitschool.normalplayer.ui.fragment.data.LoginRepository;
-import ru.myitschool.normalplayer.ui.fragment.ui.login.LoginViewModel;
+import ru.myitschool.normalplayer.ui.fragment.login.data.LoginDataSource;
+import ru.myitschool.normalplayer.ui.fragment.login.data.LoginRepository;
+import ru.myitschool.normalplayer.ui.fragment.login.LoginViewModel;
 import ru.myitschool.normalplayer.ui.viewmodel.MainActivityViewModel;
 import ru.myitschool.normalplayer.ui.viewmodel.MediaItemFragmentViewModel;
 import ru.myitschool.normalplayer.ui.viewmodel.NowPlayingViewModel;

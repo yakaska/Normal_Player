@@ -1,4 +1,4 @@
-package ru.myitschool.normalplayer.ui.fragment.data;
+package ru.myitschool.normalplayer.ui.fragment.login.data;
 
 /**
  * A generic class that holds a result success w/ data or an error exception.

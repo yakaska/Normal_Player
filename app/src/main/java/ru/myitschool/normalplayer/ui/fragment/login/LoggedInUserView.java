@@ -1,4 +1,4 @@
-package ru.myitschool.normalplayer.ui.fragment.ui.login;
+package ru.myitschool.normalplayer.ui.fragment.login;
 
 /**
  * Class exposing authenticated user details to the UI.

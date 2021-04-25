@@ -1,4 +1,4 @@
-package ru.myitschool.normalplayer.ui.fragment.ui.login;
+package ru.myitschool.normalplayer.ui.fragment.login;
 
 import android.content.Intent;
 import android.os.Bundle;

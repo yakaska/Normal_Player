@@ -1,4 +1,4 @@
-package ru.myitschool.normalplayer.ui.fragment.data.model;
+package ru.myitschool.normalplayer.ui.fragment.login.data.model;
 
 import android.content.Context;
 import android.content.SharedPreferences;
