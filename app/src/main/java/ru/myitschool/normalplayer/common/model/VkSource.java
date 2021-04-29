@@ -20,14 +20,12 @@ import ru.myitschool.normalplayer.api.vk.model.Response;
 import ru.myitschool.normalplayer.api.vk.model.response.VkMusicResponse;
 import ru.myitschool.normalplayer.ui.fragment.login.data.model.VkSessionManager;
 
-public class VkSource implements MusicProviderSource {
-    private final Context context;
+public class VkSource extends MusicProviderSource {
 
-    private final Bitmap defaultArt;
 
     public VkSource(Context context) {
-        this.context = context;
-        defaultArt = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_notification);
+        super(context, SOURCE_TYPE.VK);
+        super.defaultBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_notification);
     }
 
     @Override
@@ -123,7 +121,7 @@ public class VkSource implements MusicProviderSource {
             }
         }
         int duration = item.getDuration() * 1000;
-        Bitmap icon = defaultArt;
+        Bitmap icon = super.defaultBitmap;
         if (item.getAlbum() != null) {
 
             if (item.getAlbum().getTitle() != null) {

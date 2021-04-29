@@ -58,8 +58,9 @@ public class MediaItemData {
     private long duration;
     private boolean browsable;
     private int playbackRes;
+    private long sourceType;
 
-    public MediaItemData(String mediaId, String title, String subtitle, Uri mediaUri, Uri albumArtUri, long duration, boolean browsable, int playbackRes) {
+    public MediaItemData(String mediaId, String title, String subtitle, Uri mediaUri, Uri albumArtUri, long duration, boolean browsable, int playbackRes, long sourceType) {
         this.mediaId = mediaId;
         this.title = title;
         this.subtitle = subtitle;
@@ -68,6 +69,7 @@ public class MediaItemData {
         this.duration = duration;
         this.browsable = browsable;
         this.playbackRes = playbackRes;
+        this.sourceType = sourceType;
     }
 
     public String getMediaId() {
@@ -134,5 +136,7 @@ public class MediaItemData {
         this.playbackRes = playbackRes;
     }
 
-
+    public long getSourceType() {
+        return sourceType;
+    }
 }

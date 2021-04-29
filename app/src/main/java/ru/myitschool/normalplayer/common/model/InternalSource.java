@@ -16,15 +16,11 @@ import java.util.Iterator;
 
 import ru.myitschool.normalplayer.R;
 
-public class InternalSource implements MusicProviderSource {
-    
-    private final Context context;
-
-    private final Bitmap defaultArt;
+public class InternalSource extends MusicProviderSource {
 
     public InternalSource(Context context) {
-        this.context = context;
-        defaultArt = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_notification);
+        super(context, SOURCE_TYPE.INTERNAL);
+        super.defaultBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_notification);
     }
 
     @Override
@@ -45,7 +41,7 @@ public class InternalSource implements MusicProviderSource {
             bitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver(), audioContent.getArt_uri());
         } catch (IOException e) {
             e.printStackTrace();
-            bitmap = defaultArt;
+            bitmap = super.defaultBitmap;
         }
 
         return new MediaMetadataCompat.Builder()
@@ -62,6 +58,7 @@ public class InternalSource implements MusicProviderSource {
                 .putString(MediaMetadataCompat.METADATA_KEY_GENRE, "Not_implemented_yet")
                 .putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, bitmap)
                 .putLong(MediaMetadataCompat.METADATA_KEY_DURATION, audioContent.getDuration())
+                .putLong(MusicProviderSource.SOURCE_TYPE_KEY, super.sourceType.getValue())
                 .build();
     }
 

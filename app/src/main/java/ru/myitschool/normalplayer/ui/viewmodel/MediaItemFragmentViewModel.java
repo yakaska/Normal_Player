@@ -17,6 +17,7 @@ import java.util.List;
 import ru.myitschool.normalplayer.R;
 import ru.myitschool.normalplayer.common.MusicServiceConnection;
 import ru.myitschool.normalplayer.common.model.MusicProvider;
+import ru.myitschool.normalplayer.common.model.MusicProviderSource;
 import ru.myitschool.normalplayer.ui.model.MediaItemData;
 import ru.myitschool.normalplayer.utils.PlayerUtil;
 
@@ -55,7 +56,8 @@ public class MediaItemFragmentViewModel extends ViewModel {
                         item.getDescription().getIconUri(),
                         duration,
                         item.isBrowsable(),
-                        getResourceForMediaId(mediaId)
+                        getResourceForMediaId(mediaId),
+                        item.getDescription().getExtras().getLong(MusicProviderSource.SOURCE_TYPE_KEY, -1)
                 ));
             }
             mediaItems.postValue(itemList);
@@ -122,6 +124,7 @@ public class MediaItemFragmentViewModel extends ViewModel {
                 if (item.getMediaId().equals(metadata.getString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID))) {
                     useResId = newResId;
                 }
+                //TODO copy!!!!!!!
                 item = new MediaItemData(
                         item.getMediaId(),
                         item.getTitle(),
@@ -130,7 +133,8 @@ public class MediaItemFragmentViewModel extends ViewModel {
                         item.getAlbumArtUri(),
                         item.getDuration(),
                         item.isBrowsable(),
-                        useResId);
+                        useResId,
+                        item.getSourceType());
                 resultList.add(item);
             }
         }
