@@ -57,6 +57,10 @@ public class MainActivityViewModel extends ViewModel {
         }
     }
 
+    public void mediaItemMenuClicked(String action, MediaItemData clickedItem) {
+        Log.d(TAG, "mediaItemMenuClicked: " + action);
+    }
+
     public void showFragment(Fragment fragment, boolean backStack, String tag) {
         Log.d(TAG, "showFragment: " + fragment.getClass());
         navigateToFragment.setValue(new Event<>(new FragmentNavigationRequest(fragment, backStack, tag)));

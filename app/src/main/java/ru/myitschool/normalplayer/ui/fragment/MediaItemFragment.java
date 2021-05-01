@@ -108,6 +108,11 @@ public class MediaItemFragment extends Fragment implements MediaItemAdapter.OnIt
     }
 
     @Override
+    public void onItemMenuClick(String action, MediaItemData clickedItem) {
+        mainActivityViewModel.mediaItemMenuClicked(action, clickedItem);
+    }
+
+    @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
 

@@ -2,6 +2,7 @@ package ru.myitschool.normalplayer.ui.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.PopupMenu;
@@ -17,6 +18,7 @@ import java.util.Collections;
 import java.util.List;
 
 import ru.myitschool.normalplayer.R;
+import ru.myitschool.normalplayer.common.model.MusicProviderSource;
 import ru.myitschool.normalplayer.databinding.ItemGridBinding;
 import ru.myitschool.normalplayer.databinding.ItemLineBinding;
 import ru.myitschool.normalplayer.ui.model.MediaItemData;
@@ -129,42 +131,82 @@ public class MediaItemAdapter extends ListAdapter<MediaItemData, RecyclerView.Vi
 
     public interface OnItemClickListener {
         void onItemClick(MediaItemData clickedItem);
+        void onItemMenuClick(String action, MediaItemData clickedItem);
     }
 
     public static class LineViewHolder extends RecyclerView.ViewHolder {
 
-        private MediaItemData item = null;
-
         private final ItemLineBinding binding;
 
-        private PopupMenu menu;
+        private final OnItemClickListener itemClickListener;
+
+        private MediaItemData item = null;
 
         public LineViewHolder(ItemLineBinding binding, OnItemClickListener itemClickListener) {
             super(binding.getRoot());
             this.binding = binding;
+            this.itemClickListener = itemClickListener;
 
             binding.getRoot().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (item != null) {
-                        itemClickListener.onItemClick(item);
-                    }
+                    itemClickListener.onItemClick(item);
                 }
             });
             binding.itemLineMore.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (item != null) {
-
+                        showPopupMenu(v, item);
                     }
                 }
             });
+
+        }
+
+        private void showPopupMenu(View v, MediaItemData item) {
+            PopupMenu menu = new PopupMenu(v.getContext(), v);
+            switch (MusicProviderSource.SOURCE_TYPE.valueOf(item.getSourceType())) {
+                case INTERNAL:
+                    menu.inflate(R.menu.menu_internal);
+                    menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem menuItem) {
+                            switch (menuItem.getItemId()) {
+                                case R.id.menu_share:
+                                    itemClickListener.onItemMenuClick(MediaItemData.ACTION_SHARE, item);
+                                    break;
+                                case R.id.menu_details:
+                                    itemClickListener.onItemMenuClick(MediaItemData.ACTION_DETAILS, item);
+                                    break;
+                                case R.id.menu_delete:
+                                    itemClickListener.onItemMenuClick(MediaItemData.ACTION_DELETE, item);
+                                    break;
+                            }
+                            return false;
+                        }
+                    });
+                    menu.show();
+                    break;
+                case VK:
+                    menu.inflate(R.menu.menu_vk);
+                    menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem item) {
+                            return false;
+                        }
+                    });
+                    menu.show();
+                    break;
+                default:
+                    throw new IllegalStateException("No such source type");
+            }
         }
     }
 
     public static class GridViewHolder extends RecyclerView.ViewHolder {
         private MediaItemData item = null;
-        private ItemGridBinding binding;
+        private final ItemGridBinding binding;
 
         public GridViewHolder(ItemGridBinding binding, OnItemClickListener itemClickListener) {
             super(binding.getRoot());
