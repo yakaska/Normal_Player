@@ -153,6 +153,7 @@ public class VkSource extends MusicProviderSource {
                 .putString(MediaMetadataCompat.METADATA_KEY_GENRE, genre)
                 .putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, icon)
                 .putLong(MediaMetadataCompat.METADATA_KEY_DURATION, duration)
+                .putLong(MusicProviderSource.SOURCE_TYPE_KEY, super.sourceType.getValue())
                 .build();
     }
 

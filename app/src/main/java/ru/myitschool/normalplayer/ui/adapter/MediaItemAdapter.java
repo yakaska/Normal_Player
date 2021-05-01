@@ -1,10 +1,10 @@
 package ru.myitschool.normalplayer.ui.adapter;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.PopupMenu;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.ListAdapter;
@@ -17,7 +17,6 @@ import java.util.Collections;
 import java.util.List;
 
 import ru.myitschool.normalplayer.R;
-import ru.myitschool.normalplayer.common.model.MusicProviderSource;
 import ru.myitschool.normalplayer.databinding.ItemGridBinding;
 import ru.myitschool.normalplayer.databinding.ItemLineBinding;
 import ru.myitschool.normalplayer.ui.model.MediaItemData;
@@ -27,7 +26,9 @@ public class MediaItemAdapter extends ListAdapter<MediaItemData, RecyclerView.Vi
 
     private static final int VIEW_TYPE_LINE = 1;
     private static final int VIEW_TYPE_GRID = 2;
+
     private final OnItemClickListener itemClickListener;
+
     private List<MediaItemData> unfilteredList = new ArrayList<>();
 
     public MediaItemAdapter(OnItemClickListener itemClickListener) {
@@ -131,18 +132,30 @@ public class MediaItemAdapter extends ListAdapter<MediaItemData, RecyclerView.Vi
     }
 
     public static class LineViewHolder extends RecyclerView.ViewHolder {
+
         private MediaItemData item = null;
-        private ItemLineBinding binding;
+
+        private final ItemLineBinding binding;
+
+        private PopupMenu menu;
 
         public LineViewHolder(ItemLineBinding binding, OnItemClickListener itemClickListener) {
             super(binding.getRoot());
             this.binding = binding;
+
             binding.getRoot().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     if (item != null) {
-                        Log.d("Jopa", "onClick: " + MusicProviderSource.SOURCE_TYPE.valueOf(item.getSourceType()));
                         itemClickListener.onItemClick(item);
+                    }
+                }
+            });
+            binding.itemLineMore.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (item != null) {
+
                     }
                 }
             });
