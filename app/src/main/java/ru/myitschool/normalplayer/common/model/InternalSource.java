@@ -19,7 +19,7 @@ import ru.myitschool.normalplayer.R;
 public class InternalSource extends MusicProviderSource {
 
     public InternalSource(Context context) {
-        super(context, SOURCE_TYPE.INTERNAL);
+        super(context, MusicProviderSource.SourceType.INTERNAL);
         super.defaultBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_notification);
     }
 

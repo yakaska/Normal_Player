@@ -24,7 +24,7 @@ public class VkSource extends MusicProviderSource {
 
 
     public VkSource(Context context) {
-        super(context, SOURCE_TYPE.VK);
+        super(context, MusicProviderSource.SourceType.VK);
         super.defaultBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_notification);
     }
 

@@ -22,27 +22,26 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.slider.Slider;
 import com.karumi.dexter.Dexter;
+import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
-import com.karumi.dexter.listener.PermissionDeniedResponse;
-import com.karumi.dexter.listener.PermissionGrantedResponse;
 import com.karumi.dexter.listener.PermissionRequest;
-import com.karumi.dexter.listener.single.PermissionListener;
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.squareup.picasso.Picasso;
 
+import java.util.List;
+
 import ru.myitschool.normalplayer.R;
+import ru.myitschool.normalplayer.common.model.MusicProviderSource;
 import ru.myitschool.normalplayer.databinding.ActivityMainBinding;
 import ru.myitschool.normalplayer.ui.fragment.MediaItemFragment;
-import ru.myitschool.normalplayer.ui.fragment.login.data.model.VkSessionManager;
 import ru.myitschool.normalplayer.ui.fragment.login.LoginFragment;
+import ru.myitschool.normalplayer.ui.fragment.login.data.model.VkSessionManager;
 import ru.myitschool.normalplayer.ui.model.NowPlayingMetadata;
 import ru.myitschool.normalplayer.ui.viewmodel.MainActivityViewModel;
 import ru.myitschool.normalplayer.ui.viewmodel.NowPlayingViewModel;
 import ru.myitschool.normalplayer.utils.Event;
 import ru.myitschool.normalplayer.utils.MediaIDUtil;
 import ru.myitschool.normalplayer.utils.ProviderUtil;
-
-import static ru.myitschool.normalplayer.common.playback.MusicService.SOURCE_PHONE;
-import static ru.myitschool.normalplayer.common.playback.MusicService.SOURCE_VK;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -73,22 +72,21 @@ public class MainActivity extends AppCompatActivity {
     private void checkPermissions() {
         Dexter
                 .withContext(this)
-                .withPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
-                .withListener(new PermissionListener() {
+                .withPermissions(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                .withListener(new MultiplePermissionsListener() {
                     @Override
-                    public void onPermissionGranted(PermissionGrantedResponse permissionGrantedResponse) {
-                        initUI();
+                    public void onPermissionsChecked(MultiplePermissionsReport multiplePermissionsReport) {
+                        if (multiplePermissionsReport.areAllPermissionsGranted()) {
+                            initUI();
+                        }
                     }
 
                     @Override
-                    public void onPermissionDenied(PermissionDeniedResponse permissionDeniedResponse) {
+                    public void onPermissionRationaleShouldBeShown(List<PermissionRequest> list, PermissionToken permissionToken) {
+                        permissionToken.continuePermissionRequest();
                     }
-
-                    @Override
-                    public void onPermissionRationaleShouldBeShown(PermissionRequest permissionRequest, PermissionToken permissionToken) {
-
-                    }
-                }).onSameThread().check();
+                }
+                ).onSameThread().check();
     }
 
     private void initUI() {
@@ -303,10 +301,10 @@ public class MainActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.nav_phone:
-                        setMediaSource(SOURCE_PHONE);
+                        setMediaSource(MusicProviderSource.SourceType.INTERNAL);
                         break;
                     case R.id.nav_vk:
-                        setMediaSource(SOURCE_VK);
+                        setMediaSource(MusicProviderSource.SourceType.VK);
                         break;
                 }
                 return false;
@@ -328,8 +326,8 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void setMediaSource(String source) {
-        if (source.equals(SOURCE_VK)) {
+    private void setMediaSource(MusicProviderSource.SourceType source) {
+        if (source.equals(MusicProviderSource.SourceType.VK)) {
             VkSessionManager vkSessionManager = new VkSessionManager(this);
             if (vkSessionManager.getToken() == null) {
                 new LoginFragment().show(getSupportFragmentManager(), "TUBORG");

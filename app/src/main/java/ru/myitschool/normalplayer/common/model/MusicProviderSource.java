@@ -16,22 +16,22 @@ public abstract class MusicProviderSource {
 
     protected Bitmap defaultBitmap;
 
-    protected SOURCE_TYPE sourceType;
+    protected SourceType sourceType;
 
-    public enum SOURCE_TYPE {
+    public enum SourceType {
         INTERNAL(0),
         VK(1);
 
         private final long value;
 
-        private static Map<Long, SOURCE_TYPE> map = new HashMap<>();
+        private static Map<Long, SourceType> map = new HashMap<>();
 
-        SOURCE_TYPE(long value) {
+        SourceType(long value) {
             this.value = value;
         }
 
         static {
-            for (SOURCE_TYPE source_type : SOURCE_TYPE.values()) {
+            for (SourceType source_type : MusicProviderSource.SourceType.values()) {
                 map.put(source_type.value, source_type);
             }
         }
@@ -40,13 +40,13 @@ public abstract class MusicProviderSource {
             return value;
         }
 
-        public static SOURCE_TYPE valueOf(long sourceType) {
+        public static SourceType valueOf(long sourceType) {
             return map.get(sourceType);
         }
 
     }
 
-    public MusicProviderSource(Context context, SOURCE_TYPE sourceType) {
+    public MusicProviderSource(Context context, SourceType sourceType) {
         this.context = context;
         this.sourceType = sourceType;
     }

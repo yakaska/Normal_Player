@@ -1,10 +1,13 @@
 package ru.myitschool.normalplayer.common.playback;
 
+import android.app.DownloadManager;
 import android.app.Notification;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.ResultReceiver;
 import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.MediaDescriptionCompat;
@@ -12,6 +15,7 @@ import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -38,6 +42,7 @@ import java.util.List;
 
 import ru.myitschool.normalplayer.common.model.InternalSource;
 import ru.myitschool.normalplayer.common.model.MusicProvider;
+import ru.myitschool.normalplayer.common.model.MusicProviderSource;
 import ru.myitschool.normalplayer.common.model.VkSource;
 import ru.myitschool.normalplayer.ui.activity.MainActivity;
 import ru.myitschool.normalplayer.utils.CacheUtil;
@@ -49,11 +54,17 @@ import static ru.myitschool.normalplayer.utils.MediaIDUtil.MEDIA_ID_EMPTY_ROOT;
 import static ru.myitschool.normalplayer.utils.MediaIDUtil.MEDIA_ID_ROOT;
 
 public class MusicService extends MediaBrowserServiceCompat {
+
     private static final String TAG = MusicService.class.getSimpleName();
 
-    public static final String SOURCE_PHONE = "source_phone";
-    public static final String SOURCE_VK = "source_vk";
-    public static final String MEDIA_DESCRIPTION_EXTRAS_START_PLAYBACK_POSITION_MS = "playback_start_position_ms";
+    public static final String ACTION_CHANGE_SOURCE = "ru.myitschool.normalplayer.ACTION_CHANGE_SOURCE";
+    public static final String ACTION_DETAILS = "ru.myitschool.normalplayer.ACTION_DETAILS";
+    public static final String ACTION_SHARE = "ru.myitschool.normalplayer.ACTION_SHARE";
+    public static final String ACTION_DOWNLOAD = "ru.myitschool.normalplayer.ACTION_DOWNLOAD";
+
+    public static final String MEDIA_EXTRA_START_PLAYBACK_POSITION = "extra_playback_start_position";
+    public static final String MEDIA_EXTRA_FILE_URI = "extra_file_uri";
+    public static final String MEDIA_EXTRA_FILE_NAME = "extra_file_name";
 
     private static final String NP_USER_AGENT = "NP_USER_AGENT";
 
@@ -74,6 +85,8 @@ public class MusicService extends MediaBrowserServiceCompat {
     public void onCreate() {
         super.onCreate();
         Log.d(TAG, "onCreate");
+        Bundle ex = new Bundle();
+        ex.putLong("ass", MusicProviderSource.SourceType.INTERNAL.getValue());
         musicProvider = new MusicProvider(new InternalSource(getApplicationContext()));
         musicProvider.retrieveMediaAsync(success -> {
             if (success) {
@@ -109,17 +122,39 @@ public class MusicService extends MediaBrowserServiceCompat {
         exoPlayer.release();
     }
 
-    //PLEASE NOTICE THAT IT USED ONLY FOR CHANGING MEDIA SOURCE!
     @Override
     public void onCustomAction(@NonNull String action, Bundle extras, @NonNull Result<Bundle> result) {
+        Log.d(TAG, "onCustomAction: " + action);
         result.detach();
-        if (action.equals(SOURCE_VK)) musicProvider = new MusicProvider(new VkSource(getApplicationContext()));
-        else musicProvider = new MusicProvider(new InternalSource(getApplicationContext()));
+
+        switch (action) {
+            case ACTION_CHANGE_SOURCE:
+                if (extras.getLong(MusicProviderSource.SOURCE_TYPE_KEY) == MusicProviderSource.SourceType.INTERNAL.getValue()) {
+                    musicProvider = new MusicProvider(new InternalSource(getApplicationContext()));
+                } else {
+                    musicProvider = new MusicProvider(new VkSource(getApplicationContext()));
+                }
+                break;
+            case ACTION_DETAILS:
+                Toast.makeText(this, "DETAILS", Toast.LENGTH_SHORT).show();
+                break;
+            case ACTION_SHARE:
+                Toast.makeText(this, "SHARE", Toast.LENGTH_SHORT).show();
+                break;
+            case ACTION_DOWNLOAD:
+                Toast.makeText(this, "DOWNLOAD", Toast.LENGTH_SHORT).show();
+                download(extras.getString(MEDIA_EXTRA_FILE_URI), extras.getString(MEDIA_EXTRA_FILE_NAME));
+                break;
+            default:
+                break;
+        }
+
+        //if (action.equals(SOURCE_VK)) musicProvider = new MusicProvider(new VkSource(getApplicationContext()));
+        //else musicProvider = new MusicProvider(new InternalSource(getApplicationContext()));
     }
 
     @Override
     public void onTaskRemoved(Intent rootIntent) {
-        Log.d(TAG, "onTaskRemoved: ");
         exoPlayer.stop(true);
         super.onTaskRemoved(rootIntent);
     }
@@ -154,6 +189,20 @@ public class MusicService extends MediaBrowserServiceCompat {
             resultList.add(new MediaBrowserCompat.MediaItem(metadata.getDescription(), MediaBrowserCompat.MediaItem.FLAG_PLAYABLE));
         }
         result.sendResult(resultList);
+    }
+
+    private void download(String url, String fileName) {
+        Log.d(TAG, "download: " + fileName);
+        DownloadManager downloadManager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
+        DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url))
+                .setVisibleInDownloadsUi(true)
+                .setTitle(fileName)
+                .setDescription("Downloading")
+                .setMimeType("audio/MP3")
+                .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
+                .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, fileName + ".mp3");
+        request.allowScanningByMediaScanner();
+        downloadManager.enqueue(request);
     }
 
     private void preparePlaylist(ArrayList<MediaMetadataCompat> metadataList, @Nullable String mediaIdToPlay, boolean playWhenReady, long playbackStartPositionMs) {
@@ -227,7 +276,7 @@ public class MusicService extends MediaBrowserServiceCompat {
             } else {
                 long playbackStartPositionMs;
                 if (extras != null) {
-                    playbackStartPositionMs = extras.getLong(MEDIA_DESCRIPTION_EXTRAS_START_PLAYBACK_POSITION_MS, 0);
+                    playbackStartPositionMs = extras.getLong(MEDIA_EXTRA_START_PLAYBACK_POSITION, 0);
                 } else {
                     playbackStartPositionMs = 0;
                 }

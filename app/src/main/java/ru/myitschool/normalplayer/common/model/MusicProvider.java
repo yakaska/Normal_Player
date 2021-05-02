@@ -68,7 +68,7 @@ public class MusicProvider {
         }
     };
     private final ConcurrentMap<String, MutableMediaMetadata> musicListById;
-    private MusicProviderSource source;
+    private final MusicProviderSource source;
     // Categorized caches for music track data:
     private ConcurrentMap<String, List<MediaMetadataCompat>> musicListByArtist;
     private ConcurrentMap<String, List<MediaMetadataCompat>> musicListByAlbum;
@@ -87,11 +87,6 @@ public class MusicProvider {
         musicListById = new ConcurrentHashMap<>();
     }
 
-    /**
-     * Get an iterator over the list of all music
-     *
-     * @return music
-     */
     public Iterable<String> getAllMusic() {
         if (currentState != State.INITIALIZED) {
             return Collections.emptyList();
@@ -99,11 +94,6 @@ public class MusicProvider {
         return musicListById.keySet();
     }
 
-    /**
-     * Get an iterator over the list of genres
-     *
-     * @return genres
-     */
     public Iterable<String> getGenres() {
         if (currentState != State.INITIALIZED) {
             return Collections.emptyList();
@@ -111,11 +101,6 @@ public class MusicProvider {
         return musicListByGenre.keySet();
     }
 
-    /**
-     * Get an iterator over the list of albums
-     *
-     * @return albums
-     */
     public Iterable<String> getAlbums() {
         if (currentState != State.INITIALIZED) {
             return Collections.emptyList();
@@ -123,11 +108,7 @@ public class MusicProvider {
         return musicListByAlbum.keySet();
     }
 
-    /**
-     * Get an iterator over the list of artists
-     *
-     * @return artists
-     */
+
     public Iterable<String> getArtists() {
         if (currentState != State.INITIALIZED) {
             return Collections.emptyList();
@@ -135,9 +116,6 @@ public class MusicProvider {
         return musicListByArtist.keySet();
     }
 
-    /**
-     * Get an iterator over a shuffled collection of all songs
-     */
     public Iterable<MediaMetadataCompat> getShuffledMusic() {
         if (currentState != State.INITIALIZED) {
             return Collections.emptyList();
@@ -162,9 +140,6 @@ public class MusicProvider {
         return result;
     }
 
-    /**
-     * Get music tracks of the given genre
-     */
     public Iterable<MediaMetadataCompat> getMusicsByArtist(String artist) {
         if (currentState != State.INITIALIZED || !musicListByArtist.containsKey(artist)) {
             return Collections.emptyList();
@@ -174,9 +149,6 @@ public class MusicProvider {
         return result;
     }
 
-    /**
-     * Get music tracks of the given genre
-     */
     public Iterable<MediaMetadataCompat> getMusicsByGenre(String genre) {
         if (currentState != State.INITIALIZED || !musicListByGenre.containsKey(genre)) {
             return Collections.emptyList();
@@ -186,9 +158,6 @@ public class MusicProvider {
         return result;
     }
 
-    /**
-     * Get music tracks of the given album
-     */
     public Iterable<MediaMetadataCompat> getMusicsByAlbum(String album) {
         if (currentState != State.INITIALIZED || !musicListByAlbum.containsKey(album)) {
             return Collections.emptyList();
@@ -198,26 +167,17 @@ public class MusicProvider {
         return result;
     }
 
-    /**
-     * Very basic implementation of a search that filter music tracks with title containing
-     * the given query.
-     */
+
     public Iterable<MediaMetadataCompat> searchMusicBySongTitle(String query) {
         return searchMusic(MediaMetadataCompat.METADATA_KEY_TITLE, query);
     }
 
-    /**
-     * Very basic implementation of a search that filter music tracks with album containing
-     * the given query.
-     */
+
     public Iterable<MediaMetadataCompat> searchMusicByAlbum(String query) {
         return searchMusic(MediaMetadataCompat.METADATA_KEY_ALBUM, query);
     }
 
-    /**
-     * Very basic implementation of a search that filter music tracks with artist containing
-     * the given query.
-     */
+
     public Iterable<MediaMetadataCompat> searchMusicByArtist(String query) {
         return searchMusic(MediaMetadataCompat.METADATA_KEY_ARTIST, query);
     }
@@ -237,17 +197,12 @@ public class MusicProvider {
         return result;
     }
 
-    /**
-     * Return the MediaMetadataCompat for the given musicID.
-     *
-     * @param musicId The unique, non-hierarchical music ID.
-     */
-    public MediaMetadataCompat getMusic(String musicId) {
-        return musicListById.containsKey(musicId) ? musicListById.get(musicId).metadata : null;
-    }
-
     public boolean isInitialized() {
         return currentState == State.INITIALIZED;
+    }
+
+    public MediaMetadataCompat getMusic(String musicId) {
+        return musicListById.containsKey(musicId) ? musicListById.get(musicId).metadata : null;
     }
 
     @SuppressLint("StaticFieldLeak")
@@ -483,6 +438,7 @@ public class MusicProvider {
                 .setSubtitle(metadata.getString(MediaMetadataCompat.METADATA_KEY_ARTIST))
                 .setIconUri(Uri.parse(metadata.getString(MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI)))
                 .setMediaId(hierarchyAwareMediaID)
+                .setMediaUri(Uri.parse(metadata.getString(MediaMetadataCompat.METADATA_KEY_MEDIA_URI)))
                 .setIconBitmap(metadata.getBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART))
                 .setExtras(extras)
                 .build();

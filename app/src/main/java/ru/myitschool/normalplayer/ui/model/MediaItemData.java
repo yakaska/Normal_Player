@@ -12,14 +12,6 @@ public class MediaItemData {
 
     public static final int PLAYBACK_RES_CHANGED = 1;
 
-    //INTERNAL ACTIONS
-    public static final String ACTION_DETAILS = "ru.myitschool.normalplayer.ACTION_DETAILS";
-    public static final String ACTION_SHARE = "ru.myitschool.normalplayer.ACTION_SHARE";
-    public static final String ACTION_DELETE = "ru.myitschool.normalplayer.ACTION_DELETE";
-
-    //VK ACTIONS
-    public static final String ACTION_DOWNLOAD = "ru.myitschool.normalplayer.ACTION_DOWNLOAD";
-
     public static final DiffUtil.ItemCallback<MediaItemData> DIFF_CALLBACK = new DiffUtil.ItemCallback<MediaItemData>() {
         @Override
         public boolean areItemsTheSame(@NonNull MediaItemData oldItem, @NonNull MediaItemData newItem) {
@@ -146,5 +138,21 @@ public class MediaItemData {
 
     public long getSourceType() {
         return sourceType;
+    }
+
+
+    @Override
+    public String toString() {
+        return "MediaItemData{" +
+                "mediaId='" + mediaId + '\'' +
+                ", title='" + title + '\'' +
+                ", subtitle='" + subtitle + '\'' +
+                ", mediaUri=" + mediaUri +
+                ", albumArtUri=" + albumArtUri +
+                ", duration=" + duration +
+                ", browsable=" + browsable +
+                ", playbackRes=" + playbackRes +
+                ", sourceType=" + sourceType +
+                '}';
     }
 }

@@ -19,6 +19,7 @@ import java.util.List;
 
 import ru.myitschool.normalplayer.R;
 import ru.myitschool.normalplayer.common.model.MusicProviderSource;
+import ru.myitschool.normalplayer.common.playback.MusicService;
 import ru.myitschool.normalplayer.databinding.ItemGridBinding;
 import ru.myitschool.normalplayer.databinding.ItemLineBinding;
 import ru.myitschool.normalplayer.ui.model.MediaItemData;
@@ -157,16 +158,16 @@ public class MediaItemAdapter extends ListAdapter<MediaItemData, RecyclerView.Vi
                 @Override
                 public void onClick(View v) {
                     if (item != null) {
-                        showPopupMenu(v, item);
+                        showPopupMenu(v);
                     }
                 }
             });
 
         }
 
-        private void showPopupMenu(View v, MediaItemData item) {
+        private void showPopupMenu(View v) {
             PopupMenu menu = new PopupMenu(v.getContext(), v);
-            switch (MusicProviderSource.SOURCE_TYPE.valueOf(item.getSourceType())) {
+            switch (MusicProviderSource.SourceType.valueOf(item.getSourceType())) {
                 case INTERNAL:
                     menu.inflate(R.menu.menu_internal);
                     menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
@@ -174,13 +175,10 @@ public class MediaItemAdapter extends ListAdapter<MediaItemData, RecyclerView.Vi
                         public boolean onMenuItemClick(MenuItem menuItem) {
                             switch (menuItem.getItemId()) {
                                 case R.id.menu_share:
-                                    itemClickListener.onItemMenuClick(MediaItemData.ACTION_SHARE, item);
+                                    itemClickListener.onItemMenuClick(MusicService.ACTION_SHARE, item);
                                     break;
                                 case R.id.menu_details:
-                                    itemClickListener.onItemMenuClick(MediaItemData.ACTION_DETAILS, item);
-                                    break;
-                                case R.id.menu_delete:
-                                    itemClickListener.onItemMenuClick(MediaItemData.ACTION_DELETE, item);
+                                    itemClickListener.onItemMenuClick(MusicService.ACTION_DETAILS, item);
                                     break;
                             }
                             return false;
@@ -192,7 +190,12 @@ public class MediaItemAdapter extends ListAdapter<MediaItemData, RecyclerView.Vi
                     menu.inflate(R.menu.menu_vk);
                     menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                         @Override
-                        public boolean onMenuItemClick(MenuItem item) {
+                        public boolean onMenuItemClick(MenuItem menuItem) {
+                            switch (menuItem.getItemId()) {
+                                case R.id.download:
+                                    itemClickListener.onItemMenuClick(MusicService.ACTION_DOWNLOAD, item);
+                                    break;
+                            }
                             return false;
                         }
                     });

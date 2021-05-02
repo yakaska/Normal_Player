@@ -19,12 +19,11 @@ import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import ru.myitschool.normalplayer.common.model.MusicProviderSource;
 import ru.myitschool.normalplayer.databinding.FragmentLoginBinding;
 import ru.myitschool.normalplayer.ui.activity.MainActivity;
 import ru.myitschool.normalplayer.ui.viewmodel.MainActivityViewModel;
 import ru.myitschool.normalplayer.utils.ProviderUtil;
-
-import static ru.myitschool.normalplayer.common.playback.MusicService.SOURCE_VK;
 
 public class LoginFragment extends DialogFragment {
 
@@ -124,7 +123,7 @@ public class LoginFragment extends DialogFragment {
         // TODO : initiate successful logged in experience
         MainActivityViewModel mainActivityViewModel = new ViewModelProvider(getActivity(), ProviderUtil.provideMainActivityViewModel(requireActivity())).get(MainActivityViewModel.class);
         if (getContext() != null && getContext().getApplicationContext() != null) {
-            mainActivityViewModel.setMediaSource(SOURCE_VK);
+            mainActivityViewModel.setMediaSource(MusicProviderSource.SourceType.VK);
             getContext().startActivity(new Intent(getActivity(), MainActivity.class));
         }
     }

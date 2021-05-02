@@ -2,6 +2,7 @@ package ru.myitschool.normalplayer.common;
 
 import android.content.ComponentName;
 import android.content.Context;
+import android.os.Bundle;
 import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaControllerCompat;
@@ -56,6 +57,10 @@ public class MusicServiceConnection {
 
     public void changeMediaSource(String source) {
         mediaBrowser.sendCustomAction(source, null, null);
+    }
+
+    public void sendAction(String action, Bundle extras) {
+        mediaBrowser.sendCustomAction(action, extras, null);
     }
 
     public void subscribe(String parentId, MediaBrowserCompat.SubscriptionCallback subscriptionCallback) {

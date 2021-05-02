@@ -1,5 +1,6 @@
 package ru.myitschool.normalplayer.ui.viewmodel;
 
+import android.os.Bundle;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaControllerCompat;
 import android.util.Log;
@@ -13,6 +14,8 @@ import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
 import ru.myitschool.normalplayer.common.MusicServiceConnection;
+import ru.myitschool.normalplayer.common.model.MusicProviderSource;
+import ru.myitschool.normalplayer.common.playback.MusicService;
 import ru.myitschool.normalplayer.ui.model.MediaItemData;
 import ru.myitschool.normalplayer.utils.Event;
 import ru.myitschool.normalplayer.utils.PlayerUtil;
@@ -53,12 +56,20 @@ public class MainActivityViewModel extends ViewModel {
             browseToItem(clickedItem);
         } else {
             playMediaId(clickedItem.getMediaId());
-            Log.d(TAG, "mediaItemClicked: " + clickedItem.getMediaId());
+            Log.d(TAG, "mediaItemClicked: " + clickedItem.getTitle());
         }
     }
 
     public void mediaItemMenuClicked(String action, MediaItemData clickedItem) {
-        Log.d(TAG, "mediaItemMenuClicked: " + action);
+        Bundle extras = new Bundle();
+        Log.d(TAG, "mediaItemMenuClicked: " + clickedItem.getTitle());
+        extras.putString(MusicService.MEDIA_EXTRA_FILE_URI, String.valueOf(clickedItem.getMediaUri()));
+        extras.putString(MusicService.MEDIA_EXTRA_FILE_NAME, clickedItem.getTitle());
+        sendAction(action, extras);
+    }
+
+    private void sendAction(String action, Bundle extras) {
+        connection.sendAction(action, extras);
     }
 
     public void showFragment(Fragment fragment, boolean backStack, String tag) {
@@ -110,8 +121,10 @@ public class MainActivityViewModel extends ViewModel {
         }
     }
 
-    public void setMediaSource(String source) {
-        connection.changeMediaSource(source);
+    public void setMediaSource(MusicProviderSource.SourceType sourceType) {
+        Bundle extra = new Bundle();
+        extra.putLong(MusicProviderSource.SOURCE_TYPE_KEY, sourceType.getValue());
+        sendAction(MusicService.ACTION_CHANGE_SOURCE, extra);
     }
 
     private void browseToItem(MediaItemData clickedItem) {

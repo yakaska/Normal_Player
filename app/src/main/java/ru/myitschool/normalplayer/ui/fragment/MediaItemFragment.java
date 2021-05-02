@@ -1,5 +1,6 @@
 package ru.myitschool.normalplayer.ui.fragment;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,6 +12,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ShareCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -18,7 +20,11 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+
 import ru.myitschool.normalplayer.R;
+import ru.myitschool.normalplayer.common.model.MusicProviderSource;
+import ru.myitschool.normalplayer.common.playback.MusicService;
 import ru.myitschool.normalplayer.databinding.FragmentMediaitemBinding;
 import ru.myitschool.normalplayer.ui.adapter.MediaItemAdapter;
 import ru.myitschool.normalplayer.ui.model.MediaItemData;
@@ -32,16 +38,11 @@ public class MediaItemFragment extends Fragment implements MediaItemAdapter.OnIt
     private static final String TAG = MediaItemFragment.class.getSimpleName();
 
     private static final String MEDIA_ID_ARG = "media_id_arg";
-
-    private String mediaId;
-
-    private MainActivityViewModel mainActivityViewModel;
-
-    private MediaItemFragmentViewModel mediaItemFragmentViewModel;
-
-    private FragmentMediaitemBinding binding;
-
     private final MediaItemAdapter adapter = new MediaItemAdapter(this);
+    private String mediaId;
+    private MainActivityViewModel mainActivityViewModel;
+    private MediaItemFragmentViewModel mediaItemFragmentViewModel;
+    private FragmentMediaitemBinding binding;
 
     public static MediaItemFragment newInstance(String mediaId) {
         Log.d(TAG, "newInstance: ");
@@ -86,7 +87,7 @@ public class MediaItemFragment extends Fragment implements MediaItemAdapter.OnIt
             } else {
                 binding.spinner.setVisibility(View.VISIBLE);
             }
-            Log.d(TAG, "onActivityCreated: " +  gridLayoutManager.getSpanCount());
+            Log.d(TAG, "onActivityCreated: " + gridLayoutManager.getSpanCount());
             adapter.modifyList(mediaItems);
         });
         mainActivityViewModel.getSearch().observe(getViewLifecycleOwner(), new Observer<String>() {
@@ -109,7 +110,37 @@ public class MediaItemFragment extends Fragment implements MediaItemAdapter.OnIt
 
     @Override
     public void onItemMenuClick(String action, MediaItemData clickedItem) {
+        switch (action) {
+            case MusicService.ACTION_SHARE:
+                share(clickedItem.getMediaUri());
+                break;
+            case MusicService.ACTION_DETAILS:
+                showDetails(clickedItem);
+                break;
+        }
         mainActivityViewModel.mediaItemMenuClicked(action, clickedItem);
+    }
+
+    private void share(Uri uri) {
+        ShareCompat.IntentBuilder.from(getActivity())
+                .setStream(uri)
+                .setType("audio/*")
+                .startChooser();
+    }
+
+    private void showDetails(MediaItemData selectedItem) {
+        Log.d(TAG, "showDetails: " + selectedItem.toString());
+        CharSequence[] items = new CharSequence[6];
+        items[0] = "Title: " + selectedItem.getTitle();
+        items[1] = "Subtitle: " + selectedItem.getSubtitle();
+        items[2] = "Path to file: " + selectedItem.getMediaUri();
+        items[3] = "Path to image: " + selectedItem.getAlbumArtUri();
+        items[4] = "Source type: " + MusicProviderSource.SourceType.valueOf(selectedItem.getSourceType());
+        items[5] = "Is browsable: " + selectedItem.isBrowsable();
+        new MaterialAlertDialogBuilder(getContext())
+                .setItems(items, null)
+                .setPositiveButton("OK", null)
+                .show();
     }
 
     @Override
