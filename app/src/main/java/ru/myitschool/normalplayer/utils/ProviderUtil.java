@@ -15,7 +15,7 @@ import ru.myitschool.normalplayer.ui.viewmodel.NowPlayingViewModel;
 
 public class ProviderUtil {
 
-    public static MusicServiceConnection provideMusicServiceConnection(Context context) {
+    private static MusicServiceConnection provideMusicServiceConnection(Context context) {
         return MusicServiceConnection.getInstance(context, new ComponentName(context, MusicService.class));
     }
 

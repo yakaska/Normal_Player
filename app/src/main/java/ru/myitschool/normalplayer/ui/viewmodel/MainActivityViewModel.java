@@ -112,8 +112,6 @@ public class MainActivityViewModel extends ViewModel {
                     transportControls.pause();
                 } else if (PlayerUtil.isPlayEnabled(connection.getPlaybackState().getValue())) {
                     transportControls.play();
-                } else {
-                    Log.d(TAG, "playMediaId: пшлнхпдрс");
                 }
             }
         } else {
