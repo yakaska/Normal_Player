@@ -8,6 +8,7 @@ import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 public class MusicServiceConnection {
@@ -34,11 +35,11 @@ public class MusicServiceConnection {
     private final MutableLiveData<MediaMetadataCompat> nowPlaying = new MutableLiveData<>(NOTHING_PLAYING);
     private final MutableLiveData<PlaybackStateCompat> playbackState = new MutableLiveData<>(EMPTY_PLAYBACK_STATE);
 
-    public MutableLiveData<MediaMetadataCompat> getNowPlaying() {
+    public LiveData<MediaMetadataCompat> getNowPlaying() {
         return nowPlaying;
     }
 
-    public MutableLiveData<PlaybackStateCompat> getPlaybackState() {
+    public LiveData<PlaybackStateCompat> getPlaybackState() {
         return playbackState;
     }
 
