@@ -21,8 +21,6 @@ import ru.myitschool.normalplayer.common.model.MusicProviderSource;
 import ru.myitschool.normalplayer.ui.model.MediaItemData;
 import ru.myitschool.normalplayer.utils.PlayerUtil;
 
-/*TODO enable sort!*/
-
 public class MediaItemFragmentViewModel extends ViewModel {
 
     private static final String TAG = MediaItemFragmentViewModel.class.getSimpleName();
@@ -39,7 +37,6 @@ public class MediaItemFragmentViewModel extends ViewModel {
         @Override
         public void onChildrenLoaded(@NonNull String parentId, @NonNull List<MediaBrowserCompat.MediaItem> children) {
             super.onChildrenLoaded(parentId, children);
-            Log.d(TAG, "onChildrenLoaded: " + children.toString());
             List<MediaItemData> itemList = new ArrayList<>();
             for (MediaBrowserCompat.MediaItem item : children) {
                 long duration;

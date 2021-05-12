@@ -1,7 +1,6 @@
 package ru.myitschool.normalplayer.common.model;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.res.Resources;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -13,7 +12,6 @@ import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -35,49 +33,15 @@ public class MusicProvider {
 
     public static final String EXTRA_DURATION = "extra_duration";
     private static final String TAG = MusicProvider.class.getSimpleName();
-    private static final Comparator<MediaBrowserCompat.MediaItem> mediaItemTitleComparator = new Comparator<MediaBrowserCompat.MediaItem>() {
-        @Override
-        public int compare(MediaBrowserCompat.MediaItem o1, MediaBrowserCompat.MediaItem o2) {
-            return o1.getDescription().getTitle().toString().compareTo(o2.getDescription().getTitle().toString());
-        }
 
-        @Override
-        public Comparator<MediaBrowserCompat.MediaItem> reversed() {
-            return new Comparator<MediaBrowserCompat.MediaItem>() {
-                @Override
-                public int compare(MediaBrowserCompat.MediaItem o1, MediaBrowserCompat.MediaItem o2) {
-                    return o1.getDescription().getTitle().toString().compareTo(o2.getDescription().getTitle().toString()) * -1;
-                }
-            };
-        }
-    };
-    private static final Comparator<MediaMetadataCompat> mediaMetadataTitleComparator = new Comparator<MediaMetadataCompat>() {
-        @Override
-        public int compare(MediaMetadataCompat o1, MediaMetadataCompat o2) {
-            return o1.getString(MediaMetadataCompat.METADATA_KEY_TITLE).compareTo(o2.getString(MediaMetadataCompat.METADATA_KEY_TITLE));
-        }
-
-        @Override
-        public Comparator<MediaMetadataCompat> reversed() {
-            return new Comparator<MediaMetadataCompat>() {
-                @Override
-                public int compare(MediaMetadataCompat o1, MediaMetadataCompat o2) {
-                    return o1.getString(MediaMetadataCompat.METADATA_KEY_TITLE).compareTo(o2.getString(MediaMetadataCompat.METADATA_KEY_TITLE)) * -1;
-                }
-            };
-        }
-    };
     private final ConcurrentMap<String, MutableMediaMetadata> musicListById;
     private final MusicProviderSource source;
     // Categorized caches for music track data:
     private ConcurrentMap<String, List<MediaMetadataCompat>> musicListByArtist;
     private ConcurrentMap<String, List<MediaMetadataCompat>> musicListByAlbum;
     private ConcurrentMap<String, List<MediaMetadataCompat>> musicListByGenre;
-    private volatile State currentState = State.NON_INITIALIZED;
 
-    public MusicProvider(Context context) {
-        this(new InternalSource(context));
-    }
+    private volatile State currentState = State.NON_INITIALIZED;
 
     public MusicProvider(MusicProviderSource source) {
         this.source = source;
@@ -136,7 +100,6 @@ public class MusicProvider {
         for (MutableMediaMetadata mutableMetadata : musicListById.values()) {
             result.add(mutableMetadata.metadata);
         }
-        Collections.sort(result, mediaMetadataTitleComparator);
         return result;
     }
 
@@ -145,7 +108,6 @@ public class MusicProvider {
             return Collections.emptyList();
         }
         List<MediaMetadataCompat> result = musicListByArtist.get(artist);
-        Collections.sort(result, mediaMetadataTitleComparator);
         return result;
     }
 
@@ -154,7 +116,6 @@ public class MusicProvider {
             return Collections.emptyList();
         }
         List<MediaMetadataCompat> result = musicListByGenre.get(genre);
-        Collections.sort(result, mediaMetadataTitleComparator);
         return result;
     }
 
@@ -163,7 +124,6 @@ public class MusicProvider {
             return Collections.emptyList();
         }
         List<MediaMetadataCompat> result = musicListByAlbum.get(album);
-        Collections.sort(result, mediaMetadataTitleComparator);
         return result;
     }
 
@@ -310,7 +270,7 @@ public class MusicProvider {
         }
 
         if (MEDIA_ID_ROOT.equals(mediaId)) {
-            mediaItems.add(createMediaTemplate(mediaId, resources, null));
+            mediaItems.add(createBrowsableMediaItem(mediaId, resources, null));
 
         } else if (MEDIA_ID_MUSICS_ALL.equals(mediaId)) {
             for (String id : getAllMusic()) {
@@ -318,7 +278,7 @@ public class MusicProvider {
             }
         } else if (MEDIA_ID_MUSICS_BY_GENRE.equals(mediaId)) {
             for (String genre : getGenres()) {
-                mediaItems.add(createMediaTemplate(mediaId, resources, genre));
+                mediaItems.add(createBrowsableMediaItem(mediaId, resources, genre));
             }
 
         } else if (mediaId.startsWith(MEDIA_ID_MUSICS_BY_GENRE)) {
@@ -329,7 +289,7 @@ public class MusicProvider {
 
         } else if (MEDIA_ID_MUSICS_BY_ALBUM.equals(mediaId)) {
             for (String album : getAlbums()) {
-                mediaItems.add(createMediaTemplate(mediaId, resources, album));
+                mediaItems.add(createBrowsableMediaItem(mediaId, resources, album));
             }
 
         } else if (mediaId.startsWith(MEDIA_ID_MUSICS_BY_ALBUM)) {
@@ -341,7 +301,7 @@ public class MusicProvider {
         } else if (MEDIA_ID_MUSICS_BY_ARTIST.equals(mediaId)) {
             for (String artist : getArtists()) {
                 Log.d(TAG, "getChildren: " + artist);
-                mediaItems.add(createMediaTemplate(mediaId, resources, artist));
+                mediaItems.add(createBrowsableMediaItem(mediaId, resources, artist));
             }
 
         } else if (mediaId.startsWith(MEDIA_ID_MUSICS_BY_ARTIST)) {
@@ -352,11 +312,10 @@ public class MusicProvider {
         } else {
             Log.w(TAG, "Skipping unmatched mediaId: " + mediaId);
         }
-        Collections.sort(mediaItems, mediaItemTitleComparator);
         return mediaItems;
     }
 
-    private MediaBrowserCompat.MediaItem createMediaTemplate(String mediaId, Resources resources, String parameter) {
+    private MediaBrowserCompat.MediaItem createBrowsableMediaItem(String mediaId, Resources resources, String parameter) {
 
         String localMediaId = "";
         String localTitle = "";
@@ -412,9 +371,6 @@ public class MusicProvider {
         String unique;
 
         switch (key) {
-            case MEDIA_ID_MUSICS_BY_GENRE:
-                unique = metadata.getString(MediaMetadataCompat.METADATA_KEY_GENRE);
-                break;
             case MEDIA_ID_MUSICS_BY_ALBUM:
                 unique = metadata.getString(MediaMetadataCompat.METADATA_KEY_ALBUM);
                 break;
@@ -443,7 +399,6 @@ public class MusicProvider {
                 .setExtras(extras)
                 .build();
 
-        Log.d(TAG, "createMediaItem: extra " + extras.getLong(EXTRA_DURATION));
         return new MediaBrowserCompat.MediaItem(description,
                 MediaBrowserCompat.MediaItem.FLAG_PLAYABLE);
 

@@ -4,13 +4,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ShareCompat;
 import androidx.fragment.app.Fragment;
@@ -22,7 +18,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
-import ru.myitschool.normalplayer.R;
 import ru.myitschool.normalplayer.common.model.MusicProviderSource;
 import ru.myitschool.normalplayer.common.playback.MusicService;
 import ru.myitschool.normalplayer.databinding.FragmentMediaitemBinding;
@@ -141,24 +136,5 @@ public class MediaItemFragment extends Fragment implements MediaItemAdapter.OnIt
                 .setItems(items, null)
                 .setPositiveButton("OK", null)
                 .show();
-    }
-
-    @Override
-    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_settings:
-                Log.d(TAG, "onOptionsItemSelected: " + "SETTINGS");
-                break;
-            case R.id.menu_sort:
-                Log.d(TAG, "onOptionsItemSelected: " + "SORT");
-                break;
-        }
-        return super.onOptionsItemSelected(item);
     }
 }

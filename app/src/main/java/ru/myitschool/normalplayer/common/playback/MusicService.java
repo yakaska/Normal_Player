@@ -15,7 +15,6 @@ import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -85,8 +84,6 @@ public class MusicService extends MediaBrowserServiceCompat {
     public void onCreate() {
         super.onCreate();
         Log.d(TAG, "onCreate");
-        Bundle ex = new Bundle();
-        ex.putLong("ass", MusicProviderSource.SourceType.INTERNAL.getValue());
         musicProvider = new MusicProvider(new InternalSource(getApplicationContext()));
         musicProvider.retrieveMediaAsync(success -> {
             if (success) {
@@ -136,13 +133,10 @@ public class MusicService extends MediaBrowserServiceCompat {
                 }
                 break;
             case ACTION_DETAILS:
-                Toast.makeText(this, "DETAILS", Toast.LENGTH_SHORT).show();
                 break;
             case ACTION_SHARE:
-                Toast.makeText(this, "SHARE", Toast.LENGTH_SHORT).show();
                 break;
             case ACTION_DOWNLOAD:
-                Toast.makeText(this, "DOWNLOAD", Toast.LENGTH_SHORT).show();
                 download(extras.getString(MEDIA_EXTRA_FILE_URI), extras.getString(MEDIA_EXTRA_FILE_NAME));
                 break;
             default:

@@ -1,7 +1,6 @@
 package ru.myitschool.normalplayer.api.vk;
 
 import okhttp3.OkHttpClient;
-import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import ru.myitschool.normalplayer.utils.UserAgentInterceptor;
@@ -22,11 +21,8 @@ public class VkService {
     }
 
     private VkService() {
-        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
         UserAgentInterceptor userAgentInterceptor = new UserAgentInterceptor(USER_AGENT);
-        interceptor.level(HttpLoggingInterceptor.Level.BASIC);
         OkHttpClient client = new OkHttpClient.Builder()
-                .addNetworkInterceptor(interceptor)
                 .addNetworkInterceptor(userAgentInterceptor)
                 .build();
         Retrofit retrofit = new Retrofit.Builder()

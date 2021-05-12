@@ -55,6 +55,7 @@ public class QueueUtil {
                     .build();
             queue.add(trackCopy);
         }
+
         return queue;
     }
 }

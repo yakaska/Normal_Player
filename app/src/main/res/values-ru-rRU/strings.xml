@@ -9,7 +9,6 @@
     <string name="albums" translatable="false">Альбомы</string>
     <string name="artists" translatable="false">Исполнители</string>
     <string name="folders" translatable="false">Папки</string>
-    <string name="favorite">Избранные</string>
     <string name="pause">Пауза</string>
     <string name="error_no_metadata">Невозможно извлечь метадату</string>
     <string name="browse_genres">Жанры</string>
@@ -21,13 +20,9 @@
     <string name="search">Поиск</string>
     <string name="delete">Удалить</string>
     <string name="details">Подробнее</string>
-    <string name="edit_tags">Редактор тегов</string>
     <string name="share">Поделиться</string>
-    <string name="goto_artist">Перейти к исполнителю</string>
-    <string name="goto_album">Перейти к альбому</string>
     <string name="vk_music">ВК музыка</string>
     <string name="genres">Жанры</string>
-    <string name="settings">Настройки</string>
     <string name="vkontakte">Вконтакте</string>
     <string name="sort">Сортировка</string>
     <string name="rock">Рок</string>
@@ -52,4 +47,10 @@
     <string name="electro_pop_disco">Электропоп и Диско</string>
     <string name="other">Другое</string>
     <string name="phone">Телефон</string>
+    <string name="prompt_login">Логин</string>
+    <string name="prompt_password">Пароль</string>
+    <string name="download">Скачать</string>
+    <string name="welcome">Добро пожаловать!</string>
+    <string name="song_title_placeholder">Не выбрал песню?</string>
+    <string name="choose_song">Выбери песню!</string>
 </resources>

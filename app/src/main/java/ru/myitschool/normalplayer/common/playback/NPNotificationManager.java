@@ -3,7 +3,6 @@ package ru.myitschool.normalplayer.common.playback;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.util.Log;
@@ -50,10 +49,6 @@ public class NPNotificationManager {
     private class DescriptionAdapter implements PlayerNotificationManager.MediaDescriptionAdapter {
 
         private final MediaControllerCompat controller;
-
-        private Uri currentIconUri;
-
-        private Bitmap currentBitmap;
 
         public DescriptionAdapter(MediaControllerCompat controller) {
             this.controller = controller;

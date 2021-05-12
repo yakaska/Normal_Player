@@ -9,6 +9,7 @@ import android.support.v4.media.session.PlaybackStateCompat;
 import com.google.android.exoplayer2.source.ConcatenatingMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.source.ProgressiveMediaSource;
+import com.google.android.exoplayer2.source.ShuffleOrder;
 import com.google.android.exoplayer2.upstream.cache.CacheDataSourceFactory;
 
 import java.util.ArrayList;
@@ -25,7 +26,7 @@ public class PlayerUtil {
     }
 
     public static ConcatenatingMediaSource metadataListToMediaSource(ArrayList<MediaMetadataCompat> metadataList, CacheDataSourceFactory dataSourceFactory) {
-        ConcatenatingMediaSource mediaSource = new ConcatenatingMediaSource();
+        ConcatenatingMediaSource mediaSource = new ConcatenatingMediaSource(false, true, new ShuffleOrder.UnshuffledShuffleOrder(500));
         for (MediaMetadataCompat metadata : metadataList) {
         
             mediaSource.addMediaSource(toMediaSource(metadata, dataSourceFactory));
