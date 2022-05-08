@@ -2,27 +2,26 @@ package ru.myitschool.normalplayer.api.vk.model.response;
 
 import com.google.gson.annotations.SerializedName;
 
-public class VkTokenResponse {
+public class VkTokenResponse{
 
-    @SerializedName("token")
-    private String token;
-    @SerializedName("user_agent")
-    private String userAgent;
+	@SerializedName("access_token")
+	private String accessToken;
 
-    public String getToken() {
-        return token;
-    }
+	@SerializedName("user_id")
+	private int userId;
 
-    public void setToken(String token) {
-        this.token = token;
-    }
+	@SerializedName("expires_in")
+	private int expiresIn;
 
-    public String getUserAgent() {
-        return userAgent;
-    }
+	public String getAccessToken(){
+		return accessToken;
+	}
 
-    public void setUserAgent(String userAgent) {
-        this.userAgent = userAgent;
-    }
+	public int getUserId(){
+		return userId;
+	}
 
+	public int getExpiresIn(){
+		return expiresIn;
+	}
 }

@@ -47,6 +47,7 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
     implementation "androidx.lifecycle:lifecycle-viewmodel:2.3.1"
     implementation 'com.google.android.exoplayer:exoplayer-core:2.13.1'
+    implementation 'com.google.android.exoplayer:exoplayer-hls:2.13.1'
     implementation 'com.google.android.exoplayer:exoplayer-ui:2.13.1'
     implementation 'com.google.android.exoplayer:extension-mediasession:2.13.1'
     implementation 'com.karumi:dexter:6.2.2'

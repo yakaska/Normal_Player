@@ -1,5 +1,8 @@
 package ru.myitschool.normalplayer.common.playback;
 
+import static ru.myitschool.normalplayer.utils.MediaIDUtil.MEDIA_ID_EMPTY_ROOT;
+import static ru.myitschool.normalplayer.utils.MediaIDUtil.MEDIA_ID_ROOT;
+
 import android.app.DownloadManager;
 import android.app.Notification;
 import android.app.PendingIntent;
@@ -30,10 +33,9 @@ import com.google.android.exoplayer2.audio.AudioAttributes;
 import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector;
 import com.google.android.exoplayer2.ext.mediasession.TimelineQueueNavigator;
 import com.google.android.exoplayer2.source.ConcatenatingMediaSource;
+import com.google.android.exoplayer2.source.hls.DefaultHlsDataSourceFactory;
 import com.google.android.exoplayer2.ui.PlayerNotificationManager;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
-import com.google.android.exoplayer2.upstream.cache.CacheDataSource;
-import com.google.android.exoplayer2.upstream.cache.CacheDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 
 import java.util.ArrayList;
@@ -44,47 +46,38 @@ import ru.myitschool.normalplayer.common.model.MusicProvider;
 import ru.myitschool.normalplayer.common.model.MusicProviderSource;
 import ru.myitschool.normalplayer.common.model.VkSource;
 import ru.myitschool.normalplayer.ui.activity.MainActivity;
-import ru.myitschool.normalplayer.utils.CacheUtil;
 import ru.myitschool.normalplayer.utils.MediaIDUtil;
 import ru.myitschool.normalplayer.utils.PlayerUtil;
 import ru.myitschool.normalplayer.utils.QueueUtil;
 
-import static ru.myitschool.normalplayer.utils.MediaIDUtil.MEDIA_ID_EMPTY_ROOT;
-import static ru.myitschool.normalplayer.utils.MediaIDUtil.MEDIA_ID_ROOT;
-
 public class MusicService extends MediaBrowserServiceCompat {
-
-    private static final String TAG = MusicService.class.getSimpleName();
 
     public static final String ACTION_CHANGE_SOURCE = "ru.myitschool.normalplayer.ACTION_CHANGE_SOURCE";
     public static final String ACTION_DETAILS = "ru.myitschool.normalplayer.ACTION_DETAILS";
     public static final String ACTION_SHARE = "ru.myitschool.normalplayer.ACTION_SHARE";
     public static final String ACTION_DOWNLOAD = "ru.myitschool.normalplayer.ACTION_DOWNLOAD";
-
     public static final String MEDIA_EXTRA_START_PLAYBACK_POSITION = "extra_playback_start_position";
     public static final String MEDIA_EXTRA_FILE_URI = "extra_file_uri";
     public static final String MEDIA_EXTRA_FILE_NAME = "extra_file_name";
-
+    private static final String TAG = MusicService.class.getSimpleName();
     private static final String NP_USER_AGENT = "NP_USER_AGENT";
 
     private final AudioAttributes audioAttributes = new AudioAttributes.Builder().setContentType(C.CONTENT_TYPE_MUSIC).setUsage(C.USAGE_MEDIA).build();
     private final PlayerEventListener playerListener = new PlayerEventListener();
-
+    protected MediaSessionCompat mediaSession;
+    protected MediaSessionConnector mediaSessionConnector;
     private NPNotificationManager notificationManager;
     private MusicProvider musicProvider;
     private ArrayList<MediaMetadataCompat> currentPlaylistItems = new ArrayList<>();
-    private CacheDataSourceFactory cacheDataSourceFactory;
+    private DefaultHlsDataSourceFactory cacheDataSourceFactory;
     private boolean isForegroundService;
     private SimpleExoPlayer exoPlayer;
-
-    protected MediaSessionCompat mediaSession;
-    protected MediaSessionConnector mediaSessionConnector;
 
     @Override
     public void onCreate() {
         super.onCreate();
         Log.d(TAG, "onCreate");
-        musicProvider = new MusicProvider(new InternalSource(getApplicationContext()));
+        musicProvider = new MusicProvider(new VkSource(getApplicationContext()));
         musicProvider.retrieveMediaAsync(success -> {
             if (success) {
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
@@ -94,7 +87,7 @@ public class MusicService extends MediaBrowserServiceCompat {
                 mediaSession.setActive(true);
                 setSessionToken(mediaSession.getSessionToken());
                 DefaultDataSourceFactory dataSourceFactory = new DefaultDataSourceFactory(getApplicationContext(), Util.getUserAgent(getApplicationContext(), NP_USER_AGENT), null);
-                cacheDataSourceFactory = new CacheDataSourceFactory(CacheUtil.getPlayerCache(getApplicationContext()), dataSourceFactory, CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR);
+                cacheDataSourceFactory = new DefaultHlsDataSourceFactory(dataSourceFactory);
                 exoPlayer = new SimpleExoPlayer.Builder(getApplicationContext()).build();
                 exoPlayer.setAudioAttributes(audioAttributes, true);
                 exoPlayer.setHandleAudioBecomingNoisy(true);

@@ -5,11 +5,14 @@ import android.net.Uri;
 import android.os.SystemClock;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
+import android.util.Log;
 
 import com.google.android.exoplayer2.source.ConcatenatingMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.source.ProgressiveMediaSource;
 import com.google.android.exoplayer2.source.ShuffleOrder;
+import com.google.android.exoplayer2.source.hls.DefaultHlsDataSourceFactory;
+import com.google.android.exoplayer2.source.hls.HlsMediaSource;
 import com.google.android.exoplayer2.upstream.cache.CacheDataSourceFactory;
 
 import java.util.ArrayList;
@@ -25,17 +28,18 @@ public class PlayerUtil {
                         TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(milliSeconds)));
     }
 
-    public static ConcatenatingMediaSource metadataListToMediaSource(ArrayList<MediaMetadataCompat> metadataList, CacheDataSourceFactory dataSourceFactory) {
+    public static ConcatenatingMediaSource metadataListToMediaSource(ArrayList<MediaMetadataCompat> metadataList, DefaultHlsDataSourceFactory dataSourceFactory) {
         ConcatenatingMediaSource mediaSource = new ConcatenatingMediaSource(false, true, new ShuffleOrder.UnshuffledShuffleOrder(500));
         for (MediaMetadataCompat metadata : metadataList) {
-        
+            Log.d("TAG", "metadataListToMediaSource: " + metadata.getDescription().getMediaUri());
+
             mediaSource.addMediaSource(toMediaSource(metadata, dataSourceFactory));
         }
         return mediaSource;
     }
 
-    public static MediaSource toMediaSource(MediaMetadataCompat metadataCompat, CacheDataSourceFactory dataSourceFactory) {
-        return new ProgressiveMediaSource.Factory(dataSourceFactory).createMediaSource(Uri.parse(metadataCompat.getString(MediaMetadataCompat.METADATA_KEY_MEDIA_URI)));
+    public static MediaSource toMediaSource(MediaMetadataCompat metadataCompat, DefaultHlsDataSourceFactory dataSourceFactory) {
+        return new HlsMediaSource.Factory(dataSourceFactory).createMediaSource(Uri.parse(metadataCompat.getString(MediaMetadataCompat.METADATA_KEY_MEDIA_URI)));
     }
 
 

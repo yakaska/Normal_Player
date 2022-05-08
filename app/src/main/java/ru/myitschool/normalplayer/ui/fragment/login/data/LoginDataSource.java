@@ -16,16 +16,23 @@ public class LoginDataSource {
     public Result<String> login(String username, String password) {
         Log.d("ASC", "login: ");
         try {
-            Response<VkTokenResponse> tokenResponse = VkTokenService.getInstance().getVkTokenApi().getToken(username, password).execute();
+            Response<VkTokenResponse> tokenResponse = VkTokenService.getInstance().getVkTokenApi().getToken(
+                    username,
+                    password,
+                    "password",
+                    "2274003",
+                    "hHbZxrka2uZ6jB1inYsH",
+                    "0"
+            ).execute();
             if (tokenResponse.body() != null) {
-                if (tokenResponse.body().getToken() != null) {
-                    Log.d("ASC", "login: " + tokenResponse.body().getToken());
-                    return new Result.Success<>(tokenResponse.body().getToken());
+                if (tokenResponse.body().getAccessToken() != null) {
+                    Log.d("ASC", "login: " + tokenResponse.body().getAccessToken());
+                    return new Result.Success<>(tokenResponse.body().getAccessToken());
                 } else {
                     throw new Exception("Error");
                 }
             } else {
-                throw new Exception("Token error");
+                throw new Exception("Token error" + tokenResponse.code());
             }
         } catch (Exception e) {
             Log.e("ASC", "login: ", e);
